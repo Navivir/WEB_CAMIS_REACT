@@ -31,8 +31,8 @@ public class UserService {
 
         if (user != null && checkPassword(loginUser.getPassword(), user.getPassword())) {
             // Aquí puedes generar un token JWT o simplemente retornar un mensaje
-            String token = generateToken(user); // Si usas JWT
-            return ResponseEntity.ok("Login exitoso. Token: " + token);
+           // String token = generateToken(user); // Si usas JWT
+            return ResponseEntity.ok("Login exitoso. Token: " ); // <---- + token
         } else {
             return ResponseEntity.status(401).body("Usuario o contraseña incorrectos");
         }
@@ -69,6 +69,10 @@ public class UserService {
         if (userRepository.existsByUsername(user.getUsername())) {
             return ResponseEntity.badRequest().build(); // Usuario ya existe
         }
+        // Encripta la contraseña
+        String hashedPassword = hashPassword(user.getPassword());
+        user.setPassword(hashedPassword);
+
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(savedUser);
     }
