@@ -1,24 +1,23 @@
-body {
-    font-family: 'Montserrat', Arial, sans-serif; /* Fuente actualizada a Montserrat */
+/* General Styles */
+html, body {
+    height: 100%;
     margin: 0;
-    padding: 0;
+}
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
     background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column; /* Asegura que los hijos se apilen verticalmente */
 }
 
 header {
     background-color: #333;
     color: white;
     padding: 10px;
-    text-align: center;
+    text-align: left;
     width: 100%;
 }
 
-header img {
-    width: 100%;
-    height: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 5px;
-}
 .nav-bar {
     background-color: #333;
     overflow: hidden;
@@ -28,12 +27,12 @@ header img {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    display: flex; /* Alinea los elementos de la lista en una fila */
+    display: flex;
     justify-content: center;
 }
 
 .nav-bar ul li {
-    margin: 0 15px; /* Espacio entre las opciones de la barra de navegación */
+    margin: 0 15px;
 }
 
 .nav-bar ul li a {
@@ -50,27 +49,31 @@ header img {
 }
 
 .container {
-    max-width: 1000px; /* Ancho máximo ajustado para centrar */
+    width: 35%; /* Ancho máximo ajustado para centrar */
+    height: 60%;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: left; /* Centrado del contenido */
+    text-align: center; /* Centrado del contenido */
 }
 
 .checkout-button:hover {
     background-color: #219150;
 }
 
-.carrito-icono {
+.carrito-icono, .home-icono {
     position: absolute;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.carrito-icono {
     right: 28px;
     top: 18px;
     width: 30px;
     height: 30px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
 }
 
 .carrito-icono:hover {
@@ -78,13 +81,10 @@ header img {
 }
 
 .home-icono {
-    position: absolute;
     left: 28px;
     top: 14px;
     width: 35px;
     height: 35px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
 }
 
 .home-icono:hover {
@@ -96,37 +96,37 @@ footer {
     color: #fff;
     padding: 20px;
     width: 100%;
-    box-sizing: border-box; /* Asegura que el padding no añada un margen extra */
+    box-sizing: border-box;
     margin-top: 10px;
 }
 
 .footer-content {
     display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1fr; 
-    column-gap: 400px; /* Divide el espacio en tres columnas iguales */
-    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
-    margin: 0; /* Elimina cualquier margen horizontal */
-    padding: 0; /* Elimina cualquier padding */
+    grid-template-columns: 1.5fr 1.5fr 1fr;
+    column-gap: 400px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .footer-section {
-    padding: 0 10px; /* Ajusta el padding para evitar demasiado espacio entre secciones */
+    padding: 0 10px;
 }
 
 .footer-section:first-child {
-    text-align: left; /* Alinea "Sobre Nosotros" a la izquierda */
+    text-align: left;
 }
 
 .footer-section:nth-child(2) {
-    text-align: left; /* Centra "Enlaces Útiles" */
+    text-align: left;
 }
 
 .footer-section:last-child {
-    text-align: left; /* Alinea "Síguenos" a la derecha */
+    text-align: left;
 }
 
 .footer-section h2 {
-    color:#c10505ea;
+    color: #c10505ea;
     margin-bottom: 10px;
 }
 
@@ -151,7 +151,7 @@ footer {
 
 .social-media a {
     display: inline-block;
-    margin:10px;
+    margin: 10px;
 }
 
 .social-icon {
@@ -159,7 +159,8 @@ footer {
     height: 30px;
     vertical-align: middle;
 }
-.social-icon:hover{
+
+.social-icon:hover {
     transform: scale(1.2);
 }
 
@@ -167,5 +168,48 @@ footer {
     margin-top: 20px;
     text-align: center;
     font-size: 12px;
-    color:#c10505ea;
+    color: #c10505ea;
+}
+
+.login-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre los campos y el botón */
+    align-items: center;
+}
+
+.login-container input {
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-container input:focus {
+    border-color: #a90303;
+    box-shadow: 0 0 5px rgba(193, 5, 5, 0.2);
+    outline: none;
+}
+
+.login-container button {
+    padding: 10px;
+    width: 40%;
+    border: none;
+    border-radius: 4px;
+    background-color: #a90303;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #c10505;
 }

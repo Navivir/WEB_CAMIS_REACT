@@ -24,7 +24,6 @@ public class User {
     @Column(nullable = false)
     private String surname;
 
-
     @Column(unique = true, nullable = false)
     private String username;
 
