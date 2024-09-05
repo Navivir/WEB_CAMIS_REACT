@@ -1,0 +1,316 @@
+body {
+    font-family: 'Montserrat', Arial, sans-serif; /* Fuente actualizada a Montserrat */
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.nav-bar {
+    background-color: #333;
+    overflow: hidden;
+}
+
+.nav-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Alinea los elementos de la lista en una fila */
+    justify-content: center;
+}
+
+.nav-bar ul li {
+    margin: 0 15px; /* Espacio entre las opciones de la barra de navegación */
+}
+
+.nav-bar ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.nav-bar ul li a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
+
+.container {
+    max-width: 600px; /* Ancho máximo ajustado para centrar */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centrado del contenido */
+}
+
+.cart-item-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 25px; /* Aumentar el margen inferior para más espacio entre tarjetas */
+    border-radius: 8px;
+    background-color: #fff;
+    display: flex;
+    align-items: center; /* Alinea el contenido verticalmente en el centro */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative; /* Posicionamiento relativo para el botón de eliminar */
+}
+
+.cart-item-card img {
+    width: 200px; /* Ancho específico para la imagen */
+    height: 200px; /* Altura específica para la imagen */
+    object-fit: cover; /* Asegura que la imagen cubra el área especificada sin deformarse */
+    margin-right: 15px; /* Espacio entre la imagen y el contenido */
+    border-radius: 8px; /* Bordes redondeados opcionales para la imagen */
+}
+
+.cart-item-card .item-details {
+    flex: 1; /* Hace que el contenedor de detalles ocupe el espacio restante */
+    text-align: left; /* Alinea el texto a la izquierda dentro de la tarjeta */
+    margin-left: 15px; /* Ajustar el margen a la izquierda si es necesario */
+}
+
+.cart-item-card h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 10px; /* Aumentar el tamaño del texto del título */
+}
+
+.cart-item-card .item-price {
+    font-weight: bold;
+    color: #000;
+    font-size: 1.1em; /* Aumentar el tamaño del texto del precio */
+    margin-bottom: 10px; /* Espacio entre el precio y el siguiente atributo */
+}
+
+.cart-item-card .item-quantity {
+    color: #333;
+    font-size: 1em; /* Aumentar el tamaño del texto de la cantidad */
+    margin-top: 5px; /* Espacio encima del atributo */
+}
+
+/* Estilo del botón de eliminar */
+.cart-item-card .delete-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: absolute; /* Posiciona el botón dentro de la tarjeta */
+    right: 10px;
+    bottom: 10px; /* Posicionado en la esquina inferior derecha */
+    width: 50px; /* Tamaño de la imagen de la papelera */
+    height: 50px;
+    border-radius: 5px;
+    background-size: contain; /* Asegura que la imagen se ajuste al botón */
+    background-repeat: no-repeat;
+    background-position: center;
+    
+}
+
+.cart-item-card .delete-button:hover {
+    opacity: 0.7; /* Efecto de hover */
+}
+
+.empty-cart {
+    text-align: center;
+    font-size: 1.2em;
+    color: #888;
+}
+
+.checkout-button {
+    display: block;
+    margin: 30px auto 20px auto; /* Margen superior aumentado a 30px y margen inferior a 20px */
+    background-color: #c10505c4;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.checkout-button:hover {
+    background-color: #ff0000;
+}
+
+.trash-icon {
+    width: 50px; /* Tamaño de la imagen */
+    height: 50px; /* Tamaño de la imagen */
+    cursor: pointer; /* Cambia el cursor a pointer */
+    color: red;
+}
+
+.item-quantity {
+    margin-top: 10px;
+}
+
+.item-quantity label {
+    font-size: 16px;
+    color: #555;
+    margin-right: 10px;
+}
+
+.item-quantity select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    appearance: none; /* Oculta la apariencia predeterminada del dropdown en algunos navegadores */
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.home-icono {
+    position: absolute;
+    left: 28px;
+    top: 14px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.home-icono:hover {
+    transform: scale(1.4);
+}
+
+.total-card {
+   /* Asegúrate de que este margen no esté sobrescrito */
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%; /* Asegura que el total ocupe todo el ancho del card */
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
+}
+
+.total-card h4 {
+    margin-top: 5px;
+    font-size: 1.2em; /* Tamaño del texto del total */
+}
+
+.total-card p {
+    font-size: 1.5em; /* Tamaño del texto del precio total */
+    font-weight: bold;
+    color: #000;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding no añada un margen extra */
+    margin-top: 10px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr; 
+    column-gap: 400px; /* Divide el espacio en tres columnas iguales */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    margin: 0; /* Elimina cualquier margen horizontal */
+    padding: 0; /* Elimina cualquier padding */
+}
+
+.footer-section {
+    padding: 0 10px; /* Ajusta el padding para evitar demasiado espacio entre secciones */
+}
+
+.footer-section:first-child {
+    text-align: left; /* Alinea "Sobre Nosotros" a la izquierda */
+}
+
+.footer-section:nth-child(2) {
+    text-align: left; /* Centra "Enlaces Útiles" */
+}
+
+.footer-section:last-child {
+    text-align: left; /* Alinea "Síguenos" a la derecha */
+}
+
+.footer-section h2 {
+    color:#c10505ea;
+    margin-bottom: 10px;
+}
+
+.footer-section p, .footer-section ul, .footer-section form {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin: 10px 0;
+}
+
+.footer-section ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.social-media a {
+    display: inline-block;
+    margin:10px;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+.social-icon:hover{
+    transform: scale(1.2);
+}
+
+.footer-bottom {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color:#c10505ea;
+}
+
+.original-price {
+    color: #821111; /* Color gris para el precio original */
+    font-size: 16px;
+    text-decoration:line-through;
+}
+
+.discounted-price { /* Tachado si el producto tiene descuento */
+    color: #000000; /* Cambia el color a un gris más claro */
+    font-size: 20px;
+}
+.discount-label {
+    background-color: #c10505c4; /* Color de fondo */
+    color: #fff; /* Color de texto */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 50%; /* Hacerla redonda */
+    position: absolute; /* Posicionamiento absoluto para moverla a la parte superior derecha */
+    top: 10px; /* Espaciado desde la parte superior */
+    right: 10px; /* Espaciado desde la parte derecha */
+    font-size: 14px; /* Tamaño del texto */
+    font-weight: bold; /* Hacer el texto más grueso */
+    text-align: center; /* Alineación del texto */
+    width: 40px; /* Ancho fijo para que sea circular */
+    height: 40px; /* Altura fija para que sea circular */
+    display: flex; /* Para centrar el texto verticalmente */
+    align-items: center; /* Para centrar el texto verticalmente */
+    justify-content: center; /* Para centrar el texto horizontalmente */
+    z-index: 1; /* Asegurar que esté por encima de otros elementos */
+}
