@@ -1,5 +1,6 @@
 package com.example.Joyas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,6 +43,7 @@ public class Cart {
     @Column(nullable = true)
     private String email; // Correo electrónico del usuario
 
+    @JsonIgnore  // evitas que se haga un bucle con la relación paralela (como en un espejo)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cart_id")
     private List<CartItem> items = new ArrayList<>();
