@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,16 +21,35 @@ public class Cart {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userId;
+    private String token; // Token único para identificar el carrito
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt; // Fecha de creación del carrito
+
+    @Column(nullable = false)
+    private LocalDateTime expiresAt; // Fecha de expiración del carrito
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private User user; // Relación con la entidad User
+
+    @Column(nullable = true)
+    private String name; // Apellidos del usuario
+
+    @Column(nullable = true)
+    private String lastName; // Apellidos del usuario
+
+    @Column(nullable = true)
+    private String email; // Correo electrónico del usuario
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cart_id")
     private List<CartItem> items = new ArrayList<>();
 
-    // Constructor que acepta userId
-    public Cart(String userId) {
-        this.userId = userId;
+    // Constructor que acepta token
+    public Cart(String token) {
+        this.token = token;
+        this.createdAt = LocalDateTime.now();
+        this.expiresAt = this.createdAt.plusHours(6);
     }
-
-    // Otros métodos
 }

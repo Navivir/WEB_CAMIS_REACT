@@ -1,28 +1,28 @@
-import { getUserId } from './session.js';
+import { getToken } from './session.js';
 
 // Añade el event listener cuando el DOM esté cargado
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const searchButton = document.getElementById('search-button');
-    const userId = getUserId(); // Obtener el userId
+    const token = getToken(); // Obtener el token
 
     // Añadir listener para la tecla Enter
     searchInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
-            searchCamisetas(userId); // Llama a la función cuando se presiona Enter
+            searchCamisetas(token); // Llama a la función cuando se presiona Enter
         }
     });
 
     // Añadir listener para el botón de búsqueda
     if (searchButton) {
         searchButton.addEventListener('click', () => {
-            searchCamisetas(userId); // Llama a la función cuando se presiona el botón
+            searchCamisetas(token); // Llama a la función cuando se presiona el botón
         });
     }
 });
 
 // Función para buscar camisetas
-export function searchCamisetas(userId, page = 0, limit = 10) {
+export function searchCamisetas(token, page = 0, limit = 10) {
     const query = document.getElementById('search-input').value.trim();
 
     // Si el campo de búsqueda está vacío, usa el endpoint general
@@ -105,7 +105,7 @@ export function searchCamisetas(userId, page = 0, limit = 10) {
                 camiCard.appendChild(spacer);
 
                 camiCard.addEventListener('click', () => {
-                    window.location.href = `details.html?id=${cami.id}&userId=${userId}`;
+                    window.location.href = `details.html?id=${cami.id}&token=${token}`;
                 });
 
                 container.appendChild(camiCard);

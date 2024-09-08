@@ -15,20 +15,23 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<?> addToCart(@PathVariable String userId, @RequestBody CartItem cartItem) {
+    @PostMapping("/{token}")
+    public ResponseEntity<?> addToCart(@PathVariable String token, @RequestBody CartItem cartItem) {
         try {
-            cartService.addToCart(userId, cartItem);
+            cartService.addToCart(token, cartItem);
             return ResponseEntity.ok().body(new ResponseMessage("Item añadido al carrito"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("Error al añadir al carrito"));
+            // Log the exception message and stack trace for debugging
+            e.printStackTrace(); // Or use a logger to log the exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseMessage("Error al añadir al carrito: " + e.getMessage()));
         }
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getCart(@PathVariable String userId) {
+    @GetMapping("/{token}")
+    public ResponseEntity<?> getCart(@PathVariable String token) {
         try {
-            Cart cart = cartService.getCartByUserId(userId);
+            Cart cart = cartService.getCartByToken(token);
             if (cart != null) {
                 return ResponseEntity.ok(cart.getItems());
             } else {
@@ -38,22 +41,22 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("Error al recuperar el carrito"));
         }
     }
-    @DeleteMapping("/{userId}/items/{itemId}")
-    public ResponseEntity<?> removeFromCart(@PathVariable String userId, @PathVariable Long itemId) {
+    @DeleteMapping("/{token}/items/{itemId}")
+    public ResponseEntity<?> removeFromCart(@PathVariable String token, @PathVariable Long itemId) {
         try {
-            cartService.removeFromCart(userId, itemId);
+            cartService.removeFromCart(token, itemId);
             return ResponseEntity.ok().body(new ResponseMessage("Item eliminado del carrito"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("Error al eliminar del carrito"));
         }
     }
 
-    @PutMapping("/{userId}/items/{itemId}")
-    public ResponseEntity<?> updateCartItemQuantity(@PathVariable String userId,
+    @PutMapping("/{token}/items/{itemId}")
+    public ResponseEntity<?> updateCartItemQuantity(@PathVariable String token,
                                                     @PathVariable Long itemId,
                                                     @RequestParam Integer quantity) {
         try {
-            cartService.updateCartItemQuantity(userId, itemId, quantity);
+            cartService.updateCartItemQuantity(token, itemId, quantity);
             return ResponseEntity.ok().body(new ResponseMessage("Cantidad del ítem actualizada"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("Error al actualizar la cantidad del ítem"));

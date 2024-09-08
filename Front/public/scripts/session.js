@@ -1,23 +1,39 @@
-// session.js
-const USER_ID_KEY = 'userId';
+const TOKEN_KEY = 'sessionToken';
+const EXPIRATION_KEY = 'tokenExpiration';
 
-// Generar un ID de sesión aleatorio (o usar uno existente)
-function generateUserId() {
+// Generar un token de sesión aleatorio
+function generateToken() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 }
 
-// Obtener el userId desde el almacenamiento local o generarlo
-function getUserId() {
-    let userId = localStorage.getItem(USER_ID_KEY);
-    if (!userId) {
-        userId = generateUserId();
-        localStorage.setItem(USER_ID_KEY, userId);
+// Obtener la fecha y hora actual más un número de horas
+function getExpirationDate(hours) {
+    const now = new Date();
+    now.setHours(now.getHours() + hours);
+    return now.toISOString();
+}
+
+// Obtener el token de sesión desde el almacenamiento local o generarlo
+function getToken() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    const expiration = localStorage.getItem(EXPIRATION_KEY);
+
+    if (token && expiration && new Date() < new Date(expiration)) {
+        return token;
+    } else {
+        // Token ha expirado o no existe, generar uno nuevo
+        const newToken = generateToken();
+        const expirationDate = getExpirationDate(6); // Token expira en 6 horas
+
+        localStorage.setItem(TOKEN_KEY, newToken);
+        localStorage.setItem(EXPIRATION_KEY, expirationDate);
+
+        return newToken;
     }
-    return userId;
 }
 
 // Exportar la función para usarla en otros archivos
-export { getUserId };
+export { getToken };

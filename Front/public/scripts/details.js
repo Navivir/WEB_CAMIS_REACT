@@ -1,10 +1,10 @@
-import { getUserId } from './session.js'; // Importar la función desde session.js
+import { getToken } from './session.js'; // Importar la función desde session.js
 import { ImageZoom } from './zoom.js'; // Importar la clase de zoom
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const camiId = urlParams.get('id');
-    const userId = getUserId(); // Obtener el ID de usuario usando getUserId
+    const token = getToken(); // Obtener el ID de usuario usando getUserId
 
     if (camiId) {
         fetch(`http://localhost:8080/cami/${camiId}`)
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         discount: cami.discount
                     };
 
-                    fetch(`http://localhost:8080/cart/${userId}`, { // Usa el userId en la URL
+                    fetch(`http://localhost:8080/cart/${token}`, { // Usa el userId en la URL
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
