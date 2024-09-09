@@ -29,9 +29,14 @@
     <div class="container">
         <div class="login-container">
             <h2>Iniciar Sesión</h2>
-            <form action="#" method="post">
+            <form id="loginForm">
                 <input type="text" placeholder="Usuario" required>
-                <input type="password" placeholder="Contraseña" required>
+                
+                <div class="password-wrapper">
+                    <input type="password" placeholder="Contraseña" id="password" required>
+                    <img src="images/ver.svg" alt="Mostrar contraseña" id="togglePassword" class="toggle-password">
+                </div>
+            
                 <button type="submit">Iniciar Sesión</button>
             </form>
         </div>
@@ -83,5 +88,7 @@
             <p>&copy; 2024 Tu Tienda de Camisetas. Todos los derechos reservados.</p>
         </div>
     </footer>
+    <script type="module" src="scripts/session.js"></script>
+    <script type="module" src="scripts/login.js"></script>
 </body>
 </html>

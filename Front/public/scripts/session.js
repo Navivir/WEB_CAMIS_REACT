@@ -8,6 +8,12 @@ function generateToken() {
         return v.toString(16);
     });
 }
+function saveToken(token, hours) {
+    const expirationDate = getExpirationDate(hours); // Usar la función getExpirationDate existente
+    localStorage.setItem(TOKEN_KEY, token); // Guardar el token en localStorage
+    localStorage.setItem(EXPIRATION_KEY, expirationDate); // Guardar la fecha de expiración
+    console.log('Token guardado:', token, 'Expira en:', expirationDate); // Para debugging
+}
 
 // Obtener la fecha y hora actual más un número de horas
 function getExpirationDate(hours) {
@@ -36,4 +42,4 @@ function getToken() {
 }
 
 // Exportar la función para usarla en otros archivos
-export { getToken };
+export { getToken, saveToken };

@@ -1,6 +1,7 @@
 package com.example.Joyas.service;
 
 import com.example.Joyas.config.JwtUtil;
+import com.example.Joyas.model.LoginResponse;
 import com.example.Joyas.model.User;
 import com.example.Joyas.dao.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -19,17 +20,21 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public ResponseEntity<String> loginUser(User loginUser) {
+    public ResponseEntity<LoginResponse> loginUser(User loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername());
         if (user != null && checkPassword(loginUser.getPassword(), user.getPassword())) {
             // Genera un token JWT usando JwtUtil
             String token = jwtUtil.generateToken(user.getUsername());
+            int userId = user.getId();
 
-            // Retorna el token en la respuesta
-            return ResponseEntity.ok(token);
+            // Crea la respuesta
+            LoginResponse loginResponse = new LoginResponse(token, userId);
+
+            // Retorna el token y el ID en la respuesta
+            return ResponseEntity.ok(loginResponse);
         } else {
             // Si las credenciales son incorrectas, retorna un estado 401
-            return ResponseEntity.status(401).body("Usuario o contraseña incorrectos");
+            return ResponseEntity.status(401).body(null);
         }
     }
 
