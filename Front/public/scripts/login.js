@@ -28,9 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                const token = await response.text();
-                saveToken(token, 6); // Guardar el token con expiración de 6 horas
-                alert('Inicio de sesión exitoso');
+                const { token, userId } = await response.json();
+                saveToken(token, userId, 6); // Guardar el token y el userID con expiración de 6 horas
                 window.location.href = 'index.html'; // Redirigir al inicio
             } else {
                 alert('Usuario o contraseña incorrectos');

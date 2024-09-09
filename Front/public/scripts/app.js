@@ -1,4 +1,4 @@
-import { searchCamisetas } from './search.js';
+import { isLoggedIn, logout } from './session.js';
 import { Paginator } from './pagination.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,11 +7,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const containerDiscounted = document.getElementById('discounted-container');
     const searchInput = document.getElementById('search-input');
     const searchButton = document.getElementById('search-button');
+    const profileLink = document.getElementById('profile-icono');
+    const profileDropdown = document.getElementById('dropdown-content');
+    const logoutButton = document.getElementById('logout-button');
+   
+    // Asegurarse de que el dropdown esté oculto al cargar la página
+    profileDropdown.style.display = 'none';
 
+    // Control de la imagen si está logueado o no
+    if (isLoggedIn()) {
+        // Si está logueado, mostrar el menú desplegable al hacer clic
+        profileLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    } else {
+        // Si no está logueado, redirigir a login.html al hacer clic en la imagen
+        profileLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = 'login.html'; // Redirige a la página de login
+        });
+    }
 
-    if (!container) {
-        console.error('Contenedor de camisetas no encontrado.');
-        return;
+    // Ocultar el menú desplegable si se hace clic fuera de él
+    window.addEventListener('click', (event) => {
+        if (!profileLink.contains(event.target) && !profileDropdown.contains(event.target)) {
+            profileDropdown.style.display = 'none';
+        }
+    });
+
+    // Logout
+    if (logoutButton) {
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            logout(); // Llama a la función de logout para cerrar sesión
+        });
     }
 
     const fetchCamisetas = (page, itemsPerPage, query = '') => {
