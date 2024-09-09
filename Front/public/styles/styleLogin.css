@@ -185,7 +185,7 @@ footer {
 
 .login-container input {
     padding: 10px;
-    width: 70%;
+    width: calc(70% - 20px); /* Ajustado para tener en cuenta el padding del contenedor */
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
@@ -212,4 +212,28 @@ footer {
 
 .login-container button:hover {
     background-color: #c10505;
+}
+
+.password-wrapper {
+    width: 100%; /* Igual al input de usuario */
+    position: relative;
+    padding: 0; /* Elimina cualquier padding adicional */
+    margin: 0; /* Elimina cualquier margen adicional */
+}
+
+/* Ajusta el input de contraseña para que coincida */
+#password {
+    right: 50px;
+}
+
+/* Ajusta el tamaño y posición del icono de ver contraseña */
+.toggle-password {
+    position: absolute;
+    right: 18%;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    z-index: 10;
 }

@@ -202,6 +202,20 @@ header {
     transform: scale(1.4);
 }
 
+.profile-icono {
+    position: absolute;
+    right: 90px;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.profile-icono:hover {
+    transform: scale(1.4);
+}
+
 .modal {
     display: none; /* Ocultar el modal por defecto */
     position: fixed;

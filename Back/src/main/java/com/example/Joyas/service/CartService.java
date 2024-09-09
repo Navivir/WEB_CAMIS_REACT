@@ -7,6 +7,8 @@ import com.example.Joyas.model.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class CartService {
 
@@ -16,9 +18,9 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    public void addToCart(String userId, CartItem cartItem) {
+    public void addToCart(String token, CartItem cartItem) {
         // Recuperar el carrito del usuario, o crear uno nuevo si no existe
-        Cart cart = cartRepository.findByUserId(userId).orElseGet(() -> new Cart(userId));
+        Cart cart = cartRepository.findByToken(token).orElseGet(() -> new Cart(token));
 
         if (cartItem == null) {
             throw new IllegalArgumentException("El artículo del carrito no puede ser nulo.");
@@ -50,19 +52,21 @@ public class CartService {
         }
     }
 
-    public Cart getCartByUserId(String userId) {
-        return cartRepository.findByUserId(userId).orElse(null);
+
+    public Cart getCartByToken(String token) {
+        return cartRepository.findByToken(token).orElse(null);
     }
 
-    public void removeFromCart(String userId, Long itemId) {
-        Cart cart = cartRepository.findByUserId(userId).orElse(null);
+    public void removeFromCart(String token, Long itemId) {
+        Cart cart = cartRepository.findByToken(token).orElse(null);
         if (cart != null) {
             cart.getItems().removeIf(item -> item.getId().equals(itemId));
             cartRepository.save(cart);
         }
     }
-    public void updateCartItemQuantity(String userId, Long itemId, Integer quantity) {
-        Cart cart = cartRepository.findByUserId(userId).orElse(null);
+
+    public void updateCartItemQuantity(String token, Long itemId, Integer quantity) {
+        Cart cart = cartRepository.findByToken(token).orElse(null);
         if (cart != null) {
             CartItem item = cart.getItems().stream()
                     .filter(cartItem -> cartItem.getId().equals(itemId))
@@ -79,6 +83,4 @@ public class CartService {
             throw new IllegalArgumentException("Carrito no encontrado");
         }
     }
-
-
 }

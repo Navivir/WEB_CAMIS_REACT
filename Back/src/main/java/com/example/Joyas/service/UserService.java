@@ -1,18 +1,14 @@
 package com.example.Joyas.service;
 
 import com.example.Joyas.config.JwtUtil;
+import com.example.Joyas.model.LoginResponse;
 import com.example.Joyas.model.User;
 import com.example.Joyas.dao.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -23,47 +19,32 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
-    @Value("${jwt.secret}")
-    private String secretKey;
-    private final long validityInMilliseconds = 3600000;
-    public ResponseEntity<String> loginUser(User loginUser) {
-        User user = userRepository.findByUsername(loginUser.getUsername());
 
+    public ResponseEntity<LoginResponse> loginUser(User loginUser) {
+        User user = userRepository.findByUsername(loginUser.getUsername());
         if (user != null && checkPassword(loginUser.getPassword(), user.getPassword())) {
-            // Aquí puedes generar un token JWT o simplemente retornar un mensaje
-           // String token = generateToken(user); // Si usas JWT
-            return ResponseEntity.ok("Login exitoso. Token: " ); // <---- + token
+            // Genera un token JWT usando JwtUtil
+            String token = jwtUtil.generateToken(user.getUsername());
+            int userId = user.getId();
+
+            // Crea la respuesta
+            LoginResponse loginResponse = new LoginResponse(token, userId);
+
+            // Retorna el token y el ID en la respuesta
+            return ResponseEntity.ok(loginResponse);
         } else {
-            return ResponseEntity.status(401).body("Usuario o contraseña incorrectos");
+            // Si las credenciales son incorrectas, retorna un estado 401
+            return ResponseEntity.status(401).body(null);
         }
     }
-
-    // Método para generar un token (puede ser un JWT)
-    private String generateToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getUsername());
-        claims.put("userId", user.getId());
-
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-    }
-
 
     public static String hashPassword(String plainPassword) {
         return BCrypt.hashpw(plainPassword, BCrypt.gensalt());
     }
 
-
     public static boolean checkPassword(String plainPassword, String hashedPassword) {
         return BCrypt.checkpw(plainPassword, hashedPassword);
     }
-
 
     public ResponseEntity<User> createUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {

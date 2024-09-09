@@ -1,5 +1,6 @@
 package com.example.Joyas.controller;
 
+import com.example.Joyas.model.LoginResponse;
 import com.example.Joyas.model.User;
 import com.example.Joyas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User loginUser) {
+    public ResponseEntity<LoginResponse> login(@RequestBody User loginUser) {
         return userService.loginUser(loginUser);
     }
 

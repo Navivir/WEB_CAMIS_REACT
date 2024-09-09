@@ -1,4 +1,3 @@
-import { getUserId } from './session.js';
 import { searchCamisetas } from './search.js';
 import { Paginator } from './pagination.js';
 
@@ -8,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const containerDiscounted = document.getElementById('discounted-container');
     const searchInput = document.getElementById('search-input');
     const searchButton = document.getElementById('search-button');
-    const userId = getUserId();
+
 
     if (!container) {
         console.error('Contenedor de camisetas no encontrado.');

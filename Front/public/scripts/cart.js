@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('sessionToken');
 
-    console.log('userId:', userId);
+    console.log('token:', token);
 
-    if (userId) {
-        fetch(`http://localhost:8080/cart/${userId}`)
+    if (token) {
+        fetch(`http://localhost:8080/cart/${token}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Error al recuperar el carrito');
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             itemDiv.appendChild(imgElement);
 
                             imgElement.addEventListener('click', () => {
-                                window.location.href = `details.html?id=${item.id_cami}&userId=${userId}`;
+                                window.location.href = `details.html?id=${item.id_cami}&token=${token}`;
                             });
                         }
 
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         deleteButton.addEventListener('click', () => {
                             if (confirm('¿Estás seguro de que quieres eliminar este ítem del carrito?')) {
-                                fetch(`http://localhost:8080/cart/${userId}/items/${item.id}`, {
+                                fetch(`http://localhost:8080/cart/${token}/items/${item.id}`, {
                                     method: 'DELETE',
                                 })
                                 .then(response => {
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         quantitySelect.addEventListener('change', () => {
                             const newQuantity = parseInt(quantitySelect.value, 10);
                             if (confirm('¿Estás seguro de que quieres actualizar la cantidad?')) {
-                                fetch(`http://localhost:8080/cart/${userId}/items/${item.id}?quantity=${newQuantity}`, {
+                                fetch(`http://localhost:8080/cart/${token}/items/${item.id}?quantity=${newQuantity}`, {
                                     method: 'PUT',
                                 })
                                 .then(response => {
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error al cargar los datos del carrito:', error);
             });
     } else {
-        console.error('No se pudo recuperar el userId.');
+        console.error('No se pudo recuperar el token.');
     }
 });
 
