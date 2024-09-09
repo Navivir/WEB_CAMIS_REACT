@@ -1,5 +1,6 @@
 const TOKEN_KEY = 'sessionToken';
 const EXPIRATION_KEY = 'tokenExpiration';
+const USER_ID = '';
 
 // Generar un token de sesión aleatorio
 function generateToken() {
@@ -8,11 +9,12 @@ function generateToken() {
         return v.toString(16);
     });
 }
-function saveToken(token, hours) {
-    const expirationDate = getExpirationDate(hours); // Usar la función getExpirationDate existente
-    localStorage.setItem(TOKEN_KEY, token); // Guardar el token en localStorage
-    localStorage.setItem(EXPIRATION_KEY, expirationDate); // Guardar la fecha de expiración
-    console.log('Token guardado:', token, 'Expira en:', expirationDate); // Para debugging
+function saveToken(token, user_id, hours) {
+    const expirationDate = getExpirationDate(hours);
+    localStorage.setItem(TOKEN_KEY, token); 
+    localStorage.setItem(EXPIRATION_KEY, expirationDate);
+    localStorage.setItem(USER_ID, user_id) 
+    console.log('Token guardado:', token, 'Usuario con ID: ', user_id,'Expira en:', expirationDate);
 }
 
 // Obtener la fecha y hora actual más un número de horas
@@ -41,5 +43,27 @@ function getToken() {
     }
 }
 
+function isLoggedIn() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    const expirationDate = localStorage.getItem(EXPIRATION_KEY);
+    const userId = localStorage.getItem(USER_ID);
+
+    if (!userId) {
+        return false;
+    }
+
+    const now = new Date();
+    const expiry = new Date(expirationDate);
+
+    return now < expiry;
+}
+
+function logout() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(EXPIRATION_KEY);
+    localStorage.removeItem(USER_ID);
+    window.location.href = 'login.html'; // Redirige al login
+}
+
 // Exportar la función para usarla en otros archivos
-export { getToken, saveToken };
+export { getToken, saveToken, isLoggedIn, logout };
