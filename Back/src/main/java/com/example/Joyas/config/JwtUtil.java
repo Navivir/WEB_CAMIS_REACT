@@ -26,7 +26,7 @@ public class JwtUtil {
      */
 
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final long expirationTime = 21600000;  // 6 horas
+    private static final long expirationTime = 30L * 24 * 60 * 60 * 1000; // 30 días en milisegundos
 
     public static String generateToken(String subject) {
         Date now = new Date();
