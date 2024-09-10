@@ -41,6 +41,7 @@ public class CartController {
             // Si el userId está presente y es válido, busca el usuario
             if (userId != null && userId >= 0) {
                 ResponseEntity<User> userResponse = userService.getUserById(userId);
+
                 if (userResponse.getStatusCode().is2xxSuccessful()) {
                     user = userResponse.getBody();
                 } else {
