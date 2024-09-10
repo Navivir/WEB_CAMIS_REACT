@@ -8,7 +8,9 @@ import com.example.Joyas.model.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class CartService {
@@ -83,9 +85,13 @@ public class CartService {
             cart.getItems().add(cartItem);
         }
 
-        // Guardar los cambios en la base de datos
+        // Guardar los cambios en la base de datos, incluyendo la expiración de 30 días
         try {
-            cartRepository.save(cart);
+            // Obtener la fecha de expiración 30 días en el futuro como LocalDateTime
+            LocalDateTime expiresAt = LocalDateTime.now().plusDays(30);
+            cart.setExpiresAt(expiresAt);  // Establecer la expiración
+
+            cartRepository.save(cart); // Guardar el carrito en la base de datos
         } catch (Exception e) {
             throw new RuntimeException("Error al guardar el carrito en la base de datos.", e);
         }

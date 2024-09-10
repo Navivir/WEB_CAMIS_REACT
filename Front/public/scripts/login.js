@@ -43,10 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (tokenUser != null ) {
                     // Si hay token existente, solicitarlo y guardarlo
-                    saveToken(tokenUser, userId, 6);
+                    saveToken(tokenUser, userId,30 * 24);
                 } else {
                     // Si no hay token existente, solicitar uno nuevo al servidor y guardarlo
-                    saveToken(token, userId, 6); // Guardar el nuevo token
+                    saveToken(token, userId,30 * 24); // Guardar el nuevo token
                 }
 
                 window.location.href = 'index.html'; // Redirigir al inicio
