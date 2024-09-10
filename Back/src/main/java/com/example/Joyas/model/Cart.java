@@ -30,18 +30,10 @@ public class Cart {
     @Column(nullable = false)
     private LocalDateTime expiresAt; // Fecha de expiración del carrito
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private User user; // Relación con la entidad User
-
-    @Column(nullable = true)
-    private String name; // Apellidos del usuario
-
-    @Column(nullable = true)
-    private String lastName; // Apellidos del usuario
-
-    @Column(nullable = true)
-    private String email; // Correo electrónico del usuario
 
     @JsonIgnore  // evitas que se haga un bucle con la relación paralela (como en un espejo)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,6 +1,6 @@
 const TOKEN_KEY = 'sessionToken';
 const EXPIRATION_KEY = 'tokenExpiration';
-const USER_ID = '';
+const USER_ID = 'userId';
 
 // Generar un token de sesión aleatorio
 function generateToken() {
@@ -29,18 +29,25 @@ function getToken() {
     const token = localStorage.getItem(TOKEN_KEY);
     const expiration = localStorage.getItem(EXPIRATION_KEY);
 
+    // Verificar si el token es válido y no ha expirado
     if (token && expiration && new Date() < new Date(expiration)) {
         return token;
     } else {
         // Token ha expirado o no existe, generar uno nuevo
         const newToken = generateToken();
-        const expirationDate = getExpirationDate(6); // Token expira en 6 horas
+
+        // Verificar si el usuario está logueado
+        const expirationHours = isLoggedIn() ? 30 * 24 : 6; // 30 días para usuarios logueados, 6 horas para no logueados
+        const expirationDate = getExpirationDate(expirationHours);
 
         localStorage.setItem(TOKEN_KEY, newToken);
         localStorage.setItem(EXPIRATION_KEY, expirationDate);
 
         return newToken;
     }
+}
+function getUserId() {
+    return localStorage.getItem(USER_ID) || null; 
 }
 
 function isLoggedIn() {
@@ -65,5 +72,28 @@ function logout() {
     window.location.href = 'login.html'; // Redirige al login
 }
 
+async function fetchTokenByUserId(userId) {
+    try {
+        const response = await fetch(`http://localhost:8080/cart/token/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response.ok) {
+            const token = await response.text(); // Devuelve el token como texto
+            console.log('Token recuperado para el usuario con ID:', userId, token);
+            return token;
+        } else {
+            console.error('Error al recuperar el token del carrito:', response.status);
+            return null;
+        }
+    } catch (error) {
+        console.error('Error en fetchTokenByUserId:', error);
+        return null;
+    }
+}
+
 // Exportar la función para usarla en otros archivos
-export { getToken, saveToken, isLoggedIn, logout };
+export { getToken, saveToken, isLoggedIn, logout, getUserId, fetchTokenByUserId};

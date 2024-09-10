@@ -1,4 +1,4 @@
-import { saveToken } from './session.js'; 
+import { saveToken, fetchTokenByUserId, isLoggedIn } from './session.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('togglePassword');
@@ -19,6 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = e.target.querySelector('input[type="password"]').value;
 
         try {
+            // Verificar si ya existe un token válido antes de hacer el login
+            if (isLoggedIn()) {
+                // Si ya estás logueado, no hagas login de nuevo y usa el token actual
+                console.log('Ya tienes una sesión activa con token:', getToken());
+                window.location.href = 'index.html'; // Redirigir al inicio
+                return; // Salir de la función para evitar sobrescribir el token
+            }
+
             const response = await fetch('http://localhost:8080/users/login', {
                 method: 'POST',
                 headers: {
@@ -29,7 +37,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const { token, userId } = await response.json();
-                saveToken(token, userId, 6); // Guardar el token y el userID con expiración de 6 horas
+                
+                // Verificar si ya existe un token para el usuario
+                let tokenUser = await fetchTokenByUserId(userId);
+                
+                if (tokenUser != null ) {
+                    // Si hay token existente, solicitarlo y guardarlo
+                    saveToken(tokenUser, userId, 6);
+                } else {
+                    // Si no hay token existente, solicitar uno nuevo al servidor y guardarlo
+                    saveToken(token, userId, 6); // Guardar el nuevo token
+                }
+
                 window.location.href = 'index.html'; // Redirigir al inicio
             } else {
                 alert('Usuario o contraseña incorrectos');

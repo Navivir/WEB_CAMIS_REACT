@@ -1,10 +1,48 @@
-import { getToken } from './session.js'; // Importar la función desde session.js
+import { getToken, getUserId, isLoggedIn, logout } from './session.js'; // Importar la función desde session.js
 import { ImageZoom } from './zoom.js'; // Importar la clase de zoom
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const camiId = urlParams.get('id');
     const token = getToken(); // Obtener el ID de usuario usando getUserId
+    const userId = getUserId();
+
+    const profileLink = document.getElementById('profile-icono');
+    const profileDropdown = document.getElementById('dropdown-content');
+    const logoutButton = document.getElementById('logout-button');
+   
+    // Asegurarse de que el dropdown esté oculto al cargar la página
+    profileDropdown.style.display = 'none';
+
+    // Control de la imagen si está logueado o no
+    if (isLoggedIn()) {
+        // Si está logueado, mostrar el menú desplegable al hacer clic
+        profileLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    } else {
+        // Si no está logueado, redirigir a login.html al hacer clic en la imagen
+        profileLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = 'login.html'; // Redirige a la página de login
+        });
+    }
+
+    // Ocultar el menú desplegable si se hace clic fuera de él
+    window.addEventListener('click', (event) => {
+        if (!profileLink.contains(event.target) && !profileDropdown.contains(event.target)) {
+            profileDropdown.style.display = 'none';
+        }
+    });
+
+    // Logout
+    if (logoutButton) {
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            logout(); // Llama a la función de logout para cerrar sesión
+        });
+    }
 
     if (camiId) {
         fetch(`http://localhost:8080/cami/${camiId}`)
@@ -165,14 +203,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         discount: cami.discount
                     };
 
-                    fetch(`http://localhost:8080/cart/${token}`, { // Usa el userId en la URL
+                    // Verifica si el usuario está logueado
+                    let endpoint;
+                    if (isLoggedIn() && userId) {
+                        // Usuario logueado, utiliza el endpoint con userId
+                        endpoint = `http://localhost:8080/cart/${token}/${userId}`;
+                    } else {
+                        // Usuario no logueado, utiliza el endpoint sin userId
+                        endpoint = `http://localhost:8080/cart/${token}`;
+                    }
+
+                    fetch(endpoint, { // Usa el endpoint adecuado basado en el estado de login
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(cartItem)
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la respuesta del servidor');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         console.log('Respuesta del servidor:', data);
                         window.location.href = 'cart.html'; // Redirigir al carrito
