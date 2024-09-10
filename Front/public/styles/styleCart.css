@@ -185,20 +185,6 @@ header {
     transform: scale(1.4);
 }
 
-.profile-icono {
-    position: absolute;
-    right: 90px;
-    top: 15px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.profile-icono:hover {
-    transform: scale(1.4);
-}
-
 .total-card {
    /* Asegúrate de que este margen no esté sobrescrito */
     background-color: #f0f0f0;
@@ -327,4 +313,45 @@ footer {
     align-items: center; /* Para centrar el texto verticalmente */
     justify-content: center; /* Para centrar el texto horizontalmente */
     z-index: 1; /* Asegurar que esté por encima de otros elementos */
+}
+
+.profile-icono {
+    position: absolute;
+    right: 90px;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.profile-icono:hover {
+    transform: scale(1.4);
+}
+
+/* Estilos para el menú desplegable */
+#dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f96e;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0; /* Alinea el menú desplegable con el ícono */
+    border-radius: 8px; /* Bordes redondeados */
+    margin-right: 30px;
+}
+
+#dropdown-content a {
+    color: black;
+    padding: 10px 14px; /* Ajusta el padding para adaptarse al tamaño de letra más pequeño */
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    text-align: left;
+    
+}
+
+#dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-radius: 8px; /* Mantén los bordes redondeados en el hover */
 }

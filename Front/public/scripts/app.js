@@ -1,4 +1,4 @@
-import { isLoggedIn, logout } from './session.js';
+import { isLoggedIn, logout, fetchTokenByUserId } from './session.js';
 import { Paginator } from './pagination.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const containerDiscounted = document.getElementById('discounted-container');
     const searchInput = document.getElementById('search-input');
     const searchButton = document.getElementById('search-button');
+
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
@@ -16,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Control de la imagen si está logueado o no
     if (isLoggedIn()) {
-        // Si está logueado, mostrar el menú desplegable al hacer clic
         profileLink.addEventListener('click', (event) => {
             event.preventDefault();
             profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
