@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Sign Up</title>
     <link rel="stylesheet" href="styles/styleLogin.css">
 </head>
 <body>
@@ -28,21 +28,30 @@
 
     <div class="container">
         <div class="login-container">
-            <h2>Iniciar Sesión</h2>
-            <form id="loginForm">
-                <input type="text" placeholder="Usuario" required>
-                
+            <h2>Crear Cuenta</h2>
+            <form id="signUpForm">
+                <input type="text" placeholder="Nombre" id="name" required>
+                <input type="text" placeholder="Apellido" id="surname" required>
+                <input type="text" placeholder="Usuario" id="username" required>
+                <input type="email" placeholder="Correo Electrónico" id="email" required>
+
                 <div class="password-wrapper">
                     <input type="password" placeholder="Contraseña" id="password" required>
                     <img src="images/ver.svg" alt="Mostrar contraseña" id="togglePassword" class="toggle-password">
                 </div>
-                <a href="sign_up.html" class="sign-up-link">Sign Up</a>
-            
-                <button type="submit">Iniciar Sesión</button>
+
+                <div class="password-wrapper">
+                    <input type="password" placeholder="Repetir Contraseña" id="repeatPassword" required>
+                    <img src="images/ver.svg" alt="Mostrar contraseña" id="toggleRepeatPassword" class="toggle-password">
+                </div>
+
+                <input type="date" placeholder="Fecha de Nacimiento" id="birthDate" required>
+                <a href="login.html" class="sign-up-link">Login</a>
+                <button type="submit">Registrarse</button>
+                
             </form>
         </div>
     </div>
-
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
@@ -89,7 +98,6 @@
             <p>&copy; 2024 Tu Tienda de Camisetas. Todos los derechos reservados.</p>
         </div>
     </footer>
-    <script type="module" src="scripts/session.js"></script>
-    <script type="module" src="scripts/login.js"></script>
+    <script type="module" src="scripts/sign_up.js"></script>
 </body>
 </html>
