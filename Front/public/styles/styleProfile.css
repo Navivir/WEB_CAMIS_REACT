@@ -142,9 +142,80 @@ header {
 
 footer {
     background-color: #333;
-    color: white;
+    color: #fff;
     padding: 20px;
     width: 100%;
-    text-align: center;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr;
+    column-gap: 400px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-section {
+    padding: 0 10px;
+}
+
+.footer-section:first-child {
+    text-align: left;
+}
+
+.footer-section:nth-child(2) {
+    text-align: left;
+}
+
+.footer-section:last-child {
+    text-align: left;
+}
+
+.footer-section h2 {
+    color: #c10505ea;
+    margin-bottom: 10px;
+}
+
+.footer-section p, .footer-section ul, .footer-section form {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin: 10px 0;
+}
+
+.footer-section ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.social-media a {
+    display: inline-block;
+    margin: 10px;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+}
+
+.footer-bottom {
     margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #c10505ea;
 }

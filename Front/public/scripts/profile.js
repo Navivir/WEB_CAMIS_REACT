@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'login.html';
         return;
     }
+    const changePasswordButton = document.getElementById('changePasswordButton');
+
+    changePasswordButton.addEventListener('click', () => {
+        window.location.href = 'change_password.html';
+    });
 
     const profileForm = document.getElementById('profileForm');
 
