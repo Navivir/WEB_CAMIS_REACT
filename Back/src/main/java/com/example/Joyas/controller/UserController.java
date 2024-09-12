@@ -1,6 +1,7 @@
 package com.example.Joyas.controller;
 
 import com.example.Joyas.model.LoginResponse;
+import com.example.Joyas.model.PasswordUpdateRequest;
 import com.example.Joyas.model.User;
 import com.example.Joyas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,9 @@ public class UserController {
             @RequestBody User user) {
         return userService.updateUser(id, user);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
     }
+
 }

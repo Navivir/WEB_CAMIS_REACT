@@ -2,6 +2,7 @@ package com.example.Joyas.service;
 
 import com.example.Joyas.config.JwtUtil;
 import com.example.Joyas.model.LoginResponse;
+import com.example.Joyas.model.PasswordUpdateRequest;
 import com.example.Joyas.model.User;
 import com.example.Joyas.dao.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -68,12 +69,28 @@ public class UserService {
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<User> updateUser(int id, User user) {
-        if (!userRepository.existsById(id)) {
+    public ResponseEntity<User> updateUser(int id, User userUpdates) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        user.setId(id);
-        User updatedUser = userRepository.save(user);
+
+        User existingUser = optionalUser.get();
+
+        // Actualizar campos solo si se proporcionan
+        if (userUpdates.getName() != null) existingUser.setName(userUpdates.getName());
+        if (userUpdates.getSurname() != null) existingUser.setSurname(userUpdates.getSurname());
+        if (userUpdates.getUsername() != null) existingUser.setUsername(userUpdates.getUsername());
+        if (userUpdates.getEmail() != null) existingUser.setEmail(userUpdates.getEmail());
+        if (userUpdates.getBirthDate() != null) existingUser.setBirthDate(userUpdates.getBirthDate());
+
+        // Solo actualizar la contraseña si se proporciona una nueva
+        if (userUpdates.getPassword() != null) {
+            String newHashedPassword = hashPassword(userUpdates.getPassword());
+            existingUser.setPassword(newHashedPassword);
+        }
+
+        User updatedUser = userRepository.save(existingUser);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -82,6 +99,26 @@ public class UserService {
             return ResponseEntity.notFound().build();
         }
         userRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> updatePassword(int id, PasswordUpdateRequest passwordUpdateRequest) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = optionalUser.get();
+
+        // Verificar la contraseña actual
+        if (!checkPassword(passwordUpdateRequest.getOldPassword(), user.getPassword())) {
+            return ResponseEntity.status(400).body(null); // Contraseña actual incorrecta
+        }
+
+        // Actualizar la contraseña
+        String newHashedPassword = hashPassword(passwordUpdateRequest.getNewPassword());
+        user.setPassword(newHashedPassword);
+        userRepository.save(user);
+
         return ResponseEntity.ok().build();
     }
 }

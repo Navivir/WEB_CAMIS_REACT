@@ -1,0 +1,150 @@
+/* General Styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Montserrat', Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    width: 100%;
+}
+
+.nav-bar {
+    background-color: #333;
+    overflow: hidden;
+}
+
+.nav-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-bar ul li {
+    margin: 0 15px;
+}
+
+.nav-bar ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.nav-bar ul li a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
+
+.container {
+    width: 35%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.checkout-button:hover {
+    background-color: #219150;
+}
+
+.carrito-icono, .home-icono {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.carrito-icono {
+    right: 28px;
+    top: 18px;
+    width: 30px;
+    height: 30px;
+}
+
+.carrito-icono:hover {
+    transform: scale(1.4);
+}
+
+.home-icono {
+    left: 28px;
+    top: 14px;
+    width: 35px;
+    height: 35px;
+}
+
+.home-icono:hover {
+    transform: scale(1.4);
+}
+
+.profile-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.profile-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.profile-container label {
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+}
+
+.profile-container input {
+    padding: 10px;
+    width: calc(100% - 20px);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-container input:focus {
+    border-color: #a90303;
+    box-shadow: 0 0 5px rgba(193, 5, 5, 0.2);
+    outline: none;
+}
+
+.profile-container button {
+    padding: 10px;
+    width: 50%;
+    border: none;
+    border-radius: 4px;
+    background-color: #a90303;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-container button:hover {
+    background-color: #c10505;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}

@@ -1,4 +1,4 @@
-import { isLoggedIn, logout, fetchTokenByUserId } from './session.js';
+import { isLoggedIn, logout } from './session.js';
 import { Paginator } from './pagination.js';
 
 document.addEventListener('DOMContentLoaded', () => {

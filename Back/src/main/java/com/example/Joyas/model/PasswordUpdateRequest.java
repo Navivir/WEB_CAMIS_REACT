@@ -1,2 +1,23 @@
-package com.example.Joyas.model;public class PasswordUpdateRequest {
+package com.example.Joyas.model;
+
+public class PasswordUpdateRequest {
+    private String oldPassword;
+    private String newPassword;
+
+    // Getters y Setters
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 }

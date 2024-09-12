@@ -47,7 +47,8 @@ function getToken() {
     }
 }
 function getUserId() {
-    return localStorage.getItem(USER_ID) || null; 
+    const userId = localStorage.getItem(USER_ID) || null;
+    return userId; 
 }
 
 function isLoggedIn() {
