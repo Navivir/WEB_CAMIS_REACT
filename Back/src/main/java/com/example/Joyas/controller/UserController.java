@@ -46,4 +46,21 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable int id,
+            @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        return userService.updatePassword(id, passwordUpdateRequest);
+    }
+    @GetMapping("/{id}/username")
+    public ResponseEntity<String> getUsernameById(@PathVariable int id) {
+        String username = userService.getUsernameById(id);
+        if (username != null) {
+            return ResponseEntity.ok(username);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

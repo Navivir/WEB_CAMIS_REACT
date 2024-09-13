@@ -121,4 +121,9 @@ public class UserService {
 
         return ResponseEntity.ok().build();
     }
+
+    public String getUsernameById(int id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.map(User::getUsername).orElse(null);
+    }
 }
