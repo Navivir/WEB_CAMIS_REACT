@@ -1,4 +1,4 @@
-import { getUserId, isLoggedIn, updateUsername } from './session.js';
+import { getUserId, isLoggedIn, updateUsername, logout } from './session.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const userId = getUserId();
