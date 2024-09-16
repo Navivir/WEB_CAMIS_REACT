@@ -1,4 +1,4 @@
-import { getUserId, isLoggedIn } from './session.js';
+import { getUserId, isLoggedIn, updateUsername } from './session.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const userId = getUserId();
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
+    const profileUsername = document.getElementById('profile-username');
    
     // Asegurarse de que el dropdown esté oculto al cargar la página
     profileDropdown.style.display = 'none';
@@ -29,6 +30,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             event.preventDefault();
             profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
         });
+        // Obtener y mostrar el nombre de usuario
+      await updateUsername();
     } else {
         // Si no está logueado, redirigir a login.html al hacer clic en la imagen
         profileLink.addEventListener('click', (event) => {

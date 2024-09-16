@@ -241,9 +241,10 @@ footer {
     background-color: #f9f9f96e;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    right: 0; /* Alinea el menú desplegable con el ícono */
-    border-radius: 8px; /* Bordes redondeados */
+    right: 0; 
+    border-radius: 8px;
     margin-right: 30px;
+    padding: 0; /* Asegúrate de que no haya padding extra en el contenedor */
 }
 
 #dropdown-content a {
@@ -259,4 +260,19 @@ footer {
 #dropdown-content a:hover {
     background-color: #f1f1f1;
     border-radius: 8px; /* Mantén los bordes redondeados en el hover */
+}
+
+#dropdown-content a:first-child:hover {
+    background-color: #c1050575; /* Color de hover diferente para el primer enlace */
+}
+
+#profile-username {
+    color: black;
+    padding-top:5px; /* Igual que los enlaces */
+    text-decoration: none;
+    font-size: 14px; /* Misma fuente que los enlaces */
+    text-align: left;
+    margin: 0; /* Asegúrate de que no haya márgenes extra */
+    font-weight: normal; /* Ajusta el peso de la fuente */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }

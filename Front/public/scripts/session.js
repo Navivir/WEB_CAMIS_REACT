@@ -125,7 +125,7 @@ async function updateUsername() {
         try {
             const username = await fetchUsernameByUserId(userId);
             const profileUsername = document.getElementById('profile-username');
-            profileUsername.textContent = username || 'Nombre de Usuario'; // Usa un valor por defecto si no se encuentra el nombre
+            profileUsername.innerHTML = `Logeado como: <strong>${username || 'Nombre de Usuario'}</strong>`; 
         } catch (error) {
             console.error('Error al obtener el nombre de usuario:', error);
         }
