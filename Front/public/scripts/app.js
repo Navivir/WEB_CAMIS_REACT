@@ -1,7 +1,8 @@
-import { isLoggedIn, logout, fetchTokenByUserId } from './session.js';
+import { isLoggedIn, logout, updateUsername} from './session.js';
 import { Paginator } from './pagination.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener('DOMContentLoaded',async() => {
     const container = document.getElementById('cami-container');
     const containerFeatured = document.getElementById('featured-container');
     const containerDiscounted = document.getElementById('discounted-container');
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
+    const profileUsername = document.getElementById('profile-username');
    
     // Asegurarse de que el dropdown esté oculto al cargar la página
     profileDropdown.style.display = 'none';
@@ -21,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
         });
+      // Obtener y mostrar el nombre de usuario
+      await updateUsername();
     } else {
         // Si no está logueado, redirigir a login.html al hacer clic en la imagen
         profileLink.addEventListener('click', (event) => {

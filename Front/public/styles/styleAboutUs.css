@@ -169,3 +169,60 @@ footer {
     font-size: 12px;
     color:#c10505ea;
 }
+.profile-icono {
+    position: absolute;
+    right: 90px;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.profile-icono:hover {
+    transform: scale(1.4);
+}
+
+/* Estilos para el menú desplegable */
+#dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f96e;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0; 
+    border-radius: 8px;
+    margin-right: 30px;
+    padding: 0; /* Asegúrate de que no haya padding extra en el contenedor */
+}
+
+#dropdown-content a {
+    color: black;
+    padding: 10px 14px; /* Ajusta el padding para adaptarse al tamaño de letra más pequeño */
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    text-align: left;
+    
+}
+
+#dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-radius: 8px; /* Mantén los bordes redondeados en el hover */
+}
+
+#dropdown-content a:first-child:hover {
+    background-color: #c1050575; /* Color de hover diferente para el primer enlace */
+}
+
+#profile-username {
+    color: black;
+    padding-top:5px; /* Igual que los enlaces */
+    text-decoration: none;
+    font-size: 14px; /* Misma fuente que los enlaces */
+    text-align: left;
+    margin: 0; /* Asegúrate de que no haya márgenes extra */
+    font-weight: normal; /* Ajusta el peso de la fuente */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+

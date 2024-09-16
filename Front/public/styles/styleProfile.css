@@ -2,12 +2,13 @@
 html, body {
     height: 100%;
     margin: 0;
-}
-body {
     font-family: 'Montserrat', Arial, sans-serif;
     background-color: #f4f4f4;
+}
+
+body {
     display: flex;
-    flex-direction: column; /* Asegura que los hijos se apilen verticalmente */
+    flex-direction: column;
 }
 
 header {
@@ -49,14 +50,13 @@ header {
 }
 
 .container {
-    width: 35%; /* Ancho máximo ajustado para centrar */
-    height: 60%;
+    width: 35%;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center; /* Centrado del contenido */
+    text-align: center;
 }
 
 .checkout-button:hover {
@@ -89,6 +89,55 @@ header {
 
 .home-icono:hover {
     transform: scale(1.4);
+}
+
+.profile-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.profile-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.profile-container label {
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+}
+
+.profile-container input {
+    padding: 10px;
+    width: calc(100% - 20px);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-container input:focus {
+    border-color: #a90303;
+    box-shadow: 0 0 5px rgba(193, 5, 5, 0.2);
+    outline: none;
+}
+
+.profile-container button {
+    padding: 10px;
+    width: 50%;
+    border: none;
+    border-radius: 4px;
+    background-color: #a90303;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-container button:hover {
+    background-color: #c10505;
 }
 
 footer {
@@ -169,82 +218,6 @@ footer {
     text-align: center;
     font-size: 12px;
     color: #c10505ea;
-}
-
-.login-container h2 {
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.login-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Espacio entre los campos y el botón */
-    align-items: center;
-}
-
-.login-container input {
-    padding: 10px;
-    width: calc(70% - 20px); /* Ajustado para tener en cuenta el padding del contenedor */
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.login-container input:focus {
-    border-color: #a90303;
-    box-shadow: 0 0 5px rgba(193, 5, 5, 0.2);
-    outline: none;
-}
-
-.login-container button {
-    padding: 10px;
-    width: 40%;
-    border: none;
-    border-radius: 4px;
-    background-color: #a90303;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.login-container button:hover {
-    background-color: #c10505;
-}
-
-.password-wrapper {
-    width: 100%; /* Igual al input de usuario */
-    position: relative;
-    padding: 0; /* Elimina cualquier padding adicional */
-    margin: 0; /* Elimina cualquier margen adicional */
-}
-
-/* Ajusta el input de contraseña para que coincida */
-#password {
-    right: 50px;
-}
-
-/* Ajusta el tamaño y posición del icono de ver contraseña */
-.toggle-password {
-    position: absolute;
-    right: 18%;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    z-index: 10;
-}
-.sign-up-link {
-    color: #780404e7;
-    text-decoration:solid;
-}
-
-.sign-up-link:hover {
-    color: #ed0606f5;
-    text-decoration:solid;
 }
 
 .profile-icono {

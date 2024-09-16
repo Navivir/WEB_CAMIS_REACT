@@ -47,7 +47,8 @@ function getToken() {
     }
 }
 function getUserId() {
-    return localStorage.getItem(USER_ID) || null; 
+    const userId = localStorage.getItem(USER_ID) || null;
+    return userId; 
 }
 
 function isLoggedIn() {
@@ -95,5 +96,42 @@ async function fetchTokenByUserId(userId) {
     }
 }
 
+async function fetchUsernameByUserId(userId) {
+    try {
+        const response = await fetch(`http://localhost:8080/users/${userId}/username`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response.ok) {
+            const username = await response.text(); // Devuelve el username como texto
+            console.log('Username recuperado para el usuario con ID:', userId, username);
+            return username;
+        } else {
+            console.error('Error al recuperar el username:', response.status);
+            return null;
+        }
+    } catch (error) {
+        console.error('Error en fetchUsernameByUserId:', error);
+        return null;
+    }
+}
+
+async function updateUsername() {
+    const userId = getUserId();
+    if (userId) {
+        try {
+            const username = await fetchUsernameByUserId(userId);
+            const profileUsername = document.getElementById('profile-username');
+            profileUsername.innerHTML = `Logeado como: <strong>${username || 'Nombre de Usuario'}</strong>`; 
+        } catch (error) {
+            console.error('Error al obtener el nombre de usuario:', error);
+        }
+    }
+}
+
 // Exportar la función para usarla en otros archivos
-export { getToken, saveToken, isLoggedIn, logout, getUserId, fetchTokenByUserId};
+export { getToken, saveToken, isLoggedIn, logout, getUserId,
+     fetchTokenByUserId, fetchUsernameByUserId, updateUsername};
