@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nosotros - Tu Tienda de Camisetas</title>
-    <link rel="stylesheet" href="styles/styleMail.css">
+    <link rel="stylesheet" href="styles/styleContact.css">
 </head>
 <body>
 
@@ -38,27 +38,23 @@
         </nav>
     </header>
 
-    <div class="contact-form-container">
-        <h2>Contacta con Nosotros</h2>
-        <form id="contact-form">
-            <div class="input-group">
-                <label for="name">Nombre</label>
-                <input type="text" id="name" name="name" placeholder="Escribe tu Nombre" required>
-            </div>
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Escribe tu Email" required>
-            </div>
-            <div class="input-group">
-                <label for="subject">Asunto</label>
-                <input type="text" id="subject" name="subject" placeholder="Escribe el Asunto del Mail" required>
-            </div>
-            <div class="input-group">
-                <label for="message">Mensaje</label>
-                <textarea id="message" name="message" placeholder="Escribe tu Mensaje" rows="5" required></textarea>
-            </div>
-            <button type="submit">Send Message</button>
-        </form>
+    <div class="container" id="contact-container">
+        <div class="contact-section">
+            <h2>Contacto</h2>
+            <p>En <strong>Tienda de Camisetas Montcada</strong>, estamos aquí para ayudarte. Si tienes alguna pregunta, comentario o sugerencia, no dudes en ponerte en contacto con nosotros. ¡Nos encantaría saber de ti!</p>
+    
+            <h3>Información de Contacto</h3>
+                <div class="container" id="data-container">
+                    <ul>
+                        <li><strong>Teléfono:</strong> +34 123 456 789</li>
+                        <li><strong>Email:</strong> contacto@tiendacamisetasmontcada.com</li>
+                        <li><strong>Dirección:</strong> Calle Ejemplo, 123, Montcada i Reixac, Barcelona</li>
+                    </ul>
+                </div>
+    
+            <h3>Envíanos un Email</h3>
+            <p>Para consultas más específicas, puedes <a href="mail.html">enviarnos un correo aquí</a>.</p>
+        </div>
     </div>
 
     <footer>
@@ -107,7 +103,7 @@
             <p>&copy; 2024 Tu Tienda de Camisetas. Todos los derechos reservados.</p>
         </div>
     </footer>
-    <script type="module" src="scripts/mail.js"></script>
+    <script type="module" src="scripts/contact.js"></script>
     <script type="module" src="scripts/session.js"></script>
 </body>
 </html>
