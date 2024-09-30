@@ -34,4 +34,8 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "camis_id", nullable = false)
     private Camis camis;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

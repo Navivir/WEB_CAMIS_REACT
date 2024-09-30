@@ -132,6 +132,28 @@ async function updateUsername() {
     }
 }
 
+async function isAdmin(userId) {
+    try {
+        const response = await fetch(`http://localhost:8080/users/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al obtener los datos del usuario');
+        }
+
+        const userData = await response.json();
+        // Verifica si el rol es ROLE_ADMIN
+        return userData.role === 'ROLE_ADMIN';
+    } catch (error) {
+        console.error('Error al verificar si el usuario es admin:', error);
+        return false;
+    }
+}
+
 // Exportar la función para usarla en otros archivos
 export { getToken, saveToken, isLoggedIn, logout, getUserId,
-     fetchTokenByUserId, fetchUsernameByUserId, updateUsername};
+     fetchTokenByUserId, fetchUsernameByUserId, updateUsername, isAdmin};
