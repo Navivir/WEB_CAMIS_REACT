@@ -22,9 +22,6 @@ public class Review {
     private String comment;
 
     @Column
-    private String author;
-
-    @Column
     private int rating;
 
     @Temporal(TemporalType.TIMESTAMP)

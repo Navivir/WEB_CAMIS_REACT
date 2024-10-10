@@ -1,9 +1,11 @@
 package com.example.Joyas.service;
 
 import com.example.Joyas.dao.CamisRepository;
+import com.example.Joyas.dao.UserRepository;
 import com.example.Joyas.model.Camis;
 import com.example.Joyas.model.Review;
 import com.example.Joyas.dao.ReviewRepository;
+import com.example.Joyas.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,21 +22,26 @@ public class ReviewService {
 
     @Autowired
     private CamisRepository camisRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     public ResponseEntity<Review> createReview(Review review) {
-        // Buscar el objeto Camis por el ID que viene en la reseña
+        // Buscar el objeto Camis por el ID que viene en la reseña y el User
         Optional<Camis> camis = camisRepository.findById(review.getCamis().getId());
+        Optional<User> user = userRepository.findById(review.getUser().getId());
 
-        if (camis.isPresent()) {
-            // Asigna la entidad Camis a la reseña
+        // Verificar si ambos existen
+        if (camis.isPresent() && user.isPresent()) {
+            // Asigna la entidad Camis y User a la reseña
             review.setCamis(camis.get());
+            review.setUser(user.get());
 
             // Guarda la reseña en la base de datos
             Review savedReview = reviewRepository.save(review);
             return ResponseEntity.ok(savedReview);
         } else {
-            // Si no se encuentra la camiseta, devuelve un error
+            // Si no se encuentra la camiseta o el usuario, devuelve un error
             return ResponseEntity.badRequest().body(null);
         }
     }
