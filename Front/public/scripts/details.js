@@ -1,4 +1,4 @@
-import { getToken, getUserId, isLoggedIn, logout, updateUsername } from './session.js'; // Importar la función desde session.js
+import { getToken, getUserId, isLoggedIn, logout, updateUsername, isAdmin } from './session.js'; // Importar la función desde session.js
 import { ImageZoom } from './zoom.js'; // Importar la clase de zoom
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const camiId = urlParams.get('id');
     const token = getToken(); // Obtener el ID de usuario usando getUserId
     const userId = getUserId();
+    const isAdminUser = await isAdmin(userId);
 
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
@@ -236,6 +237,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                         console.error('Error al enviar los datos al carrito:', error);
                     });
                 });
+
+                if (isAdminUser) {
+                    const editButton = document.createElement('img');
+                    editButton.src = './images/edit.svg'; // Ruta a la imagen edit.svg
+                    editButton.alt = 'Editar';
+                    editButton.className = 'edit-button';
+                    detailsContainer.appendChild(editButton);
+
+                    // Añade un evento para manejar la acción de editar
+                    editButton.addEventListener('click', () => {
+                        window.location.href = `edit.html?id=${camiId}`; // Redirige a la página de edición
+                    });
+                }
 
                 camiCard.appendChild(detailsContainer);
                 container.appendChild(camiCard);

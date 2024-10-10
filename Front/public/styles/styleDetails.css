@@ -468,3 +468,15 @@ footer {
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
 
+.edit-button {
+    position: absolute;
+    top: 20px; 
+    left: 20px; 
+    width: 50px !important; 
+    height: 50px !important; 
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    transform: scale(1.2); /* Efecto de zoom al pasar el mouse */
+}
