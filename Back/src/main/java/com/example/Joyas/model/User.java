@@ -1,5 +1,6 @@
 package com.example.Joyas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,5 +42,11 @@ public class User {
     private String role = "ROLE_USER"; // can be ----> ROLE_USER, ROLE_ADMIN
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user")
     private List<Cart> carts;
+
+
 }
