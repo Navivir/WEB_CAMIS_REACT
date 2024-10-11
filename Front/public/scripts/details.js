@@ -1,3 +1,4 @@
+// details.js
 import { getToken, getUserId, isLoggedIn, logout, updateUsername, isAdmin } from './session.js'; // Importar la función desde session.js
 import { ImageZoom } from './zoom.js'; // Importar la clase de zoom
 

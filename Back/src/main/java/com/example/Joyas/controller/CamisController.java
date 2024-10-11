@@ -3,6 +3,7 @@ package com.example.Joyas.controller;
 import com.example.Joyas.model.Camis;
 import com.example.Joyas.model.Color;
 import com.example.Joyas.model.Size;
+import com.example.Joyas.model.Type;
 import com.example.Joyas.service.CamisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -126,6 +127,7 @@ public class CamisController {
             @RequestParam(value = "material", required = false) String material,
             @RequestParam(value = "sizes", required = false) List<String> sizes,
             @RequestParam(value = "colors", required = false) List<String> colors,
+            @RequestParam(value = "type", required = false) Type type,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "price", required = false) Float price,
             @RequestParam(value = "discount", required = false) Integer discount,  // Añadir el parámetro discount
@@ -167,6 +169,9 @@ public class CamisController {
                 }
             }
             existingCamis.setColors(colorList);
+        }
+        if (type != null) {
+            existingCamis.setType(type);
         }
         if (description != null) {
             existingCamis.setDescription(description);

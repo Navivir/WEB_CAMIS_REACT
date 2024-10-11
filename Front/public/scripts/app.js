@@ -19,11 +19,6 @@ document.addEventListener('DOMContentLoaded',async() => {
     const userId = getUserId();  // Asegúrate de obtener correctamente el userId
     const isAdminUser = await isAdmin(userId);  // Aquí se espera a que la función async se resuelva
     
-    if (isAdminUser) {
-        alert('Loggeado como admin');
-    } else {
-        alert('No es admin o no está logueado');
-    }
     // Control de la imagen si está logueado o no
     if (isLoggedIn()) {
         profileLink.addEventListener('click', (event) => {

@@ -472,8 +472,9 @@ footer {
     position: absolute;
     top: 20px; 
     left: 20px; 
-    width: 50px !important; 
-    height: 50px !important; 
+    width: 40px !important; 
+    height: 40px !important;
+    border-radius: 0% !important;
     cursor: pointer;
 }
 

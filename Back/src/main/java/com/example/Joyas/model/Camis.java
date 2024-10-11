@@ -24,13 +24,15 @@ public class Camis {
 
     @Column
     private String material;
-
     @Column
     private float price;
     @Column
     private Integer discount;
+
+    @Enumerated(EnumType.STRING)
     @Column
-    private String type;
+    private Type type;
+
     @Column
     private int featured = 0;
 
