@@ -62,8 +62,11 @@ public class CamisController {
     public ResponseEntity<?> insertCami(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "material", required = false) String material,
+            @RequestParam(value = "type", required = false) Type type,
             @RequestParam(value = "sizes", required = false) List<String> sizes,
             @RequestParam(value = "colors", required = false) List<String> colors,
+            @RequestParam(value = "discount", required = false) Integer discount,
+            @RequestParam(value = "featured", required = false) Integer featured,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "price", required = false) Float price,
             @RequestParam(value = "imagen1", required = false) MultipartFile imagen1,
@@ -76,6 +79,9 @@ public class CamisController {
         }
         if (material != null) {
             cami.setMaterial(material);
+        }
+        if (type != null) {
+            cami.setType(type);
         }
         if (sizes != null && !sizes.isEmpty()) {
             List<Size> sizeList = new ArrayList<>();
@@ -98,6 +104,13 @@ public class CamisController {
                 }
             }
             cami.setColors(colorList);
+        }
+
+        if (discount != null) {
+            cami.setDiscount(discount);
+        }
+        if (featured != null) {
+            cami.setFeatured(featured);
         }
         if (description != null) {
             cami.setDescription(description);

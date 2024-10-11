@@ -148,7 +148,19 @@ header img {
     transform: scale(1.4);
 }
 
+.add-icono {
+    position: absolute;
+    right: 28px;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
 
+.add-icono:hover {
+    transform: scale(1.4);
+}
 
 .home-icono {
     position: absolute;

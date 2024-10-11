@@ -12,10 +12,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
-    const profileUsername = document.getElementById('profile-username');
+    const carritoIcono = document.getElementById('carrito-icono');
+    const addIcono = document.getElementById('add-icono');
+    addIcono.style.display = 'none';
    
     // Asegurarse de que el dropdown esté oculto al cargar la página
     profileDropdown.style.display = 'none';
+
+    // Ocultar el carrito y mostrar el icono de añadir si el usuario es admin
+    if (isAdminUser) {
+        carritoIcono.style.display = 'none'; 
+        addIcono.style.display = 'block'; 
+    } else {
+        carritoIcono.style.display = 'block';
+        addIcono.style.display = 'none';
+    }
 
     // Control de la imagen si está logueado o no
     if (isLoggedIn()) {

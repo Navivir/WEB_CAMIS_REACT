@@ -188,6 +188,20 @@ header {
     transform: scale(1.4);
 }
 
+.add-icono {
+    position: absolute;
+    right: 28px;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.add-icono:hover {
+    transform: scale(1.4);
+}
+
 .home-icono {
     position: absolute;
     left: 28px;
@@ -481,3 +495,4 @@ footer {
 .edit-button:hover {
     transform: scale(1.2); /* Efecto de zoom al pasar el mouse */
 }
+

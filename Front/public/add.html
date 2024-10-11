@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Camisetas</title>
-    <link rel="stylesheet" href="styles/styleHome.css">
+    <title>Editar Camiseta</title>
+    <link rel="stylesheet" href="styles/stylesEdit.css">
 </head>
 <body>
+
     <header>
+        <!-- Barra de Navegación -->
         <nav class="nav-bar">
             <ul>
                 <li><a href="#" onclick="filterCamisetas('Manga Corta')">Manga Corta</a></li>
-                <li><a href="#" onclick="filterCamisetas('Manga Larga')">Manga Larga</a></li>
+                <li><a href="" onclick="filterCamisetas('Manga Larga')">Manga Larga</a></li>
                 <li><a href="#" onclick="filterCamisetas('Corte de Mujer')">Corte de Mujer</a></li>
                 <li><a href="#" onclick="filterCamisetas('Sin Mangas')">Sin Mangas</a></li>
                 <li><a href="#" onclick="filterCamisetas('Tirantes')">Tirantes</a></li>
                 <li><a href="#" onclick="filterCamisetas('Jerseys')">Jerseys</a></li>
             </ul>
-            <a href="cart.html">
-                <img src="images/carrito.svg" alt="Carrito" class="carrito-icono" id="carrito-icono">
-            </a>
-            <a href="add.html" id="add-icon-container">
-                <img src="images/add.svg" alt="Agregar" class="add-icono" id="add-icono">
-            </a>
             <a >
                 <img src="images/profile.svg" alt="Profile" class="profile-icono" id="profile-icono">
                 <div id="dropdown-content" class="dropdown-content">
@@ -35,32 +31,24 @@
             <a href="index.html">
                 <img src="images/home.svg" alt="Home" class="home-icono" id="home-icono">
             </a>
+            <a href="add.html" id="add-icon-container">
+                <img src="images/add.svg" alt="Agregar" class="add-icono" id="add-icono">
+            </a>
         </nav>
-        <img src="images/header.png" id="header-img">
     </header>
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Buscar camisetas...">
-        <button id="search-button">Buscar</button>
+
+    <div class="container">
+      
+        <!-- Aquí se insertará el formulario de edición de la camiseta -->
+        <div id="add-container"></div>
     </div>
-    <div class="container" id="cami-container">
-        <!-- Aquí se insertarán las tarjetas de las camisetas -->
-    </div>
-    <div id="pagination-container"></div>
-    <div class="container" id="featured-container">
-        <!-- Aquí se insertarán las tarjetas de productos destacados -->
-    </div>
-    <div id="featured-pagination-container"></div>
     
-    <div class="container" id="discounted-container">
-        <!-- Aquí se insertarán las tarjetas de productos con descuento -->
-    </div>
-    <div id="discounted-pagination-container"></div>
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
                 <div>
                     <h2>Sobre Nosotros</h2>
-                    <p>Tienda de Camisetas XYZ combina años de experiencia con pasión por el diseño para ofrecer camisetas de calidad superior. Con una trayectoria sólida en el sector, nuestro equipo experto asegura productos innovadores y bien elaborados, que destacan por su comodidad y estilo. Cada camiseta es el resultado de nuestra dedicación y atención al detalle, garantizando una experiencia única para cada cliente.</p>
+                    <p>Tienda de Camisetas XYZ combina años de experiencia con pasión por el diseño para ofrecer camisetas de calidad superior...</p>
                 </div>
             </div>
             <div class="footer-section links">
@@ -102,9 +90,9 @@
         </div>
     </footer>
 
-    <script type="module" src="scripts/app.js"></script>
-    <script type="module" src="scripts/search.js"></script>
-    <script type="module" src="scripts/pagination.js"></script>
+    <script type="module" src="scripts/add.js"></script>
+    <script type="module" src="scripts/zoom.js"></script>
     <script type="module" src="scripts/session.js"></script>
+
 </body>
 </html>

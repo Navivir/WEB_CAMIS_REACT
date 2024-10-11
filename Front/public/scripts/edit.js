@@ -90,6 +90,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             discountInput.placeholder = 'Descuento';
             camiForm.appendChild(createFieldContainer('Descuento:\n', discountInput));
 
+            // Tipos disponibles
+            const tiposEnum = ['MANGA_CORTA', 'MANGA_LARGA', 'CORTE_MUJER', 'SIN_MANGAS', 'TIRANTES', 'JERSEY'];
+            const selectTipo = document.createElement('select');
+
+            // Crear las opciones del dropdown
+            tiposEnum.forEach(tipo => {
+                const option = document.createElement('option');
+                option.value = tipo;
+                option.innerText = tipo;
+                selectTipo.value = cami.type;
+                selectTipo.appendChild(option);
+            });
+
+            camiForm.appendChild(createFieldContainer('Tipo:\n', selectTipo));
+
             // Checkboxes para tallas
             const sizesEnum = ['S', 'M', 'L', 'XL']; // Tallas disponibles
             const sizeContainer = document.createElement('div');
@@ -169,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 formData.append('imagen1', image1Input.files[0]);
                 formData.append('imagen2', image2Input.files[0]);
                 formData.append('featured', featuredCheckbox.checked ? 1 : 0);
+                formData.append('type', selectTipo.value);
                  // Recoger las tallas seleccionadas
                 const selectedSizes = [];
                 sizeContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
