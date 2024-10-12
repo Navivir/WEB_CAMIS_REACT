@@ -496,3 +496,17 @@ footer {
     transform: scale(1.2); /* Efecto de zoom al pasar el mouse */
 }
 
+.delete-button {
+    position: absolute;
+    top: 100px; 
+    left: 20px; 
+    width: 35px !important; 
+    height: 35px !important;
+    border-radius: 0% !important;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    transform: scale(1.2); /* Efecto de zoom al pasar el mouse */
+}
+

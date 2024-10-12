@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
     const carritoIcono = document.getElementById('carrito-icono');
+    const deleteIcono = document.getElementById('delete-button');
     const addIcono = document.getElementById('add-icono');
     addIcono.style.display = 'none';
    
@@ -252,14 +253,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (isAdminUser) {
                     const editButton = document.createElement('img');
-                    editButton.src = './images/edit.svg'; // Ruta a la imagen edit.svg
+                    const deleteButton = document.createElement('img');
+                    editButton.src = './images/edit.svg'; 
+                    deleteButton.src = './images/papelera.svg';
                     editButton.alt = 'Editar';
-                    editButton.className = 'edit-button';
+                    editButton.className = 'edit-button';                   
+                    deleteButton.alt = 'Eliminar';
+                    deleteButton.className = 'delete-button';
                     detailsContainer.appendChild(editButton);
+                    detailsContainer.appendChild(deleteButton);
 
                     // Añade un evento para manejar la acción de editar
                     editButton.addEventListener('click', () => {
                         window.location.href = `edit.html?id=${camiId}`; // Redirige a la página de edición
+                    });
+                    // Añade un evento para manejar la acción de eliminar
+                    deleteButton.addEventListener('click', () => {
+                        if (confirm('¿Estás seguro de que deseas eliminar esta camiseta?')) {
+                            // Realiza una solicitud DELETE al endpoint
+                            fetch(`http://localhost:8080/cami/${camiId}`, { 
+                                method: 'DELETE'
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('Camiseta eliminada correctamente');
+                                    window.location.reload(); // Recarga la página después de eliminar
+                                } else {
+                                    alert('Error al eliminar la camiseta');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Hubo un problema al intentar eliminar la camiseta.');
+                            });
+                        }
+                        
                     });
                 }
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -218,6 +219,16 @@ public class CamisController {
         Pageable pageable = PageRequest.of(page, limit);
         Page<Camis> camisPage = this.camisService.searchCamis(keyword, pageable);
         return ResponseEntity.ok(camisPage);
+    }
+
+    @DeleteMapping("/cami/{id}")
+    public ResponseEntity <?> removeCami(@PathVariable int id){
+        try {
+            camisService.removeCami(id);
+            return ResponseEntity.ok().body(new CartController.ResponseMessage("Cami eliminada de DB"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CartController.ResponseMessage("Error al eliminar Cami"));
+        }
     }
 
 }

@@ -1,17 +1,20 @@
-import { getToken, isLoggedIn } from './session.js';
+import { getToken, isLoggedIn, getUserId, updateUsername, logout, isAdmin } from './session.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = getToken();
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
+    const userId = getUserId();
+    const isAdminUser = await isAdmin(userId);
 
-    // Control de la imagen si está logueado o no
+   // Control de la imagen si está logueado o no
     if (isLoggedIn()) {
         profileLink.addEventListener('click', (event) => {
             event.preventDefault();
             profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
         });
+        await updateUsername();
     } else {
         profileLink.addEventListener('click', (event) => {
             event.preventDefault();
@@ -19,6 +22,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Prohibimos la entrada desde URL
+    if (!isAdminUser) {
+        alert('No puedes acceder aquí si no eres administrador')
+        window.location.href = 'index.html';
+    } 
     window.addEventListener('click', (event) => {
         if (!profileLink.contains(event.target) && !profileDropdown.contains(event.target)) {
             profileDropdown.style.display = 'none';
@@ -31,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             logout();
         });
     }
+
 
     // Aquí comienza la creación del formulario para agregar un nuevo producto
     const container = document.getElementById('add-container');

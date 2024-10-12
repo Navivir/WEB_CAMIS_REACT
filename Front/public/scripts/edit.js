@@ -1,4 +1,4 @@
-import { getToken, getUserId, isLoggedIn, isAdmin, updateUsername } from './session.js';
+import { getToken, isLoggedIn, getUserId, isAdmin, updateUsername } from './session.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
+    const userId = getUserId();
+    const isAdminUser = await isAdmin(userId);
 
     // Control de la imagen si está logueado o no
     if (isLoggedIn()) {
@@ -21,7 +23,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = 'login.html';
         });
     }
-
+    // Prohibimos la entrada desde URL
+    if (!isAdminUser) {
+        alert('No puedes acceder a edicón si ni eres administrador')
+        window.location.href = 'index.html';
+    } 
     window.addEventListener('click', (event) => {
         if (!profileLink.contains(event.target) && !profileDropdown.contains(event.target)) {
             profileDropdown.style.display = 'none';
