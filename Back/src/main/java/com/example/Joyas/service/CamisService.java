@@ -2,6 +2,8 @@ package com.example.Joyas.service;
 
 import com.example.Joyas.dao.CamisRepository;
 import com.example.Joyas.model.Camis;
+import com.example.Joyas.model.Cart;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,5 +82,15 @@ public class CamisService {
         return camisRepository.findByDiscountGreaterThan(0, pageable);
     }
 
+
+    public void removeCami(int camiId) {
+        Optional<Camis> cami = camisRepository.findById(camiId);
+        if (cami.isPresent()) {
+            camisRepository.delete(cami.get()); // Elimina la camiseta si está presente
+        } else {
+            // Maneja el caso donde la camiseta no fue encontrada
+            throw new EntityNotFoundException("Camiseta no encontrada con ID: " + camiId);
+        }
+    }
 
 }

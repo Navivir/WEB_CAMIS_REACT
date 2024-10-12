@@ -1,4 +1,5 @@
-import { getToken, getUserId, isLoggedIn, logout, updateUsername } from './session.js'; // Importar la función desde session.js
+// details.js
+import { getToken, getUserId, isLoggedIn, logout, updateUsername, isAdmin } from './session.js'; // Importar la función desde session.js
 import { ImageZoom } from './zoom.js'; // Importar la clase de zoom
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -6,14 +7,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const camiId = urlParams.get('id');
     const token = getToken(); // Obtener el ID de usuario usando getUserId
     const userId = getUserId();
+    const isAdminUser = await isAdmin(userId);
 
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
-    const profileUsername = document.getElementById('profile-username');
+    const carritoIcono = document.getElementById('carrito-icono');
+    const deleteIcono = document.getElementById('delete-button');
+    const addIcono = document.getElementById('add-icono');
+    addIcono.style.display = 'none';
    
     // Asegurarse de que el dropdown esté oculto al cargar la página
     profileDropdown.style.display = 'none';
+
+    // Ocultar el carrito y mostrar el icono de añadir si el usuario es admin
+    if (isAdminUser) {
+        carritoIcono.style.display = 'none'; 
+        addIcono.style.display = 'block'; 
+    } else {
+        carritoIcono.style.display = 'block';
+        addIcono.style.display = 'none';
+    }
 
     // Control de la imagen si está logueado o no
     if (isLoggedIn()) {
@@ -236,6 +250,46 @@ document.addEventListener('DOMContentLoaded', async () => {
                         console.error('Error al enviar los datos al carrito:', error);
                     });
                 });
+
+                if (isAdminUser) {
+                    const editButton = document.createElement('img');
+                    const deleteButton = document.createElement('img');
+                    editButton.src = './images/edit.svg'; 
+                    deleteButton.src = './images/papelera.svg';
+                    editButton.alt = 'Editar';
+                    editButton.className = 'edit-button';                   
+                    deleteButton.alt = 'Eliminar';
+                    deleteButton.className = 'delete-button';
+                    detailsContainer.appendChild(editButton);
+                    detailsContainer.appendChild(deleteButton);
+
+                    // Añade un evento para manejar la acción de editar
+                    editButton.addEventListener('click', () => {
+                        window.location.href = `edit.html?id=${camiId}`; // Redirige a la página de edición
+                    });
+                    // Añade un evento para manejar la acción de eliminar
+                    deleteButton.addEventListener('click', () => {
+                        if (confirm('¿Estás seguro de que deseas eliminar esta camiseta?')) {
+                            // Realiza una solicitud DELETE al endpoint
+                            fetch(`http://localhost:8080/cami/${camiId}`, { 
+                                method: 'DELETE'
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('Camiseta eliminada correctamente');
+                                    window.location.reload(); // Recarga la página después de eliminar
+                                } else {
+                                    alert('Error al eliminar la camiseta');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Hubo un problema al intentar eliminar la camiseta.');
+                            });
+                        }
+                        
+                    });
+                }
 
                 camiCard.appendChild(detailsContainer);
                 container.appendChild(camiCard);

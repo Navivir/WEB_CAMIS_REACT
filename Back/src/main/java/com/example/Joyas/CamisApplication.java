@@ -9,5 +9,4 @@ public class CamisApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CamisApplication.class, args);
 	}
-
 }

@@ -12,17 +12,22 @@ document.addEventListener('DOMContentLoaded',async() => {
     const profileLink = document.getElementById('profile-icono');
     const profileDropdown = document.getElementById('dropdown-content');
     const logoutButton = document.getElementById('logout-button');
-    const profileUsername = document.getElementById('profile-username');
+    const carritoIcono = document.getElementById('carrito-icono');
+    const addIcono = document.getElementById('add-icono');
+    addIcono.style.display = 'none';
    
     // Asegurarse de que el dropdown esté oculto al cargar la página
     profileDropdown.style.display = 'none';
     const userId = getUserId();  // Asegúrate de obtener correctamente el userId
     const isAdminUser = await isAdmin(userId);  // Aquí se espera a que la función async se resuelva
     
+    // Ocultar el carrito y mostrar el icono de añadir si el usuario es admin
     if (isAdminUser) {
-        alert('Loggeado como admin');
+        carritoIcono.style.display = 'none';
+        addIcono.style.display = 'block';
     } else {
-        alert('No es admin o no está logueado');
+        carritoIcono.style.display = 'block';
+        addIcono.style.display = 'none';
     }
     // Control de la imagen si está logueado o no
     if (isLoggedIn()) {
@@ -32,6 +37,8 @@ document.addEventListener('DOMContentLoaded',async() => {
         });
       // Obtener y mostrar el nombre de usuario
       await updateUsername();
+
+   
     } else {
         // Si no está logueado, redirigir a login.html al hacer clic en la imagen
         profileLink.addEventListener('click', (event) => {
