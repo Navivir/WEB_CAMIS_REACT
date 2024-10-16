@@ -58,9 +58,24 @@ header img {
     gap: 30px; /* Aumenta el espacio entre las cartas */
     padding: 20px;
     max-width: calc(240px * 5 + 30px * 4); /* Ajusta el ancho para centrado perfecto */
-    margin: 0 auto; /* Asegura que el contenedor esté centrado horizontalmente */
     justify-content: center; /* Asegura que las cartas se alineen en el centro */
     justify-items: center;
+}
+
+.search-container {
+    padding-top: 20px;
+}
+
+.nuestros_productos{
+    width: 500px;
+}
+
+.productos_destacados{
+    width: 550px;
+}
+
+.productos_con_descuento{
+    width: 550px;
 }
 
 .cami-card {
@@ -72,6 +87,9 @@ header img {
     position: relative;
     overflow: hidden;
     text-align: center;
+}
+.cami-card:hover{
+    transform: scale(1.05);
 }
 
 .cami-card img {
@@ -222,7 +240,7 @@ footer {
     padding: 20px;
     width: 100%;
     box-sizing: border-box; /* Asegura que el padding no añada un margen extra */
-    margin-top: 10px;
+    margin-top: 30px;
 }
 
 .footer-content {
@@ -479,6 +497,17 @@ footer {
     margin: 0; /* Asegúrate de que no haya márgenes extra */
     font-weight: normal; /* Ajusta el peso de la fuente */
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.nuestros_productos {
+    display: block;
+    margin: 0 auto; /* Centra la imagen horizontalmente */
+    padding-bottom: 10px; /* Reduce el espacio debajo de la imagen */
+}
+
+#cami-container {
+    padding-top: 0; /* Elimina el espacio superior */
+    margin-top: 10px; /* Ajusta el margen superior si es necesario */
 }
 
 
