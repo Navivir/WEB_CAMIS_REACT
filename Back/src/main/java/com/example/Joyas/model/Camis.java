@@ -39,6 +39,7 @@ public class Camis {
     private int featured = 0;
 
     @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinTable(
             name = "cami_color",
             joinColumns = @JoinColumn(name = "cami_id"),
