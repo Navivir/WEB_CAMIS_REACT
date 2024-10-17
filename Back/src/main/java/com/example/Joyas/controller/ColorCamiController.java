@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/color")
@@ -23,6 +24,12 @@ public class ColorCamiController {
         this.colorCamiService = colorCamiService;
     }
 
+
+    @GetMapping("/getColors")
+    public ResponseEntity<List<ColorCami>> getColors() {
+        List<ColorCami> colors = colorCamiService.getAllColors();
+        return ResponseEntity.ok(colors);
+    }
     @PostMapping("/addColor")
     public ResponseEntity<?> addColor(
             @RequestParam(value = "color") Color color,

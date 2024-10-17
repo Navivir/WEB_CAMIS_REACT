@@ -6,6 +6,8 @@ import com.example.Joyas.model.ColorCami;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ColorCamiService {
 
@@ -14,6 +16,10 @@ public class ColorCamiService {
     @Autowired
     public ColorCamiService(ColorCamiRepository colorCamiRepository) {
         this.colorCamiRepository = colorCamiRepository;
+    }
+
+    public List<ColorCami> getAllColors() {
+        return colorCamiRepository.findAll();
     }
     public ColorCami findByColorName(String colorName) {
         return colorCamiRepository.findByColor(Color.valueOf(colorName.toUpperCase()));
