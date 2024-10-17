@@ -24,8 +24,10 @@ public class Camis {
 
     @Column
     private String material;
+
     @Column
     private float price;
+
     @Column
     private Integer discount;
 
@@ -36,21 +38,23 @@ public class Camis {
     @Column
     private int featured = 0;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "cami_color",
+            joinColumns = @JoinColumn(name = "cami_id"),
+            inverseJoinColumns = @JoinColumn(name = "color_id")
+    )
+    private List<ColorCami> colorsCami;
+
     @OneToMany(mappedBy = "camis", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore  // evitas que se haga un bucle con la relación paralela (como en un espejo)
+    @JsonIgnore
     private List<Review> reviews;
 
     @ElementCollection(targetClass = Size.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "camis_sizes", joinColumns = @JoinColumn(name = "camis_id"))
     @Column(name = "size")
-    private List<Size> sizes;  // Ahora puede almacenar múltiples tamaños
-
-    @ElementCollection(targetClass = Color.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "camis_colors", joinColumns = @JoinColumn(name = "camis_id"))
-    @Column(name = "color")
-    private List<Color> colors;  // Ahora puede almacenar múltiples colores
+    private List<Size> sizes;
 
     @Lob
     @Column(columnDefinition = "TEXT")
@@ -58,9 +62,9 @@ public class Camis {
 
     @Lob
     @Column(name = "imagen1", columnDefinition="LONGBLOB")
-    private byte[] imagen1;
+    private byte[] imagen1;  // Imagen general de la camiseta (no relacionada con el color)
 
     @Lob
     @Column(name = "imagen2", columnDefinition="LONGBLOB")
-    private byte[] imagen2;
+    private byte[] imagen2;  // Otra imagen general de la camiseta
 }

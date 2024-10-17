@@ -1,10 +1,8 @@
 package com.example.Joyas.controller;
 
-import com.example.Joyas.model.Camis;
-import com.example.Joyas.model.Color;
-import com.example.Joyas.model.Size;
-import com.example.Joyas.model.Type;
+import com.example.Joyas.model.*;
 import com.example.Joyas.service.CamisService;
+import com.example.Joyas.service.ColorCamiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +21,8 @@ import java.util.List;
 public class CamisController {
     @Autowired
     private CamisService camisService;
+    @Autowired
+    private ColorCamiService colorCamiService;
 
     public CamisController(CamisService camisService) {
         this.camisService = camisService;
@@ -96,15 +96,23 @@ public class CamisController {
             cami.setSizes(sizeList);
         }
         if (colors != null && !colors.isEmpty()) {
-            List<Color> colorList = new ArrayList<>();
-            for (String color : colors) {
+            List<ColorCami> colorList = new ArrayList<>();
+            for (String colorName : colors) {
                 try {
-                    colorList.add(Color.valueOf(color.toUpperCase()));
+                    // Aquí buscar el color en la base de datos por el nombre, o crear uno nuevo
+                    ColorCami camiColor = colorCamiService.findByColorName(colorName);
+                    if (camiColor == null) {
+                        // Si no existe, puedes crear uno nuevo, pero necesitarías imágenes también
+                        // Esto puede requerir más información que el nombre del color
+                        throw new IllegalArgumentException("Color no encontrado: " + colorName);
+                    }
+                    colorList.add(camiColor);
                 } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Color inválido: " + color);
+                    return ResponseEntity.badRequest().body("Color inválido: " + colorName);
                 }
             }
-            cami.setColors(colorList);
+            cami.setColorsCami(colorList);
+
         }
 
         if (discount != null) {
@@ -174,15 +182,22 @@ public class CamisController {
             existingCamis.setSizes(sizeList);
         }
         if (colors != null && !colors.isEmpty()) {
-            List<Color> colorList = new ArrayList<>();
-            for (String color : colors) {
+            List<ColorCami> colorList = new ArrayList<>();
+            for (String colorName : colors) {
                 try {
-                    colorList.add(Color.valueOf(color.toUpperCase()));
+                    // Aquí buscar el color en la base de datos por el nombre, o crear uno nuevo
+                    ColorCami camiColor = colorCamiService.findByColorName(colorName);
+                    if (camiColor == null) {
+                        // Si no existe, puedes crear uno nuevo, pero necesitarías imágenes también
+                        // Esto puede requerir más información que el nombre del color
+                        throw new IllegalArgumentException("Color no encontrado: " + colorName);
+                    }
+                    colorList.add(camiColor);
                 } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Color inválido: " + color);
+                    return ResponseEntity.badRequest().body("Color inválido: " + colorName);
                 }
             }
-            existingCamis.setColors(colorList);
+            existingCamis.setColorsCami(colorList);
         }
         if (type != null) {
             existingCamis.setType(type);
