@@ -1,0 +1,28 @@
+@import 'flowbite';
+
+.title{
+  font-weight: bold;
+  font-size: 1.5rem;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  width: 100vw;
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  max-width: 100%;
+  margin-top: 2em;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr)); /* Em en lugar de px para una mejor adaptación */
+  gap: 1em; /* Espacio entre cartas en em */
+  margin-top: 2em;
+  width: 70%;
+  max-width: 80vw; /* También usa vw aquí para más responsividad */
+  margin-bottom: 20%;
+}

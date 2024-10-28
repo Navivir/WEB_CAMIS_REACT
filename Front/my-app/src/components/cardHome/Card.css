@@ -1,0 +1,14 @@
+.custom-card {
+    border: 1px solid #ddd; /* Borde ligero alrededor de la tarjeta */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta el contenido que desborda */
+  }
+  
+  .card-title {
+    font-size: 8px; /* Tamaño de fuente del título */
+    font-family: 'Arial', sans-serif; /* Cambia esto a la fuente que prefieras */
+    color: #333; /* Color del texto */
+    margin-top: 8px; /* Espaciado arriba del título */
+    text-align: center; /* Centra el texto */
+  }
+  

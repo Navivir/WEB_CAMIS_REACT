@@ -1,10 +1,8 @@
 package com.example.Joyas.controller;
 
-import com.example.Joyas.model.Camis;
-import com.example.Joyas.model.Color;
-import com.example.Joyas.model.Size;
-import com.example.Joyas.model.Type;
+import com.example.Joyas.model.*;
 import com.example.Joyas.service.CamisService;
+import com.example.Joyas.service.ColorCamiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +21,8 @@ import java.util.List;
 public class CamisController {
     @Autowired
     private CamisService camisService;
+    @Autowired
+    private ColorCamiService colorCamiService;
 
     public CamisController(CamisService camisService) {
         this.camisService = camisService;
@@ -64,8 +64,6 @@ public class CamisController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "material", required = false) String material,
             @RequestParam(value = "type", required = false) Type type,
-            @RequestParam(value = "sizes", required = false) List<String> sizes,
-            @RequestParam(value = "colors", required = false) List<String> colors,
             @RequestParam(value = "discount", required = false) Integer discount,
             @RequestParam(value = "featured", required = false) Integer featured,
             @RequestParam(value = "description", required = false) String description,
@@ -84,29 +82,6 @@ public class CamisController {
         if (type != null) {
             cami.setType(type);
         }
-        if (sizes != null && !sizes.isEmpty()) {
-            List<Size> sizeList = new ArrayList<>();
-            for (String size : sizes) {
-                try {
-                    sizeList.add(Size.valueOf(size.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Tamaño inválido: " + size);
-                }
-            }
-            cami.setSizes(sizeList);
-        }
-        if (colors != null && !colors.isEmpty()) {
-            List<Color> colorList = new ArrayList<>();
-            for (String color : colors) {
-                try {
-                    colorList.add(Color.valueOf(color.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Color inválido: " + color);
-                }
-            }
-            cami.setColors(colorList);
-        }
-
         if (discount != null) {
             cami.setDiscount(discount);
         }
@@ -139,8 +114,6 @@ public class CamisController {
             @PathVariable int id,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "material", required = false) String material,
-            @RequestParam(value = "sizes", required = false) List<String> sizes,
-            @RequestParam(value = "colors", required = false) List<String> colors,
             @RequestParam(value = "type", required = false) Type type,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "price", required = false) Float price,
@@ -162,28 +135,7 @@ public class CamisController {
         if (material != null) {
             existingCamis.setMaterial(material);
         }
-        if (sizes != null && !sizes.isEmpty()) {
-            List<Size> sizeList = new ArrayList<>();
-            for (String size : sizes) {
-                try {
-                    sizeList.add(Size.valueOf(size.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Tamaño inválido: " + size);
-                }
-            }
-            existingCamis.setSizes(sizeList);
-        }
-        if (colors != null && !colors.isEmpty()) {
-            List<Color> colorList = new ArrayList<>();
-            for (String color : colors) {
-                try {
-                    colorList.add(Color.valueOf(color.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Color inválido: " + color);
-                }
-            }
-            existingCamis.setColors(colorList);
-        }
+
         if (type != null) {
             existingCamis.setType(type);
         }
