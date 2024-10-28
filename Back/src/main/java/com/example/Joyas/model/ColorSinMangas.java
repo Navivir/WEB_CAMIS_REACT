@@ -1,6 +1,5 @@
 package com.example.Joyas.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table
-public class ColorCami {
+public class ColorSinMangas {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +32,8 @@ public class ColorCami {
 
     @ElementCollection(targetClass = Size.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "color_cami_sizes", joinColumns = @JoinColumn(name = "color_cami_id"))
+    @CollectionTable(name = "color_sin_mangas_sizes", joinColumns = @JoinColumn(name = "color_sin_mangas_id"))
     @Column(name = "size")
     private List<Size> sizes;
-
-
-
-
-
 
 }

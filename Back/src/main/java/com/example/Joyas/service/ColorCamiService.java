@@ -1,12 +1,12 @@
 package com.example.Joyas.service;
 
 import com.example.Joyas.dao.ColorCamiRepository;
-import com.example.Joyas.model.Color;
 import com.example.Joyas.model.ColorCami;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ColorCamiService {
@@ -21,8 +21,9 @@ public class ColorCamiService {
     public List<ColorCami> getAllColors() {
         return colorCamiRepository.findAll();
     }
-    public ColorCami findByColorName(String colorName) {
-        return colorCamiRepository.findByColor(Color.valueOf(colorName.toUpperCase()));
+
+    public Optional<ColorCami> getColorByName(String name) {
+        return colorCamiRepository.findByName(name);
     }
     public ColorCami addColor(ColorCami colorCami) {
         return colorCamiRepository.save(colorCami);

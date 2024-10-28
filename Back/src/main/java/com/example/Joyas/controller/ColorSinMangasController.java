@@ -1,9 +1,8 @@
 package com.example.Joyas.controller;
 
-import com.example.Joyas.model.ColorCami;
+import com.example.Joyas.model.ColorSinMangas;
 import com.example.Joyas.model.Size;
-import com.example.Joyas.service.CamisService;
-import com.example.Joyas.service.ColorCamiService;
+import com.example.Joyas.service.ColorSinMangasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,26 +15,25 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/colorCami")
-public class ColorCamiController {
-
+@RequestMapping("/colorSinMangas")
+public class ColorSinMangasController {
     @Autowired
-    private ColorCamiService colorCamiService;
+    private ColorSinMangasService colorSinMangasService;
 
-    public ColorCamiController(ColorCamiService colorCamiService) {
-        this.colorCamiService = colorCamiService;
+    public ColorSinMangasController(ColorSinMangasService colorSinMangasService) {
+        this.colorSinMangasService = colorSinMangasService;
     }
 
 
     @GetMapping("/getColors")
-    public ResponseEntity<List<ColorCami>> getColors() {
-        List<ColorCami> colors = colorCamiService.getAllColors();
+    public ResponseEntity<List<ColorSinMangas>> getColors() {
+        List<ColorSinMangas> colors = colorSinMangasService.getAllColors();
         return ResponseEntity.ok(colors);
     }
 
     @GetMapping("/getColor")
-    public ResponseEntity<ColorCami> getColor(@RequestParam String name) {
-        Optional<ColorCami> color = colorCamiService.getColorByName(name);
+    public ResponseEntity<ColorSinMangas> getColor(@RequestParam String name) {
+        Optional<ColorSinMangas> color = colorSinMangasService.getColorByName(name);
         return color.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -52,12 +50,12 @@ public class ColorCamiController {
         }
 
         // Crear el objeto ColorCami
-        ColorCami colorCami = new ColorCami();
-        colorCami.setName(color);
+        ColorSinMangas colorSinMangas = new ColorSinMangas();
+        colorSinMangas.setName(color);
 
         try {
-            colorCami.setImagenDelantera(imagenDelantera.getBytes());
-            colorCami.setImagenTrasera(imagenTrasera.getBytes());
+            colorSinMangas.setImagenDelantera(imagenDelantera.getBytes());
+            colorSinMangas.setImagenTrasera(imagenTrasera.getBytes());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al procesar las imágenes.");
@@ -74,10 +72,10 @@ public class ColorCamiController {
         }
 
         // Añadir los sizes a colorCami
-        colorCami.setSizes(sizeEnums);
+        colorSinMangas.setSizes(sizeEnums);
 
         // Guardar el nuevo color en la base de datos
-        ColorCami savedColor = colorCamiService.addColor(colorCami);
+        ColorSinMangas savedColor = colorSinMangasService.addColor(colorSinMangas);
         return ResponseEntity.ok(savedColor);
     }
 

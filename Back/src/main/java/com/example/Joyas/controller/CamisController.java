@@ -64,8 +64,6 @@ public class CamisController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "material", required = false) String material,
             @RequestParam(value = "type", required = false) Type type,
-            @RequestParam(value = "sizes", required = false) List<String> sizes,
-            @RequestParam(value = "colors", required = false) List<String> colors,
             @RequestParam(value = "discount", required = false) Integer discount,
             @RequestParam(value = "featured", required = false) Integer featured,
             @RequestParam(value = "description", required = false) String description,
@@ -84,37 +82,6 @@ public class CamisController {
         if (type != null) {
             cami.setType(type);
         }
-        if (sizes != null && !sizes.isEmpty()) {
-            List<Size> sizeList = new ArrayList<>();
-            for (String size : sizes) {
-                try {
-                    sizeList.add(Size.valueOf(size.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Tamaño inválido: " + size);
-                }
-            }
-            cami.setSizes(sizeList);
-        }
-        if (colors != null && !colors.isEmpty()) {
-            List<ColorCami> colorList = new ArrayList<>();
-            for (String colorName : colors) {
-                try {
-                    // Aquí buscar el color en la base de datos por el nombre, o crear uno nuevo
-                    ColorCami camiColor = colorCamiService.findByColorName(colorName);
-                    if (camiColor == null) {
-                        // Si no existe, puedes crear uno nuevo, pero necesitarías imágenes también
-                        // Esto puede requerir más información que el nombre del color
-                        throw new IllegalArgumentException("Color no encontrado: " + colorName);
-                    }
-                    colorList.add(camiColor);
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Color inválido: " + colorName);
-                }
-            }
-            cami.setColorsCami(colorList);
-
-        }
-
         if (discount != null) {
             cami.setDiscount(discount);
         }
@@ -147,8 +114,6 @@ public class CamisController {
             @PathVariable int id,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "material", required = false) String material,
-            @RequestParam(value = "sizes", required = false) List<String> sizes,
-            @RequestParam(value = "colors", required = false) List<String> colors,
             @RequestParam(value = "type", required = false) Type type,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "price", required = false) Float price,
@@ -170,35 +135,7 @@ public class CamisController {
         if (material != null) {
             existingCamis.setMaterial(material);
         }
-        if (sizes != null && !sizes.isEmpty()) {
-            List<Size> sizeList = new ArrayList<>();
-            for (String size : sizes) {
-                try {
-                    sizeList.add(Size.valueOf(size.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Tamaño inválido: " + size);
-                }
-            }
-            existingCamis.setSizes(sizeList);
-        }
-        if (colors != null && !colors.isEmpty()) {
-            List<ColorCami> colorList = new ArrayList<>();
-            for (String colorName : colors) {
-                try {
-                    // Aquí buscar el color en la base de datos por el nombre, o crear uno nuevo
-                    ColorCami camiColor = colorCamiService.findByColorName(colorName);
-                    if (camiColor == null) {
-                        // Si no existe, puedes crear uno nuevo, pero necesitarías imágenes también
-                        // Esto puede requerir más información que el nombre del color
-                        throw new IllegalArgumentException("Color no encontrado: " + colorName);
-                    }
-                    colorList.add(camiColor);
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("Color inválido: " + colorName);
-                }
-            }
-            existingCamis.setColorsCami(colorList);
-        }
+
         if (type != null) {
             existingCamis.setType(type);
         }

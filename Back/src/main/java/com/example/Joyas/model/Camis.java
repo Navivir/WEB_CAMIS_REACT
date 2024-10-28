@@ -38,23 +38,9 @@ public class Camis {
     @Column
     private int featured = 0;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "cami_color",
-            joinColumns = @JoinColumn(name = "cami_id"),
-            inverseJoinColumns = @JoinColumn(name = "color_id")
-    )
-    private List<ColorCami> colorsCami;
-
     @OneToMany(mappedBy = "camis", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Review> reviews;
-
-    @ElementCollection(targetClass = Size.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "camis_sizes", joinColumns = @JoinColumn(name = "camis_id"))
-    @Column(name = "size")
-    private List<Size> sizes;
 
     @Lob
     @Column(columnDefinition = "TEXT")
