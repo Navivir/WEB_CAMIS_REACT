@@ -1,0 +1,69 @@
+@import 'flowbite';
+
+
+
+h2 {
+  margin-bottom: 20px; /* Añade un espacio entre el título y el contenedor */
+  text-align: center; /* Centra el título */
+  font-size: 18; /* Ajusta el tamaño de la fuente del título */
+  margin-right: 660px;
+}
+
+.details-container {
+ margin-top: 50px;
+}
+
+.details-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Alinea el contenido verticalmente */
+  gap: 20px; /* Espacio entre aside y canvas */
+  margin-top: 20px; /* Separa el contenedor del título */
+  margin-bottom: 10%;
+}
+
+.details-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 150px;
+}
+
+.details-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.details-aside label {
+  font-size: 1.1em; /* Tamaño más grande para las etiquetas */
+  color: #333; /* Color del texto */
+  margin-bottom: 10px;
+}
+
+.details-aside select {
+  height: 40px;
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  font-size: 1em;
+  color: #333;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  margin-bottom: 20px;
+}
+
+.details-aside select:hover {
+  border-color: #888; /* Cambia el color del borde al pasar el mouse */
+}
+
+.details-aside select:focus {
+  border-color: #555; /* Color del borde cuando está enfocado */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar el foco */
+}
+
+.details-aside select option {
+  padding: 10px;
+  margin-bottom: 40px; 
+}
