@@ -1,9 +1,12 @@
 package com.example.Joyas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -35,6 +38,9 @@ public class CartItem {
     private Integer id_cami;
 
     @Column
+    private String type;
+
+    @Column
     private Integer discount;
 
     @Lob
@@ -45,8 +51,13 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private Cart cart; // Relación con Cart
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     // Constructor con parámetros
-    public CartItem(String name, String size, String color, Double price, Integer quantity, String image, Integer id_cami, Integer discount, Cart cart) {
+    public CartItem(String name, String size, String color, Double price, Integer quantity, String image, Integer id_cami,
+                    String type, Integer discount, Cart cart) {
         this.name = name;
         this.size = size;
         this.color = color;
@@ -54,9 +65,9 @@ public class CartItem {
         this.quantity = quantity;
         this.image = image;
         this.id_cami = id_cami;
+        this.type = type;
         this.discount = discount;
         this.cart = cart;
     }
 
-    // Otros métodos si es necesario
 }

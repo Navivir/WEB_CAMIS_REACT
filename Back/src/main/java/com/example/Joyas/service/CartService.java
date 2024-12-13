@@ -34,7 +34,8 @@ public class CartService {
                 .filter(item -> item.getName().equals(cartItem.getName()) &&
                         item.getSize().equals(cartItem.getSize()) &&
                         item.getColor().equals(cartItem.getColor()) &&
-                        item.getId_cami() == cartItem.getId_cami())
+                        item.getId_cami() == cartItem.getId_cami()&&
+                item.getType() == cartItem.getType())
                 .findFirst().orElse(null);
 
         if (existingItem != null) {
