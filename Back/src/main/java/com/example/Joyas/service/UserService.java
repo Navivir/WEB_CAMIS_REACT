@@ -23,15 +23,16 @@ public class UserService {
 
     public ResponseEntity<LoginResponse> loginUser(User loginUser) {
         // Busca al usuario por nombre de usuario o correo electrónico
-        User user = userRepository.findByUsernameOrEmail(loginUser.getUsername(), loginUser.getUsername());
+        User user = userRepository.findByEmail(loginUser.getEmail());
 
         if (user != null && checkPassword(loginUser.getPassword(), user.getPassword())) {
             // Genera un token JWT usando JwtUtil
             String token = jwtUtil.generateToken(user.getUsername());
             int userId = user.getId();
+            String userName = user.getUsername();
 
             // Crea la respuesta
-            LoginResponse loginResponse = new LoginResponse(token, userId);
+            LoginResponse loginResponse = new LoginResponse("logged",token, userId, userName);
 
             // Retorna el token y el ID en la respuesta
             return ResponseEntity.ok(loginResponse);

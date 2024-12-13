@@ -54,6 +54,7 @@ public class UserController {
     }
     @GetMapping("/{id}/username")
     public ResponseEntity<String> getUsernameById(@PathVariable int id) {
+
         String username = userService.getUsernameById(id);
         if (username != null) {
             return ResponseEntity.ok(username);
@@ -61,6 +62,5 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
 
 }
