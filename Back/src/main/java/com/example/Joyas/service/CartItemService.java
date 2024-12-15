@@ -23,6 +23,8 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
     }
+    public Optional<CartItem> getCartItemById(Integer id) {return cartItemRepository.findById(id);}
+
     public List<CartItem> getCartItemsByUserId(Integer userId) {
         return cartItemRepository.findByUserId(userId);
     }
@@ -33,6 +35,10 @@ public class CartItemService {
 
         cartItem.setUser(user);
 
+        return cartItemRepository.save(cartItem);
+    }
+
+    public CartItem addCartItem(CartItem cartItem) {
         return cartItemRepository.save(cartItem);
     }
 
@@ -47,4 +53,7 @@ public class CartItemService {
 
 
     }
+
+
+
 }

@@ -1,0 +1,137 @@
+/* SignUpPage.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6;
+}
+label {
+    font-weight: normal !important;
+}
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f3f4f6;
+}
+
+.signup-form {
+    background-color: #ffffff;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    height: auto; /* Ajusta la altura según el contenido */
+}
+
+.signup-title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+    color: #333333;
+    white-space: nowrap; /* Evita que el título se parta en varias líneas */
+}
+
+
+.signup-container .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555555;
+}
+
+.signup-container .form-input {
+    width: 100%;
+    padding: 12px; /* Aumenta el padding para más espacio dentro de los inputs */
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 20px; /* Añadimos margen entre todos los inputs */
+}
+
+.signup-container .form-input:focus {
+    border-color: #1eb300;
+    outline: none;
+}
+
+
+.signup-container .password-group {
+    position: relative;
+}
+
+.signup-container .password-wrapper {
+    align-items: center;
+    position: relative;
+    width: 100%;
+    gap: 4px; /* Reduce el espacio entre los elementos */
+}
+
+.signup-container .password-input {
+    width: 100%;
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.signup-container .password-group label {
+    font-weight: normal ; /* Aseguramos que el font-weight sea normal */
+    color: #555555; /* Aseguramos que el color sea el mismo */
+    font-size: 14px;
+}
+.signup-container .password-toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    margin-top: 12px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #555555;
+}
+
+.signup-container .password-toggle:hover {
+    color: #000;
+}
+
+.signup-container .password-error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.signup-container .form-remember {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.signup-container .forgot-password-link {
+    display: block;
+    margin-top: 1rem;
+    font-size: 14px;
+    color: #585858;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.signup-container .forgot-password-link:hover {
+    color: #1eb300;
+    text-decoration: underline;
+}
+
+
+.submit-button {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #585858;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #1a600c;
+}

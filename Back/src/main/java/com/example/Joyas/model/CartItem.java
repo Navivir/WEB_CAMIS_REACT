@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -49,7 +50,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    private Cart cart; // Relación con Cart
+    private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

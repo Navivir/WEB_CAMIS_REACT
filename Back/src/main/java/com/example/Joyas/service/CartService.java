@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
+import com.example.Joyas.config.JwtUtil;
+import java.util.Objects;
 
 @Service
 public class CartService {
@@ -22,33 +22,44 @@ public class CartService {
     private CartRepository cartRepository;
 
     public void addToCart(String token, CartItem cartItem) {
-        // Recuperar el carrito del usuario, o crear uno nuevo si no existe
-        Cart cart = cartRepository.findByToken(token).orElseGet(() -> new Cart(token));
+
+        Cart cart = cartRepository.findByToken(token)
+                .filter(c -> c.getExpiresAt().isAfter(LocalDateTime.now()))
+                .orElseGet(() -> new Cart());
 
         if (cartItem == null) {
             throw new IllegalArgumentException("El artículo del carrito no puede ser nulo.");
         }
 
-        // Verificar si el artículo ya existe en el carrito
         CartItem existingItem = cart.getItems().stream()
-                .filter(item -> item.getName().equals(cartItem.getName()) &&
-                        item.getSize().equals(cartItem.getSize()) &&
-                        item.getColor().equals(cartItem.getColor()) &&
-                        item.getId_cami() == cartItem.getId_cami()&&
-                item.getType() == cartItem.getType())
+                .filter(item ->
+                        Objects.equals(cartItem.getName(), item.getName()) &&
+                                Objects.equals(cartItem.getSize(), item.getSize()) &&
+                                Objects.equals(cartItem.getColor(), item.getColor()) &&
+                                cartItem.getId_cami() == item.getId_cami() &&
+                                cartItem.getType() == item.getType()
+                )
                 .findFirst().orElse(null);
 
         if (existingItem != null) {
-            // Actualizar la cantidad del artículo existente y la imagen
             existingItem.setQuantity(existingItem.getQuantity() + cartItem.getQuantity());
             existingItem.setImage(cartItem.getImage()); // Actualizar la imagen también
             existingItem.setDiscount(cartItem.getDiscount()); // Actualizar el descuento también
         } else {
-            // Si el artículo no existe, añadirlo al carrito
             cart.getItems().add(cartItem);
+            cart.setCreatedAt(LocalDateTime.now());
+            cart.setExpiresAt(LocalDateTime.now().plusHours(6));
+            boolean expired = JwtUtil.isTokenExpired(token);
+            if (expired){
+                String newToken = JwtUtil.generateShortLivedToken("anonymousUser");
+                cart.setToken(newToken);
+            }
+            else{
+                cart.setToken(token);
+            }
+
         }
 
-        // Guardar los cambios en la base de datos
         try {
             cartRepository.save(cart);
         } catch (Exception e) {
@@ -60,15 +71,14 @@ public class CartService {
             throw new IllegalArgumentException("El artículo del carrito no puede ser nulo.");
         }
 
-        // Recuperar el carrito por token o crear uno nuevo si no existe
-        Cart cart = cartRepository.findByToken(token).orElseGet(() -> new Cart(token));
+        Cart cart = cartRepository.findByToken(token)
+                .filter(c -> c.getExpiresAt().isAfter(LocalDateTime.now()))
+                .orElseGet(() -> new Cart());
 
-        // Asociar el usuario con el carrito si se proporciona
         if (user != null) {
             cart.setUser(user);
         }
 
-        // Verificar si el artículo ya existe en el carrito
         CartItem existingItem = cart.getItems().stream()
                 .filter(item -> item.getName().equals(cartItem.getName()) &&
                         item.getSize().equals(cartItem.getSize()) &&
@@ -77,22 +87,28 @@ public class CartService {
                 .findFirst().orElse(null);
 
         if (existingItem != null) {
-            // Actualizar la cantidad, imagen y descuento del artículo existente
             existingItem.setQuantity(existingItem.getQuantity() + cartItem.getQuantity());
             existingItem.setImage(cartItem.getImage());
             existingItem.setDiscount(cartItem.getDiscount());
         } else {
-            // Añadir el nuevo artículo al carrito
             cart.getItems().add(cartItem);
+            cart.setCreatedAt(LocalDateTime.now());
+            cart.setExpiresAt(LocalDateTime.now().plusHours(6));
+            boolean expired = JwtUtil.isTokenExpired(token);
+            if (expired){
+                String newToken = JwtUtil.generateShortLivedToken("anonymousUser");
+                cart.setToken(newToken);
+            }
+            else{
+                cart.setToken(token);
+            }
         }
 
-        // Guardar los cambios en la base de datos, incluyendo la expiración de 30 días
         try {
-            // Obtener la fecha de expiración 30 días en el futuro como LocalDateTime
             LocalDateTime expiresAt = LocalDateTime.now().plusDays(30);
-            cart.setExpiresAt(expiresAt);  // Establecer la expiración
+            cart.setExpiresAt(expiresAt);
 
-            cartRepository.save(cart); // Guardar el carrito en la base de datos
+            cartRepository.save(cart);
         } catch (Exception e) {
             throw new RuntimeException("Error al guardar el carrito en la base de datos.", e);
         }
@@ -130,7 +146,6 @@ public class CartService {
         }
     }
     public String getTokenByUserId(int userId) {
-        // Obtener el carrito más reciente asociado al usuario
         Cart cart = cartRepository.findFirstByUserIdOrderByCreatedAtDesc(userId);
         if (cart != null) {
             return cart.getToken();

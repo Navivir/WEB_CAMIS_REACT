@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface CartRepository extends JpaRepository<Cart, Long> {
     Optional<Cart> findByToken(String token);
     Cart findFirstByUserIdOrderByCreatedAtDesc(int userId);
+    Optional<Cart> findByUserId(Long userId);
 }

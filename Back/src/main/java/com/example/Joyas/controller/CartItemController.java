@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cartItem")
@@ -18,7 +19,21 @@ public class CartItemController {
         this.cartItemService = cartItemService;
     }
 
-    @GetMapping("/{userId}")
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCartItemsById(@PathVariable Integer id) {
+        if (id == null || id<= 0) {
+            return ResponseEntity.badRequest().body("El ID del item no es válido.");
+        }
+
+        Optional<CartItem> cartItem = cartItemService.getCartItemById(id);
+        if (!cartItem.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existe este Item.");
+        }
+
+        return ResponseEntity.ok(cartItem);
+    }
+    @GetMapping("/user/{userId}")
     public ResponseEntity<?> getCartItemsByUser(@PathVariable Integer userId) {
         if (userId == null || userId <= 0) {
             return ResponseEntity.badRequest().body("El ID del usuario no es válido.");
@@ -40,6 +55,19 @@ public class CartItemController {
 
         try {
             CartItem savedCartItem = cartItemService.addCartItemToUser(userId, cartItem);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCartItem);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el cartItem.");
+        }
+    }
+
+    @PostMapping("/uuser")
+    public ResponseEntity<?> addCartItem( @RequestBody CartItem cartItem) {
+
+        try {
+            CartItem savedCartItem = cartItemService.addCartItem(cartItem);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCartItem);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

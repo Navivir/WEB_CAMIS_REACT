@@ -1,11 +1,12 @@
 package com.example.Joyas.config;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 @Component
@@ -25,8 +26,12 @@ public class JwtUtil {
       los JWT son tokens autónomos, contando en sí con toda la información necesaria para verificar su validez.'
      */
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final long expirationTime = 30L * 24 * 60 * 60 * 1000; // 30 días en milisegundos
+    private static final String SECRET_KEY = Dotenv.load().get("JWT_SECRET_KEY");
+    static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    private static final long expirationTime = 30L * 24 * 60 * 60 * 1000; // 30 días
+    private static final long shortExpirationTime = 6L * 60 * 60 * 1000; // 6 horas
+    // private static final long shortExpirationTime = 2L * 60 * 1000; // 2 minutos
+
 
     public static String generateToken(String subject) {
         Date now = new Date();
@@ -55,6 +60,37 @@ public class JwtUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static String generateShortLivedToken(String subject) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + shortExpirationTime);
+        return Jwts.builder()
+                .setSubject(subject)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(key)
+                .compact();
+    }
+    public static Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public static Date getExpirationDate(String token) {
+        Claims claims = getClaims(token);
+        return claims.getExpiration();
+    }
+
+    public static Date getIssuedAtDate(String token) {
+        Claims claims = getClaims(token);
+        return claims.getIssuedAt();
+    }
+
+    public static boolean isTokenExpired(String token) {
+        return getExpirationDate(token).before(new Date());
     }
 
 }
