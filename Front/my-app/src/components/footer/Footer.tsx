@@ -1,13 +1,13 @@
 "use client";
 
 import { Footer } from "flowbite-react";
-import { BsDribbble, BsFacebook, BsGithub, BsInstagram, BsTiktok, BsTwitter } from "react-icons/bs";
+import {  BsFacebook, BsInstagram, BsTiktok, BsTwitter } from "react-icons/bs";
 
 export function FooterW() {
   return (
     <Footer bgDark>
       <div className="w-full">
-        <div className="grid w-full grid-cols-2 gap-8 px-6 py-8 md:grid-cols-3">
+        <div className="grid w-full grid-cols-2 gap-1 px-8 py-8 md:grid-cols-3 ml-8">
           <div>
             <Footer.Title title="Company" />
             <Footer.LinkGroup col>

@@ -49,7 +49,6 @@ public class CartController {
                 }
             }
 
-            // Llamar al servicio para agregar el artículo al carrito, pasando el usuario si existe
             cartService.addToCartUser(token, user, cartItem);
 
             return ResponseEntity.ok().body(new ResponseMessage("Item añadido al carrito"));

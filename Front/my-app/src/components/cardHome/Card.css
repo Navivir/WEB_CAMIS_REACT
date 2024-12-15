@@ -1,14 +1,24 @@
 .custom-card {
+    background-color: #f19696;
     border: 1px solid #ddd; /* Borde ligero alrededor de la tarjeta */
     border-radius: 8px; /* Bordes redondeados */
     overflow: hidden; /* Oculta el contenido que desborda */
+    
   }
   
   .card-title {
-    font-size: 8px; /* Tamaño de fuente del título */
-    font-family: 'Arial', sans-serif; /* Cambia esto a la fuente que prefieras */
-    color: #333; /* Color del texto */
-    margin-top: 8px; /* Espaciado arriba del título */
-    text-align: center; /* Centra el texto */
+    font-size: 30px;
+    font-family: "Rock Salt";
+    color: #333;
+    margin-top: 8px;
+    text-align: center;
+    display: block; /* Asegura que se muestre como bloque */
+    overflow: hidden; /* Evita que se desborde si el texto es muy largo */
+  }
+
+  .custom-card .MuiCardMedia-root {
+    width: 100%; /* Hace que la imagen ocupe todo el ancho disponible */
+    height: 90%; /* Altura fija para todas las imágenes */
+    object-fit: cover; /* Asegura que la imagen se ajuste sin distorsionar */
   }
   

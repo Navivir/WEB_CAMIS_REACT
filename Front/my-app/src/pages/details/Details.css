@@ -67,3 +67,43 @@ h2 {
   padding: 10px;
   margin-bottom: 40px; 
 }
+
+.custom-button {
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.custom-button:hover {
+  background-color: #45a049;
+}
+
+.custom-button:active {
+  background-color: #388e3c;
+}
+
+.d-button {
+  background-color: #5494de;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.d-button:hover {
+  background-color: #597698;
+}
+
+.d-button:active {
+  background-color: #5494de;
+}

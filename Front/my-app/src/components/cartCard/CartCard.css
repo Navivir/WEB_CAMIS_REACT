@@ -1,0 +1,72 @@
+/*CartCard.css */
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .cart-item:hover {
+    transform: translateY(-5px);
+  }
+  
+  .cart-item-image {
+    max-width: 120px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .cart-item-details {
+    flex: 1;
+    padding-left: 16px;
+  }
+  
+  .cart-item-details h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .cart-item-details p {
+    margin: 4px 0;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .cart-item-details p:nth-child(odd) {
+    font-weight: bold;
+  }
+  
+  .remove-item-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .remove-item-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  .remove-item-btn:focus {
+    outline: none;
+  }
+  
+  .cart-item-details .total-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+  }
+  

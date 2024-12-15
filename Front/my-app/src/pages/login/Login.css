@@ -1,0 +1,134 @@
+/* LoginPage.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6;
+  }
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f3f4f6;
+    
+    
+  }
+  
+  .login-form {
+    background-color: #ffffff;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    height: 480px;
+  }
+  
+  .login-title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+    color: #333333;
+  }
+  
+  .login-container .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .login-container .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555555;
+  }
+  
+  .login-container .form-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .login-container .form-input:focus {
+    border-color: #1eb300;
+    outline: none;
+  }
+  
+  .login-container .password-group {
+    position: relative;
+  }
+  
+  .login-container .password-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .login-container .password-toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #555555;
+  }
+  
+  .login-container .password-toggle:hover {
+    color: #000;
+  }
+  
+  .login-container .form-remember {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .login-container .forgot-password-link {
+    display: block;
+    margin-top: 1rem;
+    font-size: 14px;
+    color: #585858;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+ 
+  .login-container .forgot-password-link:hover {
+    color: #1eb300;
+    text-decoration: underline;
+  }
+
+  .login-container .sign-up-link {
+    display: block;
+    margin-top: 1rem;
+    font-size: 14px;
+    color: #585858;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .login-container .sign-up-link:hover{
+    color: #1eb300;
+    text-decoration: underline;
+  }
+
+  .login-container .form-checkbox {
+    margin-right: 5px;
+  }
+  
+  .login-container .submit-button {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #585858;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .login-container .submit-button:hover {
+    background-color: #1a600c;
+  }
+  

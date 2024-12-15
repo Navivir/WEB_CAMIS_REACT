@@ -1,6 +1,8 @@
 package com.example.Joyas.service;
 
 import com.example.Joyas.config.JwtUtil;
+import com.example.Joyas.dao.CartRepository;
+import com.example.Joyas.model.Cart;
 import com.example.Joyas.model.LoginResponse;
 import com.example.Joyas.model.PasswordUpdateRequest;
 import com.example.Joyas.model.User;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -17,22 +20,39 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    private CartRepository cartRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
 
+    public UserService(UserRepository userRepository, CartRepository cartRepository){
+        this.userRepository = userRepository;
+        this. cartRepository = cartRepository;
+    }
     public ResponseEntity<LoginResponse> loginUser(User loginUser) {
         // Busca al usuario por nombre de usuario o correo electrónico
         User user = userRepository.findByEmail(loginUser.getEmail());
 
         if (user != null && checkPassword(loginUser.getPassword(), user.getPassword())) {
-            // Genera un token JWT usando JwtUtil
-            String token = jwtUtil.generateToken(user.getUsername());
-            int userId = user.getId();
-            String userName = user.getUsername();
 
-            // Crea la respuesta
-            LoginResponse loginResponse = new LoginResponse("logged",token, userId, userName);
+            Optional<Cart> userCart = cartRepository.findByUserId((long) user.getId());
+
+            String token;
+            if (userCart.isPresent()) {
+                System.out.println("El usuario ya tiene un carrito asociado con el ID: " + userCart.get().getId());
+                token = userCart.get().getToken();
+                LocalDateTime expiresTime = userCart.get().getExpiresAt();
+
+                if(expiresTime.isBefore(LocalDateTime.now())){
+                    token = jwtUtil.generateToken(user.getUsername());
+                }
+            } else {
+                System.out.println("El usuario no tiene un carrito asociado. Generando uno nuevo.");
+                token = jwtUtil.generateToken(user.getUsername());
+            }
+
+            // Crea la respuesta con el token y los datos del usuario
+            LoginResponse loginResponse = new LoginResponse("logged", token, user.getId(), user.getUsername());
 
             // Retorna el token y el ID en la respuesta
             return ResponseEntity.ok(loginResponse);
