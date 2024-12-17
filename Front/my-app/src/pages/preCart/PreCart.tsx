@@ -89,9 +89,7 @@ const PreCart: React.FC = () => {
       });
 
       if (response.ok) {
-        alert(
-          `Producto agregado al carrito: ${cartItem.name}, Talla: ${selectedSize}, Cantidad: ${selectedQuantity}`
-        );
+        window.location.href = `/cart`;
       } else {
         console.error("Error al agregar el producto al carrito.");
       }
@@ -106,17 +104,15 @@ const PreCart: React.FC = () => {
 
   return (
     <div className="cart-item-page">
-      <h1>Detalles del Producto</h1>
-      <div className="cart-item">
+      <h1 className="cart-item-page-h1">Seleccione talla y cantidad.</h1>
+      <div className="cart-item-precart">
         <img
           src={cartItem.image}
           alt={cartItem.name}
-          className="cart-item-image"
+          className="cart-item-image-pre"
         />
-        <div className="cart-item-details">
-          <h2>{cartItem.name}</h2>
-          <p>Color: {cartItem.color}</p>
-
+        <div className="cart-item-details-precart">
+          <h2 className="name-h2">{cartItem.name}</h2>
           <div className="cart-item-controls">
             <label htmlFor="size-select">Talla:</label>
             <select

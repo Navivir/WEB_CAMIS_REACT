@@ -1,4 +1,4 @@
-.custom-card {
+.custom-card-cart {
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
@@ -6,7 +6,7 @@
   
   .card-title {
     font-size: 18px;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Trebuchet MS';
     color: #333;
     margin-top: 8px;
     text-align: center;
@@ -17,5 +17,9 @@
     font-size: 14px;
     color: #666;
     text-align: center;
+  }
+
+  .custom-modal {
+    z-index: 800 !important;
   }
   

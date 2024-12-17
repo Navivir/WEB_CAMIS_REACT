@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Card from "../../components/cardItem/CardItem";  // Asegúrate de tener el componente Card correcto
+import Card from "../../components/cardItem/CardItem"; // Asegúrate de tener el componente Card correcto
 import "./MyDesigns.css";
+import Modal from "../../components/modal/Modal";
 
 // Define una interfaz para el tipo de los elementos del carrito
 interface CartItem {
-  id: number;  // Cambiado a `id` en lugar de `productId`
+  id: number;
   image: string;
   type: string;
   size: string;
@@ -17,6 +18,8 @@ const MyDesigns = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]); // Usamos el tipo CartItem[] para el estado
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null); // Error puede ser string o null
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null); // ID del elemento seleccionado para eliminar
 
   useEffect(() => {
     const userId = localStorage.getItem("UserId");
@@ -25,8 +28,6 @@ const MyDesigns = () => {
       setLoading(false);
       return;
     }
-
-   
 
     fetch(`http://localhost:8080/cartItem/user/${userId}`)
       .then((response) => response.json())
@@ -41,17 +42,25 @@ const MyDesigns = () => {
       });
   }, []);
 
-  const handleDelete = (id: number) => {
-    const confirmation = window.confirm("¿Estás seguro de que quieres eliminar este producto?");
-    if (confirmation) {
-      fetch(`http://localhost:8080/cartItem/${id}`, {
-        method: "DELETE", 
+  const handleOpenModal = (id: number) => {
+    setSelectedItemId(id); // Guardamos el ID del elemento que queremos eliminar
+    setIsModalOpen(true); // Abrimos el modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Cerramos el modal
+    setSelectedItemId(null); // Limpiamos el ID seleccionado
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedItemId !== null) {
+      fetch(`http://localhost:8080/cartItem/${selectedItemId}`, {
+        method: "DELETE",
       })
         .then((response) => {
           if (response.ok) {
             // El producto ha sido eliminado correctamente
-            setCartItems((prevItems) => prevItems.filter((item) => item.id !== id)); // Usa `id` para filtrar correctamente
-            alert("Producto eliminado correctamente");
+            setCartItems((prevItems) => prevItems.filter((item) => item.id !== selectedItemId));
           } else {
             alert("Hubo un problema al eliminar el producto.");
           }
@@ -59,6 +68,9 @@ const MyDesigns = () => {
         .catch((error) => {
           console.error("Error al eliminar el producto:", error);
           alert("Hubo un error al intentar eliminar el producto.");
+        })
+        .finally(() => {
+          handleCloseModal(); // Cerramos el modal después de completar la operación
         });
     }
   };
@@ -78,27 +90,41 @@ const MyDesigns = () => {
 
   return (
     <div className="my-design-container">
-      <h1>Mis Diseños</h1>
-      <div className="cart-items">
+      <h1 className="cart-item-details-h1">Mis Diseños</h1>
+      <div className="cart-items-my-designs">
         {cartItems.length === 0 ? (
           <p>No hay productos en el carrito.</p>
         ) : (
           cartItems.map((item) => (
             <Card
-              key={item.id}  // Usamos `id` como la clave única
-              id={item.id}  // Pasamos el `id` del producto
-              title={item.name}  // Usamos el nombre del producto como título
-              imageUrl={item.image}  // Usamos la URL de la imagen
-              type={item.type}  // Usamos el tipo como tipo
-              onClick={() => { 
+              key={item.id}
+              id={item.id}
+              title={item.name}
+              imageUrl={item.image} 
+              type={item.type}
+              onClick={() => {
                 console.log("Card clicked:", item.id);
               }}
-              onDelete={handleDelete}  // Pasamos la función para eliminar
+              onDelete={() => handleOpenModal(item.id)}
               onMakeItReal={handleMakeItReal}
             />
           ))
         )}
       </div>
+
+      {/* Modal para confirmar eliminación */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        message="¿Estás seguro de que deseas eliminar este diseño?"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCloseModal}
+        confirmButtonText="Eliminar"
+        cancelButtonText="Conservar"
+        confirmButtonColor="#f08080"
+        cancelButtonColor="#5494de"
+        className={isModalOpen ? "second-modal" : ""}
+      />
     </div>
   );
 };
