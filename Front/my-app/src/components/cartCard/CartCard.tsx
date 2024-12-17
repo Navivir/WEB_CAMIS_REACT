@@ -1,7 +1,7 @@
-// src/components/cartCard/CartCard.tsx
-
+// CartCard.tsx
 import React from "react";
 import "./CartCard.css";
+import { ReactComponent as DeleteIcon } from "../../logos/basura.svg"; 
 
 interface CartCardProps {
   id: number;
@@ -14,18 +14,29 @@ interface CartCardProps {
   onRemove: (id: number) => void;
 }
 
-const CartCard: React.FC<CartCardProps> = ({ id, name, size, color, price, quantity, image, onRemove }) => {
+const CartCard: React.FC<CartCardProps> = ({
+  id,
+  name,
+  size,
+  color,
+  price,
+  quantity,
+  image,
+  onRemove,
+}) => {
   return (
-    <div className="cart-item">
-      <img src={image} alt={name} className="cart-item-image" />
-      <div className="cart-item-details">
+    <div className="cart-item-card">
+      <div className="cart-item-card-details">
         <h3>{name}</h3>
-        <p>Size: {size}</p>
+        <p>Talla: {size}</p>
         <p>Color: {color}</p>
-        <p>Price: {price.toFixed(2)} €</p>
-        <p>Quantity: {quantity}</p>
-        <button onClick={() => onRemove(id)} className="remove-item-btn">Eliminar</button>
+        <p>Precio: {price.toFixed(2)} €</p>
+        <p>Cantidad: {quantity}</p>
+        <button onClick={() => onRemove(id)} className="remove-item-btn">
+          <DeleteIcon className="remove-item-icon" />
+        </button>
       </div>
+      <img src={image} alt={name} className="cart-item-card-image" />
     </div>
   );
 };

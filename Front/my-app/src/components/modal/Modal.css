@@ -32,7 +32,7 @@
   word-break: break-word;
   white-space: normal;
   margin-bottom: 20px;
-  font-family: 'Rock Salt';
+  font-family: "Trebuchet MS";
 }
 
 /* Contenedor de botones */
@@ -54,7 +54,8 @@
 }
 
 .modal button:hover {
-  background-color: #218838;
+  background-color: var(--confirm-color);
+  filter: brightness(85%); /* Oscurecer usando el filtro de brillo */
 }
 
 /* Overlay detrás del modal */
@@ -66,14 +67,6 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: -1;
-}
-
-.button1 {
-  background-color:#5494de !important;
-}
- 
-.button1:hover {
-  background-color:#597698 !important;
 }
 
 .titleModal {

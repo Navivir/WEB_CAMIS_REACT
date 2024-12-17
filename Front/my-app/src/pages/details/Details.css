@@ -1,32 +1,36 @@
 @import 'flowbite';
 
-
-
-h2 {
-  margin-bottom: 20px; /* Añade un espacio entre el título y el contenedor */
+.details-h2 {
+  margin :20px; /* Añade un espacio entre el título y el contenedor */
   text-align: center; /* Centra el título */
-  font-size: 18; /* Ajusta el tamaño de la fuente del título */
-  margin-right: 660px;
+  font-family: "Trebuchet MS";
+  font-size: 50px;
 }
 
-.details-container {
- margin-top: 50px;
-}
 
 .details-content {
   display: flex;
   justify-content: center;
   align-items: flex-start; /* Alinea el contenido verticalmente */
-  gap: 20px; /* Espacio entre aside y canvas */
   margin-top: 20px; /* Separa el contenedor del título */
-  margin-bottom: 10%;
+  background-color: rgb(255, 255, 255);
+  padding: 2%;
+  margin-inline: 11%;
+  margin-block: 2%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
 .details-aside {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-right: 150px;
+  margin-right: 70px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  background-color: #c5c5c53c;
+  border-radius: 10px;
+  width: 50%;
 }
 
 .details-canvas {
@@ -39,6 +43,7 @@ h2 {
   font-size: 1.1em; /* Tamaño más grande para las etiquetas */
   color: #333; /* Color del texto */
   margin-bottom: 10px;
+  font-family: "Trebuchet MS";
 }
 
 .details-aside select {
@@ -68,42 +73,64 @@ h2 {
   margin-bottom: 40px; 
 }
 
+.button-container-details {
+  margin-top: 120px;
+  display: flex; 
+  justify-content: space-between; 
+  width: 100%;
+}
+
 .custom-button {
-  background-color: #4caf50;
-  color: white;
-  font-size: 16px;
-  padding: 10px 20px;
+
+  color: rgb(0, 0, 0);
+  font-size: 12px;
+  padding: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   margin-top: 20px;
-}
 
-.custom-button:hover {
-  background-color: #45a049;
-}
-
-.custom-button:active {
-  background-color: #388e3c;
 }
 
 .d-button {
-  background-color: #5494de;
-  color: white;
-  font-size: 16px;
-  padding: 10px 20px;
+  color: rgb(0, 0, 0);
+  font-size: 12px;
+  padding: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  background-color: 0.3s ease;
   margin-top: 20px;
+  
+}
+
+.custom-button:hover {
+  transform: scale(1.25);
 }
 
 .d-button:hover {
-  background-color: #597698;
+  transform: scale(1.25);
 }
 
-.d-button:active {
-  background-color: #5494de;
+
+.image-radio-group{
+  margin-top: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 100%;
+  background-color: #fcfcfd96;
+  border-radius: 10px;
+}
+.image-radio-group-color{
+  margin-top: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 100%;
+  background-color: #fcfcfd96;
+  
+  border-radius: 10px;
+}
+
+.button-icon-details{
+  width: 50px;
 }

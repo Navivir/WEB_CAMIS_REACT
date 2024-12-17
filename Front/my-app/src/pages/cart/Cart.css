@@ -1,0 +1,84 @@
+/* Cart.css */
+
+/* Contenedor principal que ocupa toda la pantalla */
+.cart-container {
+    display: flex;
+    flex-direction: column; /* Alineamos los elementos verticalmente */
+    align-items: center; /* Centramos los elementos horizontalmente */
+    justify-content: center; /* Centramos los elementos verticalmente */
+    padding: 20px;
+    width: 100%;
+    min-height: 100vh; /* Ocupa el 100% de la altura de la pantalla */
+    box-sizing: border-box;
+}
+
+/* Título del carrito */
+.cart-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: "Trebuchet MS";
+}
+
+/* Contenedor de los items del carrito */
+.cart-items-cart {
+    display: flex;
+    flex-direction: column; /* Alineamos los items verticalmente */
+    align-items: center; /* Alineamos los items al centro */
+    width: 100%;
+    gap: 20px; /* Espacio entre los items */
+}
+
+/* Contenedor del total del carrito */
+.cart-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    width: 100%;
+}
+
+/* Estilos para el texto del total */
+.cart-total h2 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    align-content: center;
+    font-family: "Trebuchet MS";
+}
+
+/* Estilo del botón de checkout */
+.checkout-btn {
+    padding: 10px 20px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin: 20px;
+}
+
+/* Efecto hover para el botón de checkout */
+.checkout-btn:hover {
+    background-color: #2ecc71;
+}
+
+/* Estilo de los párrafos dentro de los items */
+.cart-items p {
+    font-size: 1rem;
+    color: #555;
+    text-align: center;
+}
+
+/* Estilo de la carga del carrito */
+.cart-container .loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+.total-h2{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}

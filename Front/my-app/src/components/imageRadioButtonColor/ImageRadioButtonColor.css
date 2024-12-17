@@ -1,0 +1,35 @@
+/* Contenedor principal con disposición horizontal y espaciado entre los elementos */
+.image-radio-buttons-color {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+  
+  /* Estilo para cada label (envoltorio del radio button) */
+  .image-radio-button-color label {
+    cursor: pointer;
+  }
+  
+  /* Estilo para los contenedores de las imágenes */
+  .image-radio-button-color .image-container {
+    border-radius: 30px;
+    padding: 5px;
+    transition: border 0.3s ease;
+    border: 2px solid transparent; /* Borde por defecto */
+    
+  }
+  
+  /* Borde negro al seleccionar el radio button */
+  .image-radio-button-color input[type="radio"]:checked + .image-container {
+    border: 2px solid rgba(122, 122, 122, 0.53);
+  }
+  
+  /* Estilo para las imágenes */
+  .image-radio-button-color img {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    object-fit: cover;
+  }
+  

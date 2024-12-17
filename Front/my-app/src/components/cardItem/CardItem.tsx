@@ -40,7 +40,7 @@ const CardItem: React.FC<CardProps> = ({ id, title, imageUrl, type, onClick, onD
             display: "flex",
             flexDirection: "column",
           }}
-          className="custom-card"
+          className="custom-card-cart"
         >
           {/* Imagen clickeable */}
           <CardMedia
@@ -64,7 +64,7 @@ const CardItem: React.FC<CardProps> = ({ id, title, imageUrl, type, onClick, onD
       </ButtonBase>
 
       {/* Modal para ampliar la imagen */}
-      <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+      <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth  className="custom-modal">
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <img src={imageUrl} alt={title} style={{ width: "100%", height: "auto" }} />
@@ -84,7 +84,7 @@ const CardItem: React.FC<CardProps> = ({ id, title, imageUrl, type, onClick, onD
             variant="contained"
             style={{ padding: "10px" }}
           >
-            Hacerlo Realidad
+            Siguiente
           </Button>
           <Button
             onClick={handleClose}
