@@ -72,9 +72,9 @@ public class UserService {
 
     public ResponseEntity<User> createUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            return ResponseEntity.badRequest().build(); // Usuario ya existe
+            return ResponseEntity.badRequest().build();
         }
-        // Encripta la contraseña
+
         String hashedPassword = hashPassword(user.getPassword());
         user.setPassword(hashedPassword);
 
@@ -106,12 +106,7 @@ public class UserService {
         if (userUpdates.getUsername() != null) existingUser.setUsername(userUpdates.getUsername());
         if (userUpdates.getEmail() != null) existingUser.setEmail(userUpdates.getEmail());
         if (userUpdates.getBirthDate() != null) existingUser.setBirthDate(userUpdates.getBirthDate());
-
-        // Solo actualizar la contraseña si se proporciona una nueva
-        if (userUpdates.getPassword() != null) {
-            String newHashedPassword = hashPassword(userUpdates.getPassword());
-            existingUser.setPassword(newHashedPassword);
-        }
+        if (userUpdates.getImagenPerfil() != null) existingUser.setImagenPerfil(userUpdates.getImagenPerfil());
 
         User updatedUser = userRepository.save(existingUser);
         return ResponseEntity.ok(updatedUser);

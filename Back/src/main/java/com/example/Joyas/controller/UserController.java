@@ -1,15 +1,20 @@
 package com.example.Joyas.controller;
 
 import com.example.Joyas.config.JwtUtil;
+import com.example.Joyas.model.Camis;
 import com.example.Joyas.model.LoginResponse;
 import com.example.Joyas.model.PasswordUpdateRequest;
 import com.example.Joyas.model.User;
+import com.example.Joyas.service.CamisService;
 import com.example.Joyas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +26,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CamisService camisService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody User loginUser) {
@@ -28,7 +35,43 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "surname", required = false) String surname,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "birthDate", required = false) String birthDate,
+            @RequestParam(value = "role", required = false) String role,
+            @RequestParam(value = "imagenPerfil", required = false) MultipartFile imagenPerfil
+    ) throws IOException {
+        User user = new User();
+
+        if (name != null) {
+            user.setName(name);
+        }
+        if (surname != null) {
+            user.setSurname(surname);
+        }
+        if (username != null) {
+            user.setUsername(username);
+        }
+        if (email != null) {
+            user.setEmail(email);
+        }
+        if (password != null) {
+            user.setPassword(password);
+        }
+        if (birthDate != null) {
+            user.setBirthDate(LocalDate.parse(birthDate));
+        }
+        if (role != null) {
+            user.setRole(role);
+        }
+        if (imagenPerfil != null && !imagenPerfil.isEmpty()) {
+            user.setImagenPerfil(camisService.resizeImage(imagenPerfil, 500));
+        }
+
         return userService.createUser(user);
     }
 
@@ -45,9 +88,41 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(
             @PathVariable int id,
-            @RequestBody User user) {
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "surname", required = false) String surname,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "birthDate", required = false) String birthDate,
+            @RequestParam(value = "role", required = false) String role,
+            @RequestParam(value = "imagenPerfil", required = false) MultipartFile imagenPerfil
+    ) throws IOException {
+        User user = new User();
+
+        if (name != null) {
+            user.setName(name);
+        }
+        if (surname != null) {
+            user.setSurname(surname);
+        }
+        if (username != null) {
+            user.setUsername(username);
+        }
+        if (email != null) {
+            user.setEmail(email);
+        }
+        if (birthDate != null) {
+            user.setBirthDate(LocalDate.parse(birthDate));
+        }
+        if (role != null) {
+            user.setRole(role);
+        }
+        if (imagenPerfil != null && !imagenPerfil.isEmpty()) {
+            user.setImagenPerfil(camisService.resizeImage(imagenPerfil, 500));
+        }
+
         return userService.updateUser(id, user);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);

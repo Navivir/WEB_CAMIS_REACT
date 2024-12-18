@@ -41,6 +41,10 @@ public class User {
     @Column()
     private String role = "ROLE_USER"; // can be ----> ROLE_USER, ROLE_ADMIN
 
+    @Lob
+    @Column(name = "imagenPerfil", columnDefinition="LONGBLOB")
+    private byte[] imagenPerfil;
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Review> reviews;
