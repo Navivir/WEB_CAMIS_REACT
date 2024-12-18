@@ -4,13 +4,17 @@ import com.example.Joyas.dao.CamisRepository;
 import com.example.Joyas.model.Camis;
 import com.example.Joyas.model.Cart;
 import jakarta.persistence.EntityNotFoundException;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,5 +96,17 @@ public class CamisService {
             throw new EntityNotFoundException("Camiseta no encontrada con ID: " + camiId);
         }
     }
+    public byte[] resizeImage(MultipartFile image, int targetWidth) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        // Redimensionar la imagen
+        Thumbnails.of(image.getInputStream())
+                .width(targetWidth) // Ancho deseado
+                .keepAspectRatio(true)
+                .toOutputStream(byteArrayOutputStream);
+
+        return byteArrayOutputStream.toByteArray();
+    }
+
 
 }

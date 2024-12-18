@@ -38,12 +38,18 @@ export function NavbarW() {
           <Dropdown.Item disabled>{userName} </Dropdown.Item>
           )}
           {userName && (   // condición
-          <Dropdown.Item as={Link} to="/my-designs">My Designs</Dropdown.Item>
+          <Dropdown.Item as={Link} to="/my-designs">Mis Diseños</Dropdown.Item>
           )}
-          <Dropdown.Item as={Link} to="/login">Login</Dropdown.Item>
-          <Dropdown.Item as={Link} to="/sign-up">SignUp</Dropdown.Item>
-          <Dropdown.Item as={Link} to="/cart">Cart</Dropdown.Item>         
-          <Dropdown.Item as="button" onClick={handleLogout}>Sign out</Dropdown.Item>
+          {!userName && ( 
+          <Dropdown.Item as={Link} to="/login">Iniciar Sesión</Dropdown.Item>
+          )}
+          {!userName && ( 
+          <Dropdown.Item as={Link} to="/sign-up">Registrarse</Dropdown.Item>
+          )}
+          <Dropdown.Item as={Link} to="/cart">Carrito</Dropdown.Item> 
+          {userName && (         
+          <Dropdown.Item as="button" onClick={handleLogout}>Cerrar sesión</Dropdown.Item>
+          )}
         </Dropdown>
         <Navbar.Toggle />
       </div>

@@ -95,7 +95,7 @@ public class CamisController {
             cami.setPrice(price);
         }
         if (imagen1 != null && !imagen1.isEmpty()) {
-            cami.setImagen1(imagen1.getBytes());
+            cami.setImagen1(camisService.resizeImage(imagen1, 500));
         }
         if (imagen2 != null && !imagen2.isEmpty()) {
             cami.setImagen2(imagen2.getBytes());

@@ -10,8 +10,8 @@ import manga_larga from "../../logos/manga-larga.png";
 import ImageRadioButtonColor from "../../components/imageRadioButtonColor/ImageRadioButtonColor";
 import blanco from "../../logos/blanco.png";
 import negro from "../../logos/negro.png";
-import saveIcon from "../../logos/disquete.png"
-import nextIcon from '../../logos/next.png';
+import saveIcon from "../../logos/disquete.png";
+import nextIcon from "../../logos/next.png";
 import { isLoggedIn } from "../../scripts/Session";
 
 interface Product {
@@ -47,7 +47,6 @@ const typeOptionColor = [
     alt: "",
     value: "blanco",
   },
-
 ];
 
 const Details: React.FC = () => {
@@ -63,9 +62,9 @@ const Details: React.FC = () => {
   const [button2Message, setbutton2Message] = useState<string>("");
   const [idCami, setIdCami] = useState<string | null>(null);
   const [nameCami, setNameCami] = useState<string>("");
-  console.log(selectedType)
-  console.log(selectedColor)
- 
+  console.log(selectedType);
+  console.log(selectedColor);
+
   useEffect(() => {
     fetch(`http://localhost:8080/cami/${id}`)
       .then((response) => response.json())
@@ -78,12 +77,12 @@ const Details: React.FC = () => {
         console.error("Error fetching product details:", error)
       );
   }, [id]);
-  
+
   useEffect(() => {
     if (product) {
       fetchImage(selectedType, selectedColor);
     }
-  }, [selectedType, selectedColor, product]); 
+  }, [selectedType, selectedColor, product]);
 
   const fetchImage = (type: string, color: string) => {
     const fetchUrl =
@@ -120,15 +119,15 @@ const Details: React.FC = () => {
           top: 100,
           width: 300,
           height: 400,
-          fill: "rgba(105, 103, 103, 0)", 
+          fill: "rgba(105, 103, 103, 0)",
           selectable: false,
           hasBorders: false,
           hasControls: false,
         });
 
         baseImage.set({
-          top: 190,
-          left: 235,
+          top: 140,
+          left: 240,
           scaleX: 0.25,
           scaleY: 0.25,
           selectable: true,
@@ -141,84 +140,93 @@ const Details: React.FC = () => {
           hasControls: true,
         });
 
-        
         canvas.add(camiImage);
         canvas.add(limitRect);
         canvas.add(baseImage);
 
-        
-        
-        
-     // Función que limita el movimiento de la imagen base dentro del área
-     canvas.on('object:moving', (e) => {
-      const obj = e.target;
-      
-      // Limitar el movimiento de baseImage dentro del área del rectángulo
-      if (obj === baseImage) {
-        // Limitar el movimiento dentro del límite del rectángulo
-        if (obj.left < limitRect.left) {
-          obj.left = limitRect.left;
-        }
-        if (obj.top < limitRect.top) {
-          obj.top = limitRect.top;
-        }
-        if (obj.left + obj.width * obj.scaleX > limitRect.left + limitRect.width) {
-          obj.left = limitRect.left + limitRect.width - obj.width * obj.scaleX;
-        }
-        if (obj.top + obj.height * obj.scaleY > limitRect.top + limitRect.height) {
-          obj.top = limitRect.top + limitRect.height - obj.height * obj.scaleY;
-        }
-      
-        // Volver a renderizar el canvas para aplicar las restricciones
-        canvas.renderAll();
-      }
-      });
+        // Escalar las imágenes antes de agregarlas al canvas
+        //scaleImageToFixedWidth(baseImage, FIXED_WIDTH);
 
-      canvas.on('object:scaling', (e) => {
-        const obj = e.target;
-      
-        // Limitar la escala de baseImage (solo la imagen base, puedes adaptar esto a otras imágenes si es necesario)
-        if (obj === baseImage) {
-          const minScale = 0.2; // Mínimo valor de escala
-          const maxScale = 0.5;   // Máximo valor de escala
-      
-          // Limitar la escala X y Y
-          if (obj.scaleX < minScale) {
-            obj.scaleX = minScale;
+        // Función que limita el movimiento de la imagen base dentro del área
+        canvas.on("object:moving", (e) => {
+          const obj = e.target;
+
+          // Limitar el movimiento de baseImage dentro del área del rectángulo
+          if (obj === baseImage) {
+            // Limitar el movimiento dentro del límite del rectángulo
+            if (obj.left < limitRect.left) {
+              obj.left = limitRect.left;
+            }
+            if (obj.top < limitRect.top) {
+              obj.top = limitRect.top;
+            }
+            if (
+              obj.left + obj.width * obj.scaleX >
+              limitRect.left + limitRect.width
+            ) {
+              obj.left =
+                limitRect.left + limitRect.width - obj.width * obj.scaleX;
+            }
+            if (
+              obj.top + obj.height * obj.scaleY >
+              limitRect.top + limitRect.height
+            ) {
+              obj.top =
+                limitRect.top + limitRect.height - obj.height * obj.scaleY;
+            }
+
+            // Volver a renderizar el canvas para aplicar las restricciones
+            canvas.renderAll();
           }
-          if (obj.scaleY < minScale) {
-            obj.scaleY = minScale;
+        });
+
+        canvas.on("object:scaling", (e) => {
+          const obj = e.target;
+          //scaleImageToFixedWidth(baseImage, FIXED_WIDTH);
+          // Limitar la escala de baseImage (solo la imagen base, puedes adaptar esto a otras imágenes si es necesario)
+          if (obj === baseImage) {
+            
+            const minScale = 0.1; // Mínimo valor de escala
+            const maxScale = 0.5; // Máximo valor de escala
+        
+
+            // Limitar la escala X y Y
+            if (obj.scaleX < minScale) {
+              obj.scaleX = minScale;
+            }
+            if (obj.scaleY < minScale) {
+              obj.scaleY = minScale;
+            }
+            if (obj.scaleX > maxScale) {
+              obj.scaleX = maxScale;
+            }
+            if (obj.scaleY > maxScale) {
+              obj.scaleY = maxScale;
+            }
+
+            // Verificar que la imagen no salga del límite del canvas
+            const canvasWidth = canvas.getWidth();
+            const canvasHeight = canvas.getHeight();
+
+            // Limitar la imagen dentro del canvas
+            if (obj.left + obj.width * obj.scaleX > canvasWidth) {
+              obj.left = canvasWidth - obj.width * obj.scaleX;
+            }
+            if (obj.top + obj.height * obj.scaleY > canvasHeight) {
+              obj.top = canvasHeight - obj.height * obj.scaleY;
+            }
+
+            if (obj.left < 0) {
+              obj.left = 0;
+            }
+            if (obj.top < 0) {
+              obj.top = 0;
+            }
+
+            // Volver a renderizar el canvas para aplicar las restricciones de escala
+            canvas.renderAll();
           }
-          if (obj.scaleX > maxScale) {
-            obj.scaleX = maxScale;
-          }
-          if (obj.scaleY > maxScale) {
-            obj.scaleY = maxScale;
-          }
-      
-          // Verificar que la imagen no salga del límite del canvas
-          const canvasWidth = canvas.getWidth();
-          const canvasHeight = canvas.getHeight();
-      
-          // Limitar la imagen dentro del canvas
-          if (obj.left + obj.width * obj.scaleX > canvasWidth) {
-            obj.left = canvasWidth - obj.width * obj.scaleX;
-          }
-          if (obj.top + obj.height * obj.scaleY > canvasHeight) {
-            obj.top = canvasHeight - obj.height * obj.scaleY;
-          }
-      
-          if (obj.left < 0) {
-            obj.left = 0;
-          }
-          if (obj.top < 0) {
-            obj.top = 0;
-          }
-      
-          // Volver a renderizar el canvas para aplicar las restricciones de escala
-          canvas.renderAll();
-        }
-      });
+        });
       } catch (error) {
         console.error("Error loading images into canvas:", error);
       }
@@ -231,23 +239,24 @@ const Details: React.FC = () => {
     };
   }, [product, colorProduct]);
 
+
   const saveAndAddToCart = () => {
     if (!canvasRef.current) return;
 
     const userId = localStorage.getItem("UserId");
     if (!userId) {
-      
-      setModalMessage("¡Necesitas estar registrado para guardar tus diseños! Por favor, inicia sesión o regístrate para continuar.")
-      setbutton1Message("Iniciar sesión")
-      setbutton2Message("Seguir creando")
+      setModalMessage(
+        "¡Necesitas estar registrado para guardar tus diseños! Por favor, inicia sesión o regístrate para continuar."
+      );
+      setbutton1Message("Iniciar sesión");
+      setbutton2Message("Seguir creando");
       setIsModalOpen(true);
       console.error("No UserId found in localStorage");
       return;
-    }
-    else{
-      setModalMessage("¡Diseño añadido a tu lista!")
-      setbutton1Message("Ver mis diseños")
-      setbutton2Message("Seguir creando")
+    } else {
+      setModalMessage("¡Diseño añadido a tu lista!");
+      setbutton1Message("Ver mis diseños");
+      setbutton2Message("Seguir creando");
     }
 
     const canvas = canvasRef.current;
@@ -279,7 +288,6 @@ const Details: React.FC = () => {
       .catch((error) => {
         console.error("Error adding product to cart:", error);
       });
-    
   };
 
   const makeItReal = () => {
@@ -327,23 +335,18 @@ const Details: React.FC = () => {
 
   const handleStayDesigning = () => {
     setIsModalOpen(false);
-   
   };
 
   const handleGoToMyDesigns = () => {
-    
-    
     const isLogged = isLoggedIn();
 
-    if (!isLogged){
+    if (!isLogged) {
       window.location.href = "/login";
       setIsModalOpen(false);
-    }
-    else{
+    } else {
       window.location.href = "/my-designs";
       setIsModalOpen(false);
     }
-    
   };
 
   return (
@@ -351,9 +354,8 @@ const Details: React.FC = () => {
       <h2 className="details-h2">Crea tu propio Diseño</h2>
       <div className="details-content">
         <aside className="details-aside">
-          
           <div className="image-radio-group">
-          <label htmlFor="type-select-label">Tipo de Camiseta: </label>
+            <label htmlFor="type-select-label">Tipo de Camiseta: </label>
             <ImageRadioButton
               images={typeOptions}
               name="shirtType"
@@ -362,9 +364,8 @@ const Details: React.FC = () => {
             />
           </div>
 
-          
           <div className="image-radio-group-color">
-          <label htmlFor="color-select-label">Color: </label>
+            <label htmlFor="color-select-label">Color: </label>
             <ImageRadioButtonColor
               images={typeOptionColor}
               name="colorType"
@@ -372,18 +373,24 @@ const Details: React.FC = () => {
               onChange={(value) => setSelectedColor(value)}
             />
           </div>
-          
-            <div className="button-container-details">
 
-              <button className="custom-button" onClick={saveAndAddToCart}>
-                <img src={saveIcon} alt="Guardar" className="button-icon-details" />
-              </button>
+          <div className="button-container-details">
+            <button className="custom-button" onClick={saveAndAddToCart}>
+              <img
+                src={saveIcon}
+                alt="Guardar"
+                className="button-icon-details"
+              />
+            </button>
 
-              <button className="d-button" onClick={makeItReal}>
-              <img src={nextIcon} alt="Siguiente" className="button-icon-details" />
-
-              </button>
-            </div>         
+            <button className="d-button" onClick={makeItReal}>
+              <img
+                src={nextIcon}
+                alt="Siguiente"
+                className="button-icon-details"
+              />
+            </button>
+          </div>
         </aside>
 
         <div className="details-canvas">
