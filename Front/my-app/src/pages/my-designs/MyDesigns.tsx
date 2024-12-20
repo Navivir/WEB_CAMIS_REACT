@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
-import Card from "../../components/cardItem/CardItem"; 
+import Card from "../../components/cardItem/CardItem";
 import "./MyDesigns.css";
 import Modal from "../../components/modal/Modal";
-import {CartItem} from '../../scripts/Types'
+import { CartItem } from "../../scripts/Types";
+import CardHome, { handleClick } from "../../components/cardHome/CardHome";
+import { Product } from "../../scripts/Types";
+import { useNavigate } from "react-router-dom";
 
 const MyDesigns = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null); 
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("UserId");
 
   useEffect(() => {
-    const userId = localStorage.getItem("UserId");
     if (!userId) {
       setError("No user ID found.");
       setLoading(false);
       return;
     }
-  
+
     fetch(`http://localhost:8080/cartItem/user/${userId}`)
       .then((response) => response.json())
       .then((data) => {
@@ -35,7 +40,6 @@ const MyDesigns = () => {
         setError("Error al cargar los diseños.");
       });
   }, []);
-  
 
   const handleOpenModal = (id: number) => {
     setSelectedItemId(id);
@@ -43,7 +47,7 @@ const MyDesigns = () => {
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
     setSelectedItemId(null);
   };
 
@@ -54,7 +58,9 @@ const MyDesigns = () => {
       })
         .then((response) => {
           if (response.ok) {
-            setCartItems((prevItems) => prevItems.filter((item) => item.id !== selectedItemId));
+            setCartItems((prevItems) =>
+              prevItems.filter((item) => item.id !== selectedItemId)
+            );
           } else {
             alert("Hubo un problema al eliminar el diseño.");
           }
@@ -68,6 +74,21 @@ const MyDesigns = () => {
         });
     }
   };
+
+  useEffect(() => {
+    if (!userId) {
+      setError("No user ID found.");
+      setLoading(false);
+      return;
+    }
+    fetch(`http://localhost:8080/get-camis-user-id/${userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.content);
+        setProducts(data.content);
+      })
+      .catch((error) => console.error("Error fetching camis:", error));
+  }, []);
 
   const handleMakeItReal = (id: number) => {
     console.log("Hacerlo realidad con ID:", id);
@@ -85,25 +106,42 @@ const MyDesigns = () => {
   return (
     <div className="my-design-container">
       <h1 className="cart-item-details-h1">Mis Diseños</h1>
+
       <div className="cart-items-my-designs">
-        {cartItems.length === 0 ? (
-          <p>No tienes diseños guardados.</p>
-        ) : (
-          cartItems.map((item) => (
-            <Card
-              key={item.id}
-              id={item.id}
-              title={item.name}
-              imageUrl={item.image} 
-              type={item.type}
-              onClick={() => {
-                console.log("Card clicked:", item.id);
-              }}
-              onDelete={() => handleOpenModal(item.id)}
-              onMakeItReal={handleMakeItReal}
+        <h2 className="h2-my-designs-input-image">Tus Productos Creados:</h2>
+        <div className="my-products-container">
+          {cartItems.length === 0 ? (
+            <p>No tienes diseños guardados.</p>
+          ) : (
+            cartItems.map((item) => (
+              <Card
+                key={item.id}
+                id={item.id}
+                title={item.name}
+                imageUrl={item.image}
+                type={item.type}
+                onClick={() => {
+                  console.log("Card clicked:", item.id);
+                }}
+                onDelete={() => handleOpenModal(item.id)}
+                onMakeItReal={handleMakeItReal}
+              />
+            ))
+          )}
+        </div>
+      </div>
+      <div className="cards-container-my-designs">
+        <h2 className="h2-my-designs-input-image">Tus Diseños de Imagen:</h2>
+        <div className="cards-container-my-designs-cards">
+          {products.map((product, index) => (
+            <CardHome
+              key={index}
+              title={product.name}
+              imageUrl={`data:image/png;base64,${product.imagen1}`}
+              onClick={() => handleClick(product.id, navigate)}
             />
-          ))
-        )}
+          ))}
+        </div>
       </div>
 
       <Modal

@@ -86,7 +86,6 @@ public class CamisService {
         return camisRepository.findByDiscountGreaterThan(0, pageable);
     }
 
-
     public void removeCami(int camiId) {
         Optional<Camis> cami = camisRepository.findById(camiId);
         if (cami.isPresent()) {
@@ -109,4 +108,15 @@ public class CamisService {
     }
 
 
+    public Page<Camis> getCamisByUserId (Pageable pegeable,Integer userId) {
+        if(userId == null && userId < 0){
+            throw new IllegalArgumentException("User Id Invalid");
+
+        }
+        Page<Camis> camis = camisRepository.findByUserId(userId, pegeable);
+        if (camis.isEmpty()){
+            throw new EntityNotFoundException("No camis found for userId: " + userId);
+        }
+        return camis;
+    }
 }

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Card from "../../components/cardHome/Card";
+import CardHome from "../../components/cardHome/CardHome";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { GenerateToken, isValidToken } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
+import {Product} from "../../scripts/Types"
 
-interface Product {
-  id: number;
-  name: string;
-  imagen1: string;
-}
+
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -181,7 +178,7 @@ const Home: React.FC = () => {
         <h2 className="h2-home-input-image">Diseños De La Comunidad:</h2>
         <div className="cards-container-home-cards">
           {products.map((product, index) => (
-            <Card
+            <CardHome
               key={index}
               title={product.name}
               imageUrl={`data:image/png;base64,${product.imagen1}`}

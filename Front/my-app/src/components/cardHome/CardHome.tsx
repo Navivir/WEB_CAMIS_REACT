@@ -6,7 +6,8 @@ import {
   Typography,
   ButtonBase,
 } from "@mui/material";
-import "./Card.css";
+import "./CardHome.css";
+import { useNavigate } from "react-router-dom";
 
 interface CardProps {
   title: string;
@@ -14,7 +15,13 @@ interface CardProps {
   onClick: () => void; // Asegúrate de que esta línea esté presente
 }
 
-const Card: React.FC<CardProps> = ({ title, imageUrl, onClick }) => {
+export const handleClick = (id: number, navigate: ReturnType<typeof useNavigate>) => {
+  navigate(`/details/${id}`);
+};
+
+
+const CardHome: React.FC<CardProps> = ({ title, imageUrl, onClick }) => {
+  
   return (
     <ButtonBase onClick={onClick} sx={{ width: "100%" }}>
       <MaterialCard
@@ -44,4 +51,4 @@ const Card: React.FC<CardProps> = ({ title, imageUrl, onClick }) => {
   );
 };
 
-export default Card;
+export default CardHome;

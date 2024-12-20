@@ -50,6 +50,17 @@ public class CamisController {
         Page<Camis> camisPage = this.camisService.getCamisPagable(pageable);
         return ResponseEntity.ok(camisPage);
     }
+
+    @GetMapping("/get-camis-user-id/{user_id}")
+    public ResponseEntity<Page <Camis>>getCamisByUserId(
+            @PathVariable Integer user_id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "15") int limit) {
+        Pageable pagable = PageRequest.of(page, limit);
+        Page <Camis> camis = camisService.getCamisByUserId(pagable, user_id);
+        return ResponseEntity.ok(camis);
+    }
+
     @GetMapping("/published")
     public ResponseEntity<Page<Camis>> getPublishedCamis(
             @RequestParam(value = "page", defaultValue = "0") int page,

@@ -17,3 +17,9 @@ export interface User {
     quantity: number;
     name: string;
   }
+
+  export interface Product {
+    id: number;
+    name: string;
+    imagen1: string;
+  }
