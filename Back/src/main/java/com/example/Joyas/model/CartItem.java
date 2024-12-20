@@ -30,6 +30,9 @@ public class CartItem {
     private String color;
 
     @Column
+    private Integer published = 0;
+
+    @Column
     private Double price;
 
     @Column

@@ -2,7 +2,6 @@ package com.example.Joyas.service;
 
 import com.example.Joyas.dao.CamisRepository;
 import com.example.Joyas.model.Camis;
-import com.example.Joyas.model.Cart;
 import jakarta.persistence.EntityNotFoundException;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +77,9 @@ public class CamisService {
     public Page<Camis> getCamisPagable(Pageable pageable) {
         return camisRepository.findAll(pageable);
     }
-    public Page<Camis> getFeaturedCamis(Pageable pageable) {
-        return camisRepository.findByFeatured(1, pageable);  // Busca donde featured es 1
+
+    public Page<Camis> getPublishedCamis(Pageable pageable) {
+        return camisRepository.findByPublished(1, pageable);
     }
 
     public Page<Camis> getDiscountedCamis(Pageable pageable) {

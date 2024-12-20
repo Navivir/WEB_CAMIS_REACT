@@ -1,21 +1,29 @@
 /* Contenedor de las tarjetas */
-.my-design-container{
-  width: 100%;
+
+html, body {
   height: 100%;
+  margin: 0;
 }
+
+.my-design-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .cart-items-my-designs {
+  flex: 1; /* Asegura que este contenedor ocupe el espacio restante */
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
-  flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+  flex-wrap: wrap;
   justify-content: flex-start;
   margin: 10px;
-  gap: 20px; /* Espacio entre las tarjetas */
+  gap: 20px;
   padding: 20px;
 }
-
 /* Imagen de la tarjeta */
 .cart-item-image {
   height: 200px; /* Fijamos una altura para las imágenes */

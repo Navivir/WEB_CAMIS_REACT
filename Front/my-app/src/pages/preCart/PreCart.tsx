@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./PreCart.css";
 import { isLoggedIn } from "../../scripts/Session";
+import Alert from "../../components/alert/Alert";
 
 interface CartItem {
   id: number;
@@ -22,6 +23,11 @@ const PreCart: React.FC = () => {
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const searchParams = new URLSearchParams(window.location.search);
   const id = searchParams.get("id");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [alertType, setAlertType] = useState<"success" | "error" | "info">(
+    "success"
+  );
 
   useEffect(() => {
     const fetchCartItem = async () => {
@@ -54,7 +60,9 @@ const PreCart: React.FC = () => {
     }
 
     if (!selectedSize || selectedSize === "" || selectedQuantity <= 0) {
-      alert("Por favor, selecciona una talla y una cantidad válida.");
+      setAlertMessage("Por favor seleccione una talla valida.");
+      setAlertType("error");
+      setShowAlert(true);
       return;
     }
 
@@ -104,6 +112,13 @@ const PreCart: React.FC = () => {
 
   return (
     <div className="cart-item-page">
+         {showAlert && (
+        <Alert
+          message={alertMessage}
+          type={alertType}
+          onClose={() => setShowAlert(false)}
+        />
+      )}
       <h1 className="cart-item-page-h1">Seleccione talla y cantidad.</h1>
       <div className="cart-item-precart">
         <img

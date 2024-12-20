@@ -41,6 +41,10 @@ public class User {
     @Column()
     private String role = "ROLE_USER"; // can be ----> ROLE_USER, ROLE_ADMIN
 
+    @Lob
+    @Column(name = "imagenPerfil", columnDefinition="LONGBLOB")
+    private byte[] imagenPerfil;
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Review> reviews;
@@ -52,5 +56,13 @@ public class User {
     @JsonIgnore
     private List<CartItem> itemsSaved;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Camis> camiSaved;
 
+
+    public void addCami(Camis cami) {
+        this.camiSaved.add(cami);
+        cami.setUser(this);
+    }
 }

@@ -23,20 +23,13 @@ public class Camis {
     private String name;
 
     @Column
-    private String material;
-
-    @Column
     private float price;
 
     @Column
     private Integer discount;
 
-    @Enumerated(EnumType.STRING)
     @Column
-    private Type type;
-
-    @Column
-    private int featured = 0;
+    private Integer published = 0;
 
     @OneToMany(mappedBy = "camis", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -50,7 +43,8 @@ public class Camis {
     @Column(name = "imagen1", columnDefinition="LONGBLOB")
     private byte[] imagen1;  // Imagen general de la camiseta (no relacionada con el color)
 
-    @Lob
-    @Column(name = "imagen2", columnDefinition="LONGBLOB")
-    private byte[] imagen2;  // Otra imagen general de la camiseta
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }

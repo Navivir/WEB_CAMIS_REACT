@@ -14,6 +14,8 @@ export const SignUpPage: React.FC = () => {
   const [surname, setSurname] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const togglePasswordVisibility = (): void => {
     setShowPassword(!showPassword);
@@ -23,16 +25,28 @@ export const SignUpPage: React.FC = () => {
     setShowRepeatPassword(!showRepeatPassword);
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handlePasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const value = e.target.value;
     setPassword(value);
     setPasswordMatch(value === repeatPassword);
   };
 
-  const handleRepeatPasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleRepeatPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const value = e.target.value;
     setRepeatPassword(value);
     setPasswordMatch(value === password);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setProfileImage(file);
+      setPreviewImage(URL.createObjectURL(file)); 
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,22 +56,24 @@ export const SignUpPage: React.FC = () => {
       return;
     }
 
-    const userData = {
-      name,
-      surname,
-      username,
-      email,
-      password,
-      birthDate: birthDate ? birthDate.toISOString().split("T")[0] : "", // Format date as string
-    };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("surname", surname);
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append(
+      "birthDate",
+      birthDate ? birthDate.toISOString().split("T")[0] : ""
+    );
+    if (profileImage) {
+      formData.append("imagenPerfil", profileImage);
+    }
 
     try {
       const response = await fetch("http://localhost:8080/users/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -82,7 +98,32 @@ export const SignUpPage: React.FC = () => {
 
         <div className="form-group">
           <div className="input-wrapper">
-            <label htmlFor="name">Your Name</label>
+            <label htmlFor="profileImage">Profile Image</label>
+            <div className="image-upload-wrapper">
+              <div className="image-preview">
+                {previewImage ? (
+                  <img src={previewImage} alt="Profile Preview" className="image-thumbnail" />
+                ) : (
+                  <span className="image-placeholder">No Image</span>
+                )}
+              </div>
+              <div className="file-input-wrapper">
+                <input
+                  id="profileImage"
+                  type="file"
+                  accept="image/*"
+                  className="file-input"
+                  onChange={handleImageChange}
+                />
+                <label htmlFor="profileImage" className="browse-button">
+                  Browse
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="input-wrapper">
+            <label htmlFor="name"></label>
             <input
               id="name"
               type="text"
@@ -95,7 +136,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="surname">Your Surname</label>
+            <label htmlFor="surname"></label>
             <input
               id="surname"
               type="text"
@@ -108,7 +149,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username"></label>
             <input
               id="username"
               type="text"
@@ -121,7 +162,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="email">Your Email</label>
+            <label htmlFor="email"></label>
             <input
               id="email"
               type="email"
@@ -134,7 +175,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="birthDate">Birth Date</label>
+            <label htmlFor="birthDate"></label>
             <DatePicker
               selected={birthDate}
               onChange={(date: Date | null) => setBirthDate(date)}
@@ -152,7 +193,7 @@ export const SignUpPage: React.FC = () => {
 
         <div className="password-group">
           <div className="input-wrapper">
-            <label htmlFor="password">Your Password</label>
+            <label htmlFor="password"></label>
             <div className="password-wrapper">
               <input
                 id="password"
@@ -177,7 +218,7 @@ export const SignUpPage: React.FC = () => {
 
         <div className="form-group password-group">
           <div className="input-wrapper">
-            <label htmlFor="repeatPassword">Repeat Password</label>
+            <label htmlFor="repeatPassword"></label>
             <div className="password-wrapper">
               <input
                 id="repeatPassword"
@@ -204,7 +245,11 @@ export const SignUpPage: React.FC = () => {
           </div>
         </div>
 
-        <button type="submit" className="submit-button" disabled={!passwordMatch}>
+        <button
+          type="submit"
+          className="submit-button"
+          disabled={!passwordMatch}
+        >
           Submit
         </button>
       </form>
