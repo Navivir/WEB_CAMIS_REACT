@@ -123,7 +123,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="name">Your Name</label>
+            <label htmlFor="name"></label>
             <input
               id="name"
               type="text"
@@ -136,7 +136,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="surname">Your Surname</label>
+            <label htmlFor="surname"></label>
             <input
               id="surname"
               type="text"
@@ -149,7 +149,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username"></label>
             <input
               id="username"
               type="text"
@@ -162,7 +162,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="email">Your Email</label>
+            <label htmlFor="email"></label>
             <input
               id="email"
               type="email"
@@ -175,7 +175,7 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="birthDate">Birth Date</label>
+            <label htmlFor="birthDate"></label>
             <DatePicker
               selected={birthDate}
               onChange={(date: Date | null) => setBirthDate(date)}
@@ -193,7 +193,7 @@ export const SignUpPage: React.FC = () => {
 
         <div className="password-group">
           <div className="input-wrapper">
-            <label htmlFor="password">Your Password</label>
+            <label htmlFor="password"></label>
             <div className="password-wrapper">
               <input
                 id="password"
@@ -218,7 +218,7 @@ export const SignUpPage: React.FC = () => {
 
         <div className="form-group password-group">
           <div className="input-wrapper">
-            <label htmlFor="repeatPassword">Repeat Password</label>
+            <label htmlFor="repeatPassword"></label>
             <div className="password-wrapper">
               <input
                 id="repeatPassword"

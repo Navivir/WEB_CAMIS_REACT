@@ -3,17 +3,20 @@ package com.example.Joyas.controller;
 import com.example.Joyas.model.*;
 import com.example.Joyas.service.CamisService;
 import com.example.Joyas.service.ColorCamiService;
+import com.example.Joyas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -24,8 +27,14 @@ public class CamisController {
     @Autowired
     private ColorCamiService colorCamiService;
 
-    public CamisController(CamisService camisService) {
+    @Autowired
+    private UserService userService;
+
+    public CamisController(CamisService camisService, ColorCamiService colorCamiService, UserService userService) {
+
         this.camisService = camisService;
+        this.colorCamiService = colorCamiService;
+        this.userService = userService;
     }
 
     @GetMapping("/camis")
@@ -41,12 +50,12 @@ public class CamisController {
         Page<Camis> camisPage = this.camisService.getCamisPagable(pageable);
         return ResponseEntity.ok(camisPage);
     }
-    @GetMapping("/featured")
-    public ResponseEntity<Page<Camis>> getFeaturedCamis(
+    @GetMapping("/published")
+    public ResponseEntity<Page<Camis>> getPublishedCamis(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "limit", defaultValue = "15") int limit) {
+            @RequestParam(value = "limit", defaultValue = "20") int limit) {
         Pageable pageable = PageRequest.of(page, limit);
-        Page<Camis> featuredCamis = this.camisService.getFeaturedCamis(pageable);
+        Page<Camis> featuredCamis = this.camisService.getPublishedCamis(pageable);
         return ResponseEntity.ok(featuredCamis);
     }
 
@@ -62,31 +71,23 @@ public class CamisController {
     @PostMapping(value = "/cami", consumes = "multipart/form-data")
     public ResponseEntity<?> insertCami(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "material", required = false) String material,
-            @RequestParam(value = "type", required = false) Type type,
             @RequestParam(value = "discount", required = false) Integer discount,
-            @RequestParam(value = "featured", required = false) Integer featured,
+            @RequestParam(value = "published", required = false) Integer published,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "price", required = false) Float price,
-            @RequestParam(value = "imagen1", required = false) MultipartFile imagen1,
-            @RequestParam(value = "imagen2", required = false) MultipartFile imagen2) throws IOException {
+            @RequestParam(value = "imagen1", required = false) MultipartFile imagen1) throws IOException {
 
         Camis cami = new Camis();
 
         if (name != null) {
             cami.setName(name);
         }
-        if (material != null) {
-            cami.setMaterial(material);
-        }
-        if (type != null) {
-            cami.setType(type);
-        }
+
         if (discount != null) {
             cami.setDiscount(discount);
         }
-        if (featured != null) {
-            cami.setFeatured(featured);
+        if (published != null) {
+            cami.setPublished(published);
         }
         if (description != null) {
             cami.setDescription(description);
@@ -97,11 +98,13 @@ public class CamisController {
         if (imagen1 != null && !imagen1.isEmpty()) {
             cami.setImagen1(camisService.resizeImage(imagen1, 500));
         }
-        if (imagen2 != null && !imagen2.isEmpty()) {
-            cami.setImagen2(imagen2.getBytes());
-        }
 
-        return this.camisService.insertCami(cami);
+        camisService.insertCami(cami);
+        DesignResponse designResponse = new DesignResponse((long) cami.getId());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(designResponse);
     }
 
     @GetMapping("/cami/{id}")
@@ -113,14 +116,10 @@ public class CamisController {
     public ResponseEntity<?> updateCamis(
             @PathVariable int id,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "material", required = false) String material,
-            @RequestParam(value = "type", required = false) Type type,
             @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "price", required = false) Float price,
-            @RequestParam(value = "discount", required = false) Integer discount,  // Añadir el parámetro discount
-            @RequestParam(value = "featured", required = false) Integer featured,    // Añadir el parámetro featured
-            @RequestParam(value = "imagen1", required = false) MultipartFile imagen1,
-            @RequestParam(value = "imagen2", required = false) MultipartFile imagen2) throws IOException {
+            @RequestParam(value = "discount", required = false) Integer discount,
+            @RequestParam(value = "published", required = false) Integer published,
+            @RequestParam(value = "imagen1", required = false) MultipartFile imagen1) throws IOException {
 
         ResponseEntity<Camis> responseEntity = camisService.getCamiById(id);
         Camis existingCamis = responseEntity.getBody();
@@ -132,30 +131,17 @@ public class CamisController {
         if (name != null) {
             existingCamis.setName(name);
         }
-        if (material != null) {
-            existingCamis.setMaterial(material);
-        }
-
-        if (type != null) {
-            existingCamis.setType(type);
-        }
         if (description != null) {
             existingCamis.setDescription(description);
-        }
-        if (price != null) {
-            existingCamis.setPrice(price);
         }
         if (discount != null) {
             existingCamis.setDiscount(discount);
         }
-        if (featured != null) {
-            existingCamis.setFeatured(featured);
+        if (published != null) {
+            existingCamis.setPublished(published);
         }
         if (imagen1 != null && !imagen1.isEmpty()) {
             existingCamis.setImagen1(imagen1.getBytes());
-        }
-        if (imagen2 != null && !imagen2.isEmpty()) {
-            existingCamis.setImagen2(imagen2.getBytes());
         }
 
         return this.camisService.updateCamis(id, existingCamis);
@@ -183,4 +169,25 @@ public class CamisController {
         }
     }
 
+    @PostMapping("/add-new-cami/{userId}")
+    public ResponseEntity<DesignResponse> addNewCamiToUser(
+            @PathVariable Long userId,
+            @RequestParam("name") String name,
+            @RequestParam("imagen1") MultipartFile image) throws IOException {
+
+        Camis cami = new Camis();
+        cami.setName(name);
+
+        byte[] imageBytes = image.getBytes();
+        cami.setImagen1(imageBytes);
+
+        userService.addNewCamiToUser(userId, cami);
+
+        DesignResponse designResponse = new DesignResponse((long) cami.getId());
+
+        // Devuelve la respuesta como JSON
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(designResponse);
+    }
 }

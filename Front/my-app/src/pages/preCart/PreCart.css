@@ -24,7 +24,7 @@
   background: #f9f9f9;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 40px;
 }
 
 .cart-item-image-pre {
@@ -101,7 +101,7 @@
   width: 100%;
   max-width: 200px;
   align-self: center;
-  background-color: #4caf50;
+  background-color: #03548ae2;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -114,12 +114,12 @@
 }
 
 .add-to-cart-button:hover {
-  background-color: #45a049;
+  background-color: #4ab7f1dc;
   transform: scale(1.03);
 }
 
 .add-to-cart-button:active {
-  background-color: #388e3c;
+  background-color: #03548ae2;
 }
 
 .cart-item-details h2 {

@@ -77,7 +77,7 @@ const Cart: React.FC = () => {
 
   return (
     <div className="cart-container">
-      <h1 className="cart-title">Tu Carrito</h1>
+      <h1 className="cart-title">Tu Carrito 🛒</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (

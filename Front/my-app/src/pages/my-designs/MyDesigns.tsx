@@ -1,25 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Card from "../../components/cardItem/CardItem"; // Asegúrate de tener el componente Card correcto
+import Card from "../../components/cardItem/CardItem"; 
 import "./MyDesigns.css";
 import Modal from "../../components/modal/Modal";
-
-// Define una interfaz para el tipo de los elementos del carrito
-interface CartItem {
-  id: number;
-  image: string;
-  type: string;
-  size: string;
-  color: string;
-  quantity: number;
-  name: string;
-}
+import {CartItem} from '../../scripts/Types'
 
 const MyDesigns = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]); // Usamos el tipo CartItem[] para el estado
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null); // Error puede ser string o null
+  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null); // ID del elemento seleccionado para eliminar
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null); 
 
   useEffect(() => {
     const userId = localStorage.getItem("UserId");
@@ -28,28 +18,33 @@ const MyDesigns = () => {
       setLoading(false);
       return;
     }
-
+  
     fetch(`http://localhost:8080/cartItem/user/${userId}`)
       .then((response) => response.json())
       .then((data) => {
-        setCartItems(data); // Asumimos que la respuesta tiene el formato adecuado
+        if (Array.isArray(data)) {
+          setCartItems(data);
+        } else {
+          console.error("Expected an array, but received:", data);
+        }
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching cart items:", error);
-        setError("There was an error fetching the cart items.");
         setLoading(false);
+        console.error("Error fetching cart items:", error);
+        setError("Error al cargar los diseños.");
       });
   }, []);
+  
 
   const handleOpenModal = (id: number) => {
-    setSelectedItemId(id); // Guardamos el ID del elemento que queremos eliminar
-    setIsModalOpen(true); // Abrimos el modal
+    setSelectedItemId(id);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Cerramos el modal
-    setSelectedItemId(null); // Limpiamos el ID seleccionado
+    setIsModalOpen(false); 
+    setSelectedItemId(null);
   };
 
   const handleConfirmDelete = () => {
@@ -59,18 +54,17 @@ const MyDesigns = () => {
       })
         .then((response) => {
           if (response.ok) {
-            // El producto ha sido eliminado correctamente
             setCartItems((prevItems) => prevItems.filter((item) => item.id !== selectedItemId));
           } else {
-            alert("Hubo un problema al eliminar el producto.");
+            alert("Hubo un problema al eliminar el diseño.");
           }
         })
         .catch((error) => {
-          console.error("Error al eliminar el producto:", error);
-          alert("Hubo un error al intentar eliminar el producto.");
+          console.error("Error al eliminar el diseño:", error);
+          alert("Hubo un error al intentar eliminar el diseño.");
         })
         .finally(() => {
-          handleCloseModal(); // Cerramos el modal después de completar la operación
+          handleCloseModal();
         });
     }
   };
@@ -93,7 +87,7 @@ const MyDesigns = () => {
       <h1 className="cart-item-details-h1">Mis Diseños</h1>
       <div className="cart-items-my-designs">
         {cartItems.length === 0 ? (
-          <p>No hay productos en el carrito.</p>
+          <p>No tienes diseños guardados.</p>
         ) : (
           cartItems.map((item) => (
             <Card
@@ -112,7 +106,6 @@ const MyDesigns = () => {
         )}
       </div>
 
-      {/* Modal para confirmar eliminación */}
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

@@ -56,5 +56,13 @@ public class User {
     @JsonIgnore
     private List<CartItem> itemsSaved;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Camis> camiSaved;
 
+
+    public void addCami(Camis cami) {
+        this.camiSaved.add(cami);
+        cami.setUser(this);
+    }
 }

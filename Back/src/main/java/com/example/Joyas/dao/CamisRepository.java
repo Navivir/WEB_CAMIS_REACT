@@ -15,10 +15,7 @@ public interface CamisRepository extends JpaRepository<Camis, Integer> {
     @Query("SELECT c FROM Camis c WHERE c.name LIKE %:keyword% OR c.description LIKE %:keyword%")
     Page<Camis> searchCamisByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    // Encuentra todas las camisetas que son destacadas
-    Page<Camis> findByFeatured(int featured, Pageable pageable);
-
-    // Encuentra todas las camisetas que tienen un descuento
+    Page<Camis> findByPublished(Integer published, Pageable pageable);
 
     Page<Camis> findByDiscountGreaterThan(Integer discount, Pageable pageable);
 

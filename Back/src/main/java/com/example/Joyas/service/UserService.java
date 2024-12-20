@@ -1,16 +1,15 @@
 package com.example.Joyas.service;
 
 import com.example.Joyas.config.JwtUtil;
+import com.example.Joyas.dao.CamisRepository;
 import com.example.Joyas.dao.CartRepository;
-import com.example.Joyas.model.Cart;
-import com.example.Joyas.model.LoginResponse;
-import com.example.Joyas.model.PasswordUpdateRequest;
-import com.example.Joyas.model.User;
+import com.example.Joyas.model.*;
 import com.example.Joyas.dao.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,12 +21,15 @@ public class UserService {
     private UserRepository userRepository;
     private CartRepository cartRepository;
 
+    private CamisRepository camisRepository;
+
     @Autowired
     private JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, CartRepository cartRepository){
+    public UserService(UserRepository userRepository, CartRepository cartRepository, CamisRepository camisRepository){
         this.userRepository = userRepository;
-        this. cartRepository = cartRepository;
+        this.cartRepository = cartRepository;
+        this.camisRepository = camisRepository;
     }
     public ResponseEntity<LoginResponse> loginUser(User loginUser) {
         // Busca al usuario por nombre de usuario o correo electrónico
@@ -143,5 +145,19 @@ public class UserService {
     public String getUsernameById(int id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(User::getUsername).orElse(null);
+    }
+
+    @Transactional
+    public void addNewCamiToUser(Long userId, Camis cami) {
+
+        User user = userRepository.findById(Math.toIntExact(userId))
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Guardar la camiseta (cami) en la base de datos para que se genere el id
+        camisRepository.save(cami);  // Asegúrate de que tienes un repositorio de Camis
+
+        user.addCami(cami);
+
+        userRepository.save(user);
     }
 }

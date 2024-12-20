@@ -1,0 +1,42 @@
+.alert {
+    padding: 10px;
+    height: 50px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    position: fixed; /* Hace que el alert sea sobrepuesto */
+    top: 20px; /* Distancia desde la parte superior */
+    left: 50%; /* Centra el alert horizontalmente */
+    transform: translateX(-50%); /* Ajusta el alert para que esté centrado */
+    z-index: 9999; /* Asegura que el alert se muestre por encima de otros elementos */
+    width: 90%; /* Ancho del alert, puedes ajustarlo a tu gusto */
+    max-width: 600px; /* Ancho máximo para que no sea muy grande */
+    box-sizing: border-box; 
+    margin-top: 50px;/* Asegura que el padding se tenga en cuenta dentro del ancho total */
+  }
+  
+  .alert-success {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .alert-error {
+    background-color: #ee2112af;
+    color: white;
+  }
+  
+  .alert-info {
+    background-color: #2196f3;
+    color: white;
+  }
+  
+  .alert-close-button {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+  }
