@@ -1,19 +1,33 @@
 import React, { useState } from "react";
-import { Card as MaterialCard, CardContent, CardMedia, Typography, ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
-import "./CardItem.css"; // Asegúrate de tener tu CSS para el card
+import {
+  Card as MaterialCard,
+  CardContent,
+  CardMedia,
+  Typography,
+  ButtonBase,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+import "./CardItem.css";
+import { CardProps } from "../../scripts/Types";
 
-interface CardProps {
-  id: number;  // Usamos `id` como número
-  title: string;
-  imageUrl: string;
-  type: string;
-  onClick: () => void;
-  onDelete: (id: number) => void;  // Nueva propiedad para eliminar el producto
-  onMakeItReal: (id: number) => void;  // Nueva propiedad para añadir al carrito
-}
-
-const CardItem: React.FC<CardProps> = ({ id, title, imageUrl, type, onClick, onDelete, onMakeItReal }) => {
+const CardItem: React.FC<CardProps> = ({
+  id,
+  title,
+  imageUrl,
+  onClick,
+  onDelete,
+  onMakeItReal,
+  showActions,
+}) => {
   const [open, setOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
+  const [isUnpublishDialogOpen, setIsUnpublishDialogOpen] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -22,6 +36,117 @@ const CardItem: React.FC<CardProps> = ({ id, title, imageUrl, type, onClick, onD
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleOpenDeleteDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleOpenPublishDialog = () => {
+    setIsPublishDialogOpen(true);
+  };
+
+  const handleClosePublishDialog = () => {
+    setIsPublishDialogOpen(false);
+    setIsPublished(true);
+  };
+
+  const handleOpenUnpublishDialog = () => {
+    setIsUnpublishDialogOpen(true);
+  };
+
+  const handleCloseUnpublishDialog = () => {
+    setIsUnpublishDialogOpen(false);
+    setIsPublished(false);
+  };
+
+  const handleConfirmDelete = (id: number) => {
+    if (id !== null) {
+      fetch(`http://localhost:8080/cartItem/${id}`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          if (response.ok) {
+            onDelete(id);
+          } else {
+            alert("Hubo un problema al eliminar el diseño.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error al eliminar el diseño:", error);
+          alert("Hubo un error al intentar eliminar el diseño.");
+        })
+        .finally(() => {
+          handleClose();
+        });
+    }
+  };
+
+  const handlePublish = (id: number) => {
+    if (id != null) {
+      fetch(`http://localhost:8080/cartItem/add-to-published/${id}`, {
+        method: "POST",
+      })
+        .then((response) => {
+          if (response.ok) {
+            handleClosePublishDialog();
+          } else {
+            alert("no se ha podido añadir el producto a publicados");
+          }
+        })
+        .catch((error) => {})
+        .finally(() => {
+          handleClose();
+        });
+    }
+  };
+
+  const handleUnpublish = (id: number) => {
+    if (id != null) {
+      fetch(`http://localhost:8080/cartItem/remove-from-published/${id}`, {
+        method: "POST",
+      })
+        .then((response) => {
+          if (response.ok) {
+            handleCloseUnpublishDialog();
+          } else {
+            alert("no se ha podido elimnar el producto de publicados");
+          }
+        })
+        .catch((error) => {})
+        .finally(() => {
+          handleClose();
+        });
+    }
+  };
+
+  const handleIsPublished = (id: number) => {
+    if (id != null) {
+      fetch(`http://localhost:8080/cartItem/is-published/${id}`)
+        .then(response => response.text())
+        .then(text => {
+          if (text === 'Item publicado') {
+            console.log('El artículo está publicado');
+            setIsPublished(true);
+          } else {
+            console.log('El artículo no está publicado');
+            setIsPublished(false);
+          }
+        })
+        .catch(error => {
+          console.error("Ha habido un problema con la petición:", error);
+          setIsPublished(false);
+        });
+    } else {
+      console.log("ID inválido");
+      setIsPublished(false);
+    }
+  };
+
+  handleIsPublished(id);
 
   return (
     <div>
@@ -56,41 +181,131 @@ const CardItem: React.FC<CardProps> = ({ id, title, imageUrl, type, onClick, onD
             <Typography variant="h6" component="div" className="card-title">
               {title}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {type}
-            </Typography>
           </CardContent>
         </MaterialCard>
       </ButtonBase>
 
       {/* Modal para ampliar la imagen */}
-      <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth  className="custom-modal">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="lg"
+        fullWidth
+        className="custom-modal"
+      >
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <img src={imageUrl} alt={title} style={{ width: "100%", height: "auto" }} />
+          <img
+            src={imageUrl}
+            alt={title}
+            style={{ width: "100%", height: "auto" }}
+          />
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => onDelete(id)}
-            color="error" // Establecemos color rojo para el botón de eliminar
-            variant="contained"
-            style={{ padding: "10px" }}
-          >
-            Eliminar
-          </Button>
-          <Button
-            onClick={() => onMakeItReal(id)}
-            color="success" // Establecemos color verde para el botón de añadir al carrito
-            variant="contained"
-            style={{ padding: "10px" }}
-          >
-            Siguiente
-          </Button>
+          {/* Condicional para mostrar los botones solo si showActions es verdadero */}
+          {showActions && (
+            <>
+              {isPublished ? (
+                <Button
+                  onClick={handleOpenUnpublishDialog}
+                  color="info"
+                  variant="contained"
+                  style={{ padding: "10px" }}
+                >
+                  Retirar
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleOpenPublishDialog}
+                  color="info"
+                  variant="contained"
+                  style={{ padding: "10px" }}
+                >
+                  Publicar
+                </Button>
+              )}
+              <Button
+                onClick={handleOpenDeleteDialog}
+                color="error"
+                variant="contained"
+                style={{ padding: "10px" }}
+              >
+                Eliminar
+              </Button>
+              <Button
+                onClick={() => onMakeItReal(id)}
+                color="success" // Establecemos color verde para el botón de añadir al carrito
+                variant="contained"
+                style={{ padding: "10px" }}
+              >
+                Siguiente
+              </Button>
+            </>
+          )}
           <Button
             onClick={handleClose}
             style={{ padding: "10px", cursor: "pointer" }}
           >
             Cerrar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Dialog de confirmación de eliminación */}
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          ¿Estás seguro de eliminar este diseño?
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Conservar
+          </Button>
+          <Button
+            onClick={() => handleConfirmDelete(id)}
+            color="secondary"
+            autoFocus
+          >
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={isPublishDialogOpen}
+        onClose={handleClosePublishDialog}
+        aria-labelledby="publish-dialog-title"
+        aria-describedby="publish-dialog-description"
+      >
+        <DialogTitle id="publish-dialog-title">
+          ¿Estás seguro de que deseas publicar este producto?
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClosePublishDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={() => handlePublish(id)} color="success" autoFocus>
+            Publicar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={isUnpublishDialogOpen}
+        onClose={handleCloseUnpublishDialog}
+        aria-labelledby="unpublish-dialog-title"
+        aria-describedby="unpublish-dialog-description"
+      >
+        <DialogTitle id="unpublish-dialog-title">
+          ¿Estás seguro de que deseas retirar este producto?
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseUnpublishDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={() => handleUnpublish(id)} color="success" autoFocus>
+            Retirar
           </Button>
         </DialogActions>
       </Dialog>

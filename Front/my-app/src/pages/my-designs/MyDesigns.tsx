@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Card from "../../components/cardItem/CardItem";
+
 import "./MyDesigns.css";
-import Modal from "../../components/modal/Modal";
+import CardItem from "../../components/cardItem/CardItem";
 import { CartItem } from "../../scripts/Types";
 import CardHome, { handleClick } from "../../components/cardHome/CardHome";
 import { Product } from "../../scripts/Types";
@@ -11,8 +11,6 @@ const MyDesigns = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
   const userId = localStorage.getItem("UserId");
@@ -39,41 +37,8 @@ const MyDesigns = () => {
         console.error("Error fetching cart items:", error);
         setError("Error al cargar los diseños.");
       });
-  }, []);
+  }, [userId]); // El efecto se ejecutará cada vez que `userId` cambie
 
-  const handleOpenModal = (id: number) => {
-    setSelectedItemId(id);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedItemId(null);
-  };
-
-  const handleConfirmDelete = () => {
-    if (selectedItemId !== null) {
-      fetch(`http://localhost:8080/cartItem/${selectedItemId}`, {
-        method: "DELETE",
-      })
-        .then((response) => {
-          if (response.ok) {
-            setCartItems((prevItems) =>
-              prevItems.filter((item) => item.id !== selectedItemId)
-            );
-          } else {
-            alert("Hubo un problema al eliminar el diseño.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error al eliminar el diseño:", error);
-          alert("Hubo un error al intentar eliminar el diseño.");
-        })
-        .finally(() => {
-          handleCloseModal();
-        });
-    }
-  };
 
   useEffect(() => {
     if (!userId) {
@@ -88,8 +53,12 @@ const MyDesigns = () => {
         setProducts(data.content);
       })
       .catch((error) => console.error("Error fetching camis:", error));
-  }, []);
+  }, [userId]);  // El efecto se ejecutará cada vez que `userId` cambie
 
+  const handleDeleteItem = (id: number) => {
+    setCartItems(cartItems.filter((item) => item.id !== id));
+  };
+  
   const handleMakeItReal = (id: number) => {
     console.log("Hacerlo realidad con ID:", id);
     window.location.href = `/pre-cart?id=${id}`;
@@ -114,18 +83,16 @@ const MyDesigns = () => {
             <p>No tienes diseños guardados.</p>
           ) : (
             cartItems.map((item) => (
-              <Card
-                key={item.id}
-                id={item.id}
-                title={item.name}
-                imageUrl={item.image}
-                type={item.type}
-                onClick={() => {
-                  console.log("Card clicked:", item.id);
-                }}
-                onDelete={() => handleOpenModal(item.id)}
-                onMakeItReal={handleMakeItReal}
-              />
+              <CardItem
+              key={item.id}
+              id={item.id}
+              title={item.name}
+              imageUrl={item.image}
+              type={item.type}
+              onDelete={handleDeleteItem}
+              onMakeItReal={handleMakeItReal}
+              showActions={true}
+            />
             ))
           )}
         </div>
@@ -144,18 +111,7 @@ const MyDesigns = () => {
         </div>
       </div>
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        message="¿Estás seguro de que deseas eliminar este diseño?"
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCloseModal}
-        confirmButtonText="Eliminar"
-        cancelButtonText="Conservar"
-        confirmButtonColor="#f08080"
-        cancelButtonColor="#5494de"
-        className={isModalOpen ? "second-modal" : ""}
-      />
+   
     </div>
   );
 };

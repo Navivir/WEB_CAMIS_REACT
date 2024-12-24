@@ -5,11 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { User } from '../../scripts/Types';
 
-interface NavbarProps {
-  onUserUpdate: (user: User) => void;
-}
 
-export function NavbarW({ onUserUpdate }: NavbarProps){
+export function NavbarW(){
   const [user, setUser] = useState<User | null>(null);
   const userName = localStorage.getItem("UserName");
   const userId = localStorage.getItem("UserId");

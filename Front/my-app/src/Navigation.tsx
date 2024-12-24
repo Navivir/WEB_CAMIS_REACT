@@ -11,8 +11,8 @@ import { User } from './scripts/Types';
 
 // Definir tipos explícitos para las props
 interface NavigationProps {
-  user: User | null; // Tipando user como User o null
-  onUserUpdate: (updatedUser: User) => void; // Tipando la función onUserUpdate
+  user: User | null; 
+  onUserUpdate: (updatedUser: User) => void;
 }
 
 const Navigation: React.FC<NavigationProps> = ({ user, onUserUpdate }) => {

@@ -74,7 +74,7 @@ html, body {
   margin-top: 2em;
   width: 80%;
   max-width: 80vw; /* También usa vw aquí para más responsividad */
-  margin-bottom: 20%;
+  margin-bottom: 5%;
   background-color: #efeee179;
   padding: 1%;
   border-radius: 10px;

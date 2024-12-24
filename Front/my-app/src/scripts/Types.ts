@@ -16,10 +16,22 @@ export interface User {
     color: string;
     quantity: number;
     name: string;
+    
   }
 
   export interface Product {
     id: number;
     name: string;
     imagen1: string;
+  }
+
+export interface CardProps {
+    id: number;
+    title: string;
+    imageUrl: string;
+    type: string;
+    onClick?: () => void;
+    onDelete: (id: number) => void; 
+    onMakeItReal: (id: number) => void;
+    showActions: boolean; 
   }

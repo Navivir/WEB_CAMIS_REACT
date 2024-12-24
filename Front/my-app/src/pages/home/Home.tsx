@@ -4,12 +4,13 @@ import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { GenerateToken, isValidToken } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
-import {Product} from "../../scripts/Types"
-
+import {Product, CartItem} from "../../scripts/Types"
+import CardItem from "../../components/cardItem/CardItem"
 
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const[cartItems, setCartItems] = useState<CartItem[]>([]);
   const [image, setImage] = useState<File | null>(null);
   const [imageName, setImageName] = useState<string>(""); // Nuevo estado para el nombre de la imagen
   const navigate = useNavigate();
@@ -35,6 +36,14 @@ const Home: React.FC = () => {
     }
   }, [token]);
 
+  useEffect(() => {
+    fetch ("http://localhost:8080/cartItem/published")
+        .then((response) => response.json())
+        .then((data) => {setCartItems(data);
+      
+    }).catch((error) => console.error("Errror fetching the items", error))
+
+  }, []);
   useEffect(() => {
     fetch("http://localhost:8080/published")
       .then((response) => response.json())
@@ -122,6 +131,15 @@ const Home: React.FC = () => {
     navigate(`/details/${id}`);
   };
 
+  const handleDeleteItem = (id: number) => {
+    setCartItems(cartItems.filter((item) => item.id !== id));
+  };
+  
+  const handleMakeItReal = (id: number) => {
+    console.log("Hacerlo realidad con ID:", id);
+    window.location.href = `/pre-cart?id=${id}`;
+  };
+
   return (
     <div className="home-container">
       {showAlert && (
@@ -185,6 +203,25 @@ const Home: React.FC = () => {
               onClick={() => handleClick(product.id)}
             />
           ))}
+        </div>
+      </div>
+      <div className = 'card-item-container'>
+        <h2 className="h2-home-input-image">Productos Diseñados Por La Comunidad:</h2>
+        <div className = 'cart-cards-item-container'>
+          {cartItems.map((cartItem, index) => (
+               <CardItem
+              key={cartItem.id}
+              id={cartItem.id}
+              title={cartItem.name}
+              imageUrl={cartItem.image}
+              type={cartItem.type}
+              onDelete={handleDeleteItem}
+              onMakeItReal={handleMakeItReal}
+              showActions={false}
+              
+            />
+          ))}
+
         </div>
       </div>
     </div>

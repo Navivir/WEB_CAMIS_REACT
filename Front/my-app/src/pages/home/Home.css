@@ -19,10 +19,9 @@
 .cards-container-home {
   grid-template-columns: repeat(auto-fill, minmax(15em, 1fr)); /* Em en lugar de px para una mejor adaptación */
   gap: 1em; /* Espacio entre cartas en em */
-  margin-top: 2em;
   width: 75%;
   max-width: 80vw; /* También usa vw aquí para más responsividad */
-  margin-bottom: 20%;
+  margin-bottom: 5%;
   background-color: #efeee179;
   padding: 5%;
   border-radius: 10px;
@@ -30,7 +29,26 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.card-item-container{
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr)); /* Em en lugar de px para una mejor adaptación */
+  gap: 1em; /* Espacio entre cartas en em */
+  width: 75%;
+  max-width: 80vw; /* También usa vw aquí para más responsividad */
+  margin-bottom: 5%;
+  background-color: #f2e0c679;
+  padding: 5%;
+  border-radius: 10px;
+  border: 1px solid #fefefe;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 .cards-container-home-cards{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 1em;
+}
+
+.cart-cards-item-container{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
   gap: 1em;
@@ -47,7 +65,7 @@
   box-shadow: inset;
   border-radius: 10px;
   border: 1px solid #a9ceef;
-  margin-bottom: 30px;
+  margin-bottom: 5%;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 
 }
