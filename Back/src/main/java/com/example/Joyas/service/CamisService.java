@@ -78,9 +78,7 @@ public class CamisService {
         return camisRepository.findAll(pageable);
     }
 
-    public Page<Camis> getPublishedCamis(Pageable pageable) {
-        return camisRepository.findByPublished(1, pageable);
-    }
+
 
     public Page<Camis> getDiscountedCamis(Pageable pageable) {
         return camisRepository.findByDiscountGreaterThan(0, pageable);
@@ -118,5 +116,40 @@ public class CamisService {
             throw new EntityNotFoundException("No camis found for userId: " + userId);
         }
         return camis;
+    }
+
+    public ResponseEntity<?> publish(Long id) {
+        Optional<Camis> cami = camisRepository.findById(Math.toIntExact((Long) id));
+        if(cami.isPresent()){
+            cami.get().setPublished(1);
+            camisRepository.save(cami.get());
+            return ResponseEntity.ok().body("Imagen de producto insertada a publicados");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se encontró la imagen");
+
+    }
+
+    public ResponseEntity<?> unpublish(Long id) {
+        Optional<Camis> cami = camisRepository.findById(Math.toIntExact((Long) id));
+        if(cami.isPresent()){
+            cami.get().setPublished(0);
+            camisRepository.save(cami.get());
+            return ResponseEntity.ok().body("Imagen de producto retirada de publicados");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se encontró la imagen");
+    }
+
+    public Page<Camis> getPublishedCamis(Pageable pageable) {
+        return camisRepository.findByPublished(1, pageable);
+    }
+
+    public boolean isPublished(Long id) {
+        Optional<Camis> cami = camisRepository.findById(Math.toIntExact(id));
+        if(cami.get().getPublished() == 1){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

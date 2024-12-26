@@ -39,7 +39,8 @@ const Home: React.FC = () => {
   useEffect(() => {
     fetch ("http://localhost:8080/cartItem/published")
         .then((response) => response.json())
-        .then((data) => {setCartItems(data);
+        .then((data) => {
+          setCartItems(data);
       
     }).catch((error) => console.error("Errror fetching the items", error))
 
@@ -48,8 +49,8 @@ const Home: React.FC = () => {
     fetch("http://localhost:8080/published")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.content);
-        setProducts(data.content);
+        const imgsList = data._embedded?.camisList || [];
+        setProducts(imgsList);
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
@@ -214,7 +215,6 @@ const Home: React.FC = () => {
               id={cartItem.id}
               title={cartItem.name}
               imageUrl={cartItem.image}
-              type={cartItem.type}
               onDelete={handleDeleteItem}
               onMakeItReal={handleMakeItReal}
               showActions={false}

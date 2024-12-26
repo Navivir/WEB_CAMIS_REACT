@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import "./MyDesigns.css";
 import CardItem from "../../components/cardItem/CardItem";
-import { CartItem } from "../../scripts/Types";
-import CardHome, { handleClick } from "../../components/cardHome/CardHome";
-import { Product } from "../../scripts/Types";
+import CardImg from "../../components/cardImg/CardImg";
+import { CartItem, ImageDesign } from "../../scripts/Types";
 import { useNavigate } from "react-router-dom";
+
+// import { TabItem } from "flowbite-react";
 
 const MyDesigns = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [images, setImages] = useState<ImageDesign[]>([]);
   const navigate = useNavigate();
   const userId = localStorage.getItem("UserId");
 
@@ -49,8 +49,8 @@ const MyDesigns = () => {
     fetch(`http://localhost:8080/get-camis-user-id/${userId}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.content);
-        setProducts(data.content);
+        const camisList = data._embedded?.camisList || [];
+        setImages(camisList);
       })
       .catch((error) => console.error("Error fetching camis:", error));
   }, [userId]);  // El efecto se ejecutará cada vez que `userId` cambie
@@ -63,6 +63,16 @@ const MyDesigns = () => {
     console.log("Hacerlo realidad con ID:", id);
     window.location.href = `/pre-cart?id=${id}`;
   };
+
+  const handleDeleteImg = (id: number) => {
+    setImages(images.filter((item) => item.id !== id));
+  };
+
+  const handleDesign = (id: number) => {
+    console.log("Diseñar con ID:", id);
+    navigate(`/details/${id}`);
+  };
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -88,7 +98,6 @@ const MyDesigns = () => {
               id={item.id}
               title={item.name}
               imageUrl={item.image}
-              type={item.type}
               onDelete={handleDeleteItem}
               onMakeItReal={handleMakeItReal}
               showActions={true}
@@ -100,13 +109,16 @@ const MyDesigns = () => {
       <div className="cards-container-my-designs">
         <h2 className="h2-my-designs-input-image">Tus Diseños de Imagen:</h2>
         <div className="cards-container-my-designs-cards">
-          {products.map((product, index) => (
-            <CardHome
-              key={index}
-              title={product.name}
-              imageUrl={`data:image/png;base64,${product.imagen1}`}
-              onClick={() => handleClick(product.id, navigate)}
-            />
+          {images.map((img) => (
+           <CardImg
+            key={img.id}
+            id={img.id}
+            title={img.name}
+            imageUrl={`data:image/png;base64, ${img.imagen1}`}
+            onDelete={handleDeleteImg}
+            onMakeItReal={handleDesign}
+            showActions={true}          
+           />          
           ))}
         </div>
       </div>
