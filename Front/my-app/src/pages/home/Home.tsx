@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
-import Card from "../../components/cardHome/Card";
+import CardHome from "../../components/cardHome/CardHome";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { GenerateToken, isValidToken } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
-
-interface Product {
-  id: number;
-  name: string;
-  imagen1: string;
-}
+import { Product, CartItem } from "../../scripts/Types";
+import CardItem from "../../components/cardItem/CardItem";
+import Modal from "../../components/modal/Modal";
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [image, setImage] = useState<File | null>(null);
-  const [imageName, setImageName] = useState<string>(""); // Nuevo estado para el nombre de la imagen
+  const [imageName, setImageName] = useState<string>("");
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
+  const [button1Message, setbutton1Message] = useState<string>("");
+  const [button2Message, setbutton2Message] = useState<string>("");
   const token = localStorage.getItem("token");
   const user_id = localStorage.getItem("UserId");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -39,11 +42,19 @@ const Home: React.FC = () => {
   }, [token]);
 
   useEffect(() => {
+    fetch("http://localhost:8080/cartItem/published")
+      .then((response) => response.json())
+      .then((data) => {
+        setCartItems(data);
+      })
+      .catch((error) => console.error("Errror fetching the items", error));
+  }, []);
+  useEffect(() => {
     fetch("http://localhost:8080/published")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.content);
-        setProducts(data.content);
+        const imgsList = data._embedded?.camisList || [];
+        setProducts(imgsList);
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
@@ -121,7 +132,36 @@ const Home: React.FC = () => {
   };
 
   const handleClick = (id: number) => {
-    // Navegar a la página de detalles con el id
+    const selectedProduct = products.find(product => product.id === id);
+    if (selectedProduct) {
+      setProduct(selectedProduct);
+    }
+    setModalMessage("¿Deseas aplicar el diseño seleccionado a una camiseta?");
+    setbutton1Message("Aceptar");
+    setbutton2Message("Cancelar");
+    setIsModalOpen(true);
+    setModalMessage(
+      "¿Deseas aplicar el diseño seleccionado a una camiseta?."
+    );
+    setbutton1Message("Aceptar");
+    setbutton2Message("Cancelar");
+    setIsModalOpen(true);
+
+
+  };
+
+  const handleDeleteItem = (id: number) => {
+    setCartItems(cartItems.filter((item) => item.id !== id));
+  };
+
+  const handleMakeItReal = (id: number) => {
+    window.location.href = `/pre-cart?id=${id}`;
+  };
+  const handleStayDesigning = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleGoToDesign = (id:number) => {
     navigate(`/details/${id}`);
   };
 
@@ -181,7 +221,7 @@ const Home: React.FC = () => {
         <h2 className="h2-home-input-image">Diseños De La Comunidad:</h2>
         <div className="cards-container-home-cards">
           {products.map((product, index) => (
-            <Card
+            <CardHome
               key={index}
               title={product.name}
               imageUrl={`data:image/png;base64,${product.imagen1}`}
@@ -189,6 +229,35 @@ const Home: React.FC = () => {
             />
           ))}
         </div>
+      </div>
+      <div className="card-item-container">
+        <h2 className="h2-home-input-image">
+          Productos Diseñados Por La Comunidad:
+        </h2>
+        <div className="cart-cards-item-container">
+          {cartItems.map((cartItem, index) => (
+            <CardItem
+              key={cartItem.id}
+              id={cartItem.id}
+              title={cartItem.name}
+              imageUrl={cartItem.image}
+              onDelete={handleDeleteItem}
+              onMakeItReal={handleMakeItReal}
+              showActions={false}
+            />
+          ))}
+        </div>
+            <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            message={modalMessage}
+            onConfirm={() => product && handleGoToDesign(product.id)} 
+            onCancel={handleStayDesigning}
+            confirmButtonText={button1Message}
+            cancelButtonText={button2Message}
+            confirmButtonColor="#4CAF50"
+            cancelButtonColor="#5494de"
+          />
       </div>
     </div>
   );

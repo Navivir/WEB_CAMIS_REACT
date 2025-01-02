@@ -11,10 +11,10 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
-import "./CardItem.css";
-import { CardProps } from "../../scripts/Types";
+import "./CardImg.css";
+import { CardPropsImg } from "../../scripts/Types";
 
-const CardItem: React.FC<CardProps> = ({
+const CardImg: React.FC<CardPropsImg> = ({
   id,
   title,
   imageUrl,
@@ -63,9 +63,9 @@ const CardItem: React.FC<CardProps> = ({
     setIsPublished(false);
   };
 
-  const handleConfirmDelete = (id: number) => {
+  const handleConfirmDeleteImg = (id: number) => {
     if (id !== null) {
-      fetch(`http://localhost:8080/cartItem/${id}`, {
+      fetch(`http://localhost:8080/cami/${id}`, {
         method: "DELETE",
       })
         .then((response) => {
@@ -81,20 +81,21 @@ const CardItem: React.FC<CardProps> = ({
         })
         .finally(() => {
           handleClose();
+          handleCloseDeleteDialog();
         });
     }
   };
 
   const handlePublish = (id: number) => {
     if (id != null) {
-      fetch(`http://localhost:8080/cartItem/add-to-published/${id}`, {
+      fetch(`http://localhost:8080/publish/${id}`, {
         method: "POST",
       })
         .then((response) => {
           if (response.ok) {
             handleClosePublishDialog();
           } else {
-            alert("no se ha podido añadir el producto a publicados");
+            alert("no se ha podido añadir el diseño a publicados");
           }
         })
         .catch((error) => {})
@@ -106,14 +107,14 @@ const CardItem: React.FC<CardProps> = ({
 
   const handleUnpublish = (id: number) => {
     if (id != null) {
-      fetch(`http://localhost:8080/cartItem/remove-from-published/${id}`, {
+      fetch(`http://localhost:8080/unpublish/${id}`, {
         method: "POST",
       })
         .then((response) => {
           if (response.ok) {
             handleCloseUnpublishDialog();
           } else {
-            alert("no se ha podido elimnar el producto de publicados");
+            alert("no se ha podido elimnar el diseño de publicados");
           }
         })
         .catch((error) => {})
@@ -125,18 +126,18 @@ const CardItem: React.FC<CardProps> = ({
 
   const handleIsPublished = (id: number) => {
     if (id != null) {
-      fetch(`http://localhost:8080/cartItem/is-published/${id}`)
-        .then(response => response.text())
-        .then(text => {
-          if (text === 'Item publicado') {
-            console.log('El artículo está publicado');
+      fetch(`http://localhost:8080/is-published/${id}`)
+        .then((response) => response.text())
+        .then((text) => {
+          if (text === "Img publicada") {
+            console.log("La imagen está publicada");
             setIsPublished(true);
           } else {
-            console.log('El artículo no está publicado');
+            console.log("La imagen no está publicada");
             setIsPublished(false);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Ha habido un problema con la petición:", error);
           setIsPublished(false);
         });
@@ -170,15 +171,40 @@ const CardItem: React.FC<CardProps> = ({
           {/* Imagen clickeable */}
           <CardMedia
             component="img"
-            height="200"
+            sx={{
+              height: "75%", // La imagen ocupa el 75% de la tarjeta
+              cursor: "pointer",
+              objectFit: "cover", // Asegura que la imagen no se deforme
+            }}
             image={imageUrl}
             alt={title}
             onClick={handleClickOpen}
-            sx={{ cursor: "pointer" }} // Cambiar el cursor para indicar que es clickeable
+            className="image-card-my-designs"
           />
           {/* Contenido del card */}
-          <CardContent>
-            <Typography variant="h6" component="div" className="card-title">
+          <CardContent
+            sx={{
+              height: "25%", // El contenido (título) ocupa el 25% de la tarjeta
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              padding: "8px", // Espaciado interno opcional
+            }}
+          >
+            <Typography
+              variant="h6"
+              component="div"
+              className="card-title"
+              sx={{
+                fontSize: "16px",
+                fontFamily: "Trebuchet MS",
+                color: "#333",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
               {title}
             </Typography>
           </CardContent>
@@ -238,7 +264,7 @@ const CardItem: React.FC<CardProps> = ({
                 variant="contained"
                 style={{ padding: "10px" }}
               >
-                Siguiente
+                Aplicar
               </Button>
             </>
           )}
@@ -265,7 +291,7 @@ const CardItem: React.FC<CardProps> = ({
             Conservar
           </Button>
           <Button
-            onClick={() => handleConfirmDelete(id)}
+            onClick={() => handleConfirmDeleteImg(id)}
             color="secondary"
             autoFocus
           >
@@ -313,4 +339,4 @@ const CardItem: React.FC<CardProps> = ({
   );
 };
 
-export default CardItem;
+export default CardImg;

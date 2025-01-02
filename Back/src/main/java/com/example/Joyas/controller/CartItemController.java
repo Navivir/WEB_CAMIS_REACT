@@ -1,7 +1,10 @@
 package com.example.Joyas.controller;
 
+import com.example.Joyas.exceptions.EmptyListException;
 import com.example.Joyas.model.CartItem;
 import com.example.Joyas.service.CartItemService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -83,6 +86,66 @@ public class CartItemController {
             return ResponseEntity.ok().body(new CartController.ResponseMessage("Item eliminado de Mis Diseños"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CartController.ResponseMessage("Error al eliminar de Mis Diseños"));
+        }
+    }
+
+    @GetMapping("/published")
+    public ResponseEntity<?> getPublished(@RequestParam(value = "page", defaultValue = "0") int page,
+                                          @RequestParam(value = "limit", defaultValue = "15") int limit) {
+            try{
+                Pageable pageable = PageRequest.of(page, limit);
+                List<CartItem> publidhedItems = cartItemService.getPublished(pageable);
+                return ResponseEntity.status(HttpStatus.OK).body(publidhedItems);
+        }catch (EmptyListException ex){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            }
+    }
+
+    @PostMapping("/add-to-published/{id}")
+    public ResponseEntity<?> addToPublished(@PathVariable Long id){
+        if(id <= 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try{
+            cartItemService.publish(id);
+            return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+    }
+
+    @PostMapping("/remove-from-published/{id}")
+    public ResponseEntity<?> unpublish(@PathVariable Long id){
+        if(id <= 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try{
+            cartItemService.unpublish(id);
+            return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+    }
+
+    @GetMapping("/is-published/{id}")
+    public ResponseEntity<?> isPublished(@PathVariable Long id){
+        if(id <= 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try{
+            boolean isPublished = cartItemService.isPublished(id);
+            if (isPublished) {
+                return ResponseEntity.ok("Item publicado");
+            } else {
+                return ResponseEntity.ok("Item no publicado");
+            }
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

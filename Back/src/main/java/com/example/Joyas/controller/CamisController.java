@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,13 +53,28 @@ public class CamisController {
         Page<Camis> camisPage = this.camisService.getCamisPagable(pageable);
         return ResponseEntity.ok(camisPage);
     }
-    @GetMapping("/published")
-    public ResponseEntity<Page<Camis>> getPublishedCamis(
+
+    @GetMapping("/get-camis-user-id/{user_id}")
+    public ResponseEntity<PagedModel<?>> getCamisByUserId(
+            @PathVariable Integer user_id,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "limit", defaultValue = "20") int limit) {
+            @RequestParam(value = "limit", defaultValue = "15") int limit,
+            PagedResourcesAssembler<Camis> pagedResourcesAssembler) {
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<Camis> camis = camisService.getCamisByUserId(pageable, user_id);
+        PagedModel<?> pagedModel = pagedResourcesAssembler.toModel(camis);
+        return ResponseEntity.ok(pagedModel);
+    }
+
+    @GetMapping("/published")
+    public ResponseEntity<PagedModel<EntityModel<Camis>>> getPublishedCamis(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "20") int limit,
+            PagedResourcesAssembler<Camis> pagedResourcesAssembler) {
         Pageable pageable = PageRequest.of(page, limit);
         Page<Camis> featuredCamis = this.camisService.getPublishedCamis(pageable);
-        return ResponseEntity.ok(featuredCamis);
+        PagedModel<EntityModel<Camis>> pagedModel = pagedResourcesAssembler.toModel(featuredCamis);
+        return ResponseEntity.ok(pagedModel);
     }
 
     @GetMapping("/discounted")
@@ -141,7 +159,7 @@ public class CamisController {
             existingCamis.setPublished(published);
         }
         if (imagen1 != null && !imagen1.isEmpty()) {
-            existingCamis.setImagen1(imagen1.getBytes());
+            existingCamis.setImagen1(camisService.resizeImage(imagen1, 500));
         }
 
         return this.camisService.updateCamis(id, existingCamis);
@@ -178,8 +196,7 @@ public class CamisController {
         Camis cami = new Camis();
         cami.setName(name);
 
-        byte[] imageBytes = image.getBytes();
-        cami.setImagen1(imageBytes);
+        cami.setImagen1(camisService.resizeImage(image, 500));
 
         userService.addNewCamiToUser(userId, cami);
 
@@ -190,4 +207,44 @@ public class CamisController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(designResponse);
     }
+
+    @PostMapping("/publish/{id}")
+    public ResponseEntity<?> publish(@PathVariable Long id){
+        if (id<= 0 ||id == null){
+            return ResponseEntity.badRequest().body("El ID debe ser un valor mayor que 0.");
+        }
+        return camisService.publish(id);
+
+    }
+
+    @PostMapping("/unpublish/{id}")
+    public ResponseEntity<?> unpublish(@PathVariable Long id){
+        if (id<= 0 ||id == null){
+            return ResponseEntity.badRequest().body("El ID debe ser un valor mayor que 0.");
+        }
+        return camisService.unpublish(id);
+
+    }
+
+    @GetMapping("/is-published/{id}")
+    public ResponseEntity<?> isPublished(@PathVariable Long id){
+        if (id<= 0 ||id == null){
+            return ResponseEntity.badRequest().body("El ID debe ser un valor mayor que 0.");
+        }
+        try {
+            boolean isPublished = camisService.isPublished(id);
+            if (isPublished) {
+                return ResponseEntity.ok().body("Img publicada");
+            }
+            else{
+                return ResponseEntity.ok().body("Img no publicada");
+            }
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+
+    }
+
+
 }

@@ -19,4 +19,6 @@ public interface CamisRepository extends JpaRepository<Camis, Integer> {
 
     Page<Camis> findByDiscountGreaterThan(Integer discount, Pageable pageable);
 
+    Page<Camis> findByUserId(Integer userId, Pageable pageable);
+
 }

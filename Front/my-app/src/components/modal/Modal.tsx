@@ -24,7 +24,6 @@ const Modal: React.FC<ModalProps> = ({
   cancelButtonText,
   confirmButtonColor,
   cancelButtonColor,
-  className,
 }) => {
   if (!isOpen) return null; // Si el modal no está abierto, no lo renderizamos
 

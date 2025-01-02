@@ -98,7 +98,6 @@ export const SignUpPage: React.FC = () => {
 
         <div className="form-group">
           <div className="input-wrapper">
-            <label htmlFor="profileImage">Profile Image</label>
             <div className="image-upload-wrapper">
               <div className="image-preview">
                 {previewImage ? (
