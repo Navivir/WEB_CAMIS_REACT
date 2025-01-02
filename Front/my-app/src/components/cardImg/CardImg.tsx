@@ -71,7 +71,6 @@ const CardImg: React.FC<CardPropsImg> = ({
         .then((response) => {
           if (response.ok) {
             onDelete(id);
-            
           } else {
             alert("Hubo un problema al eliminar el diseño.");
           }
@@ -128,17 +127,17 @@ const CardImg: React.FC<CardPropsImg> = ({
   const handleIsPublished = (id: number) => {
     if (id != null) {
       fetch(`http://localhost:8080/is-published/${id}`)
-        .then(response => response.text())
-        .then(text => {
-          if (text === 'Img publicada') {
-            console.log('La imagen está publicada');
+        .then((response) => response.text())
+        .then((text) => {
+          if (text === "Img publicada") {
+            console.log("La imagen está publicada");
             setIsPublished(true);
           } else {
-            console.log('La imagen no está publicada');
+            console.log("La imagen no está publicada");
             setIsPublished(false);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Ha habido un problema con la petición:", error);
           setIsPublished(false);
         });
@@ -172,15 +171,40 @@ const CardImg: React.FC<CardPropsImg> = ({
           {/* Imagen clickeable */}
           <CardMedia
             component="img"
-            height="200"
+            sx={{
+              height: "75%", // La imagen ocupa el 75% de la tarjeta
+              cursor: "pointer",
+              objectFit: "cover", // Asegura que la imagen no se deforme
+            }}
             image={imageUrl}
             alt={title}
             onClick={handleClickOpen}
-            sx={{ cursor: "pointer" }} // Cambiar el cursor para indicar que es clickeable
+            className="image-card-my-designs"
           />
           {/* Contenido del card */}
-          <CardContent>
-            <Typography variant="h6" component="div" className="card-title">
+          <CardContent
+            sx={{
+              height: "25%", // El contenido (título) ocupa el 25% de la tarjeta
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              padding: "8px", // Espaciado interno opcional
+            }}
+          >
+            <Typography
+              variant="h6"
+              component="div"
+              className="card-title"
+              sx={{
+                fontSize: "16px",
+                fontFamily: "Trebuchet MS",
+                color: "#333",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
               {title}
             </Typography>
           </CardContent>

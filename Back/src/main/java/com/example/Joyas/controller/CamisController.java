@@ -159,7 +159,7 @@ public class CamisController {
             existingCamis.setPublished(published);
         }
         if (imagen1 != null && !imagen1.isEmpty()) {
-            existingCamis.setImagen1(imagen1.getBytes());
+            existingCamis.setImagen1(camisService.resizeImage(imagen1, 500));
         }
 
         return this.camisService.updateCamis(id, existingCamis);
@@ -196,8 +196,7 @@ public class CamisController {
         Camis cami = new Camis();
         cami.setName(name);
 
-        byte[] imageBytes = image.getBytes();
-        cami.setImagen1(imageBytes);
+        cami.setImagen1(camisService.resizeImage(image, 500));
 
         userService.addNewCamiToUser(userId, cami);
 

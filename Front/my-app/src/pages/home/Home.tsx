@@ -4,16 +4,21 @@ import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { GenerateToken, isValidToken } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
-import {Product, CartItem} from "../../scripts/Types"
-import CardItem from "../../components/cardItem/CardItem"
-
+import { Product, CartItem } from "../../scripts/Types";
+import CardItem from "../../components/cardItem/CardItem";
+import Modal from "../../components/modal/Modal";
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const[cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [image, setImage] = useState<File | null>(null);
-  const [imageName, setImageName] = useState<string>(""); // Nuevo estado para el nombre de la imagen
+  const [imageName, setImageName] = useState<string>("");
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
+  const [button1Message, setbutton1Message] = useState<string>("");
+  const [button2Message, setbutton2Message] = useState<string>("");
   const token = localStorage.getItem("token");
   const user_id = localStorage.getItem("UserId");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -37,13 +42,12 @@ const Home: React.FC = () => {
   }, [token]);
 
   useEffect(() => {
-    fetch ("http://localhost:8080/cartItem/published")
-        .then((response) => response.json())
-        .then((data) => {
-          setCartItems(data);
-      
-    }).catch((error) => console.error("Errror fetching the items", error))
-
+    fetch("http://localhost:8080/cartItem/published")
+      .then((response) => response.json())
+      .then((data) => {
+        setCartItems(data);
+      })
+      .catch((error) => console.error("Errror fetching the items", error));
   }, []);
   useEffect(() => {
     fetch("http://localhost:8080/published")
@@ -128,17 +132,37 @@ const Home: React.FC = () => {
   };
 
   const handleClick = (id: number) => {
-    // Navegar a la página de detalles con el id
-    navigate(`/details/${id}`);
+    const selectedProduct = products.find(product => product.id === id);
+    if (selectedProduct) {
+      setProduct(selectedProduct);
+    }
+    setModalMessage("¿Deseas aplicar el diseño seleccionado a una camiseta?");
+    setbutton1Message("Aceptar");
+    setbutton2Message("Cancelar");
+    setIsModalOpen(true);
+    setModalMessage(
+      "¿Deseas aplicar el diseño seleccionado a una camiseta?."
+    );
+    setbutton1Message("Aceptar");
+    setbutton2Message("Cancelar");
+    setIsModalOpen(true);
+
+
   };
 
   const handleDeleteItem = (id: number) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
   };
-  
+
   const handleMakeItReal = (id: number) => {
-    console.log("Hacerlo realidad con ID:", id);
     window.location.href = `/pre-cart?id=${id}`;
+  };
+  const handleStayDesigning = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleGoToDesign = (id:number) => {
+    navigate(`/details/${id}`);
   };
 
   return (
@@ -206,11 +230,13 @@ const Home: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className = 'card-item-container'>
-        <h2 className="h2-home-input-image">Productos Diseñados Por La Comunidad:</h2>
-        <div className = 'cart-cards-item-container'>
+      <div className="card-item-container">
+        <h2 className="h2-home-input-image">
+          Productos Diseñados Por La Comunidad:
+        </h2>
+        <div className="cart-cards-item-container">
           {cartItems.map((cartItem, index) => (
-               <CardItem
+            <CardItem
               key={cartItem.id}
               id={cartItem.id}
               title={cartItem.name}
@@ -218,11 +244,20 @@ const Home: React.FC = () => {
               onDelete={handleDeleteItem}
               onMakeItReal={handleMakeItReal}
               showActions={false}
-              
             />
           ))}
-
         </div>
+            <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            message={modalMessage}
+            onConfirm={() => product && handleGoToDesign(product.id)} 
+            onCancel={handleStayDesigning}
+            confirmButtonText={button1Message}
+            cancelButtonText={button2Message}
+            confirmButtonColor="#4CAF50"
+            cancelButtonColor="#5494de"
+          />
       </div>
     </div>
   );
