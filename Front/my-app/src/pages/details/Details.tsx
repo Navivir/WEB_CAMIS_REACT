@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as fabric from "fabric";
 import { useParams } from "react-router-dom";
 import "./Details.css";
 import Modal from "../../components/modal/Modal";
@@ -13,11 +12,14 @@ import negro from "../../logos/negro.png";
 import saveIcon from "../../logos/disquete.png";
 import nextIcon from "../../logos/next.png";
 import { isLoggedIn } from "../../scripts/Session";
+import { CanvasManager } from "../../fabric/CanvasManager";
 
 interface Product {
   imagen1: string;
   imagenDelantera: string;
+  imagenTrasera: string;
 }
+
 const typeOptions = [
   {
     src: camiseta,
@@ -62,8 +64,15 @@ const Details: React.FC = () => {
   const [button2Message, setbutton2Message] = useState<string>("");
   const [idCami, setIdCami] = useState<string | null>(null);
   const [nameCami, setNameCami] = useState<string>("");
-  console.log(selectedType);
-  console.log(selectedColor);
+  const [currentView, setCurrentView] = useState<"delantera" | "trasera">(
+    "delantera"
+  );
+  const [appliedImages, setAppliedImages] = useState<{
+    delantera?: string;
+    trasera?: string;
+  }>({});
+  const [isEditableDelantera, setIsEditableDelantera] = useState(true);
+  const [isEditableTrasera, setIsEditableTrasera] = useState(true);
 
   useEffect(() => {
     fetch(`http://localhost:8080/cami/${id}`)
@@ -99,146 +108,41 @@ const Details: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!canvasRef.current || !product || !colorProduct) return;
+    if (!canvasRef.current) return;
 
-    const canvas = new fabric.Canvas(canvasRef.current);
+    // Verificar si la vista actual tiene una imagen aplicada
+    if (appliedImages[currentView]) {
+      // Si hay una imagen aplicada, no mostrar el canvas
+      canvasRef.current.style.display = "none";
+    } else {
+      // Si no hay imagen aplicada, mostrar el canvas
+      canvasRef.current.style.display = "block";
 
-    const addImagesToCanvas = async () => {
-      try {
-        const [baseImage, camiImage] = await Promise.all([
-          fabric.FabricImage.fromURL(
-            `data:image/png;base64,${product.imagen1}`
-          ),
-          fabric.FabricImage.fromURL(
-            `data:image/png;base64,${colorProduct.imagenDelantera}`
-          ),
-        ]);
-        // Definir el rectángulo que limita el área de movimiento
-        const limitRect = new fabric.Rect({
-          left: 150,
-          top: 100,
-          width: 300,
-          height: 400,
-          fill: "rgba(105, 103, 103, 0)",
-          selectable: false,
-          hasBorders: false,
-          hasControls: false,
-        });
+      const canvasManager = new CanvasManager(canvasRef.current);
 
-        baseImage.set({
-          top: 140,
-          left: 240,
-          scaleX: 0.25,
-          scaleY: 0.25,
-          selectable: true,
-        });
+      
+      const baseImageSrc = `data:image/png;base64,${product?.imagen1}`;
+      const camiImageSrc =
+        currentView === "delantera"
+          ? `data:image/png;base64,${colorProduct?.imagenDelantera}`
+          : `data:image/png;base64,${colorProduct?.imagenTrasera}`;
 
-        camiImage.set({
-          top: 0,
-          left: 20,
-          selectable: false,
-          hasControls: true,
-        });
+      const limitRectParams =
+        currentView === "delantera"
+          ? { left: 150, top: 100, width: 300, height: 400 }
+          : { left: 200, top: 150, width: 250, height: 350 };
 
-        canvas.add(camiImage);
-        canvas.add(limitRect);
-        canvas.add(baseImage);
+      canvasManager.addImagesToCanvas(
+        baseImageSrc,
+        camiImageSrc,
+        limitRectParams
+      );
 
-        // Escalar las imágenes antes de agregarlas al canvas
-        //scaleImageToFixedWidth(baseImage, FIXED_WIDTH);
-
-        // Función que limita el movimiento de la imagen base dentro del área
-        canvas.on("object:moving", (e) => {
-          const obj = e.target;
-
-          // Limitar el movimiento de baseImage dentro del área del rectángulo
-          if (obj === baseImage) {
-            // Limitar el movimiento dentro del límite del rectángulo
-            if (obj.left < limitRect.left) {
-              obj.left = limitRect.left;
-            }
-            if (obj.top < limitRect.top) {
-              obj.top = limitRect.top;
-            }
-            if (
-              obj.left + obj.width * obj.scaleX >
-              limitRect.left + limitRect.width
-            ) {
-              obj.left =
-                limitRect.left + limitRect.width - obj.width * obj.scaleX;
-            }
-            if (
-              obj.top + obj.height * obj.scaleY >
-              limitRect.top + limitRect.height
-            ) {
-              obj.top =
-                limitRect.top + limitRect.height - obj.height * obj.scaleY;
-            }
-
-            // Volver a renderizar el canvas para aplicar las restricciones
-            canvas.renderAll();
-          }
-        });
-
-        canvas.on("object:scaling", (e) => {
-          const obj = e.target;
-          //scaleImageToFixedWidth(baseImage, FIXED_WIDTH);
-          // Limitar la escala de baseImage (solo la imagen base, puedes adaptar esto a otras imágenes si es necesario)
-          if (obj === baseImage) {
-            
-            const minScale = 0.1; // Mínimo valor de escala
-            const maxScale = 0.5; // Máximo valor de escala
-        
-
-            // Limitar la escala X y Y
-            if (obj.scaleX < minScale) {
-              obj.scaleX = minScale;
-            }
-            if (obj.scaleY < minScale) {
-              obj.scaleY = minScale;
-            }
-            if (obj.scaleX > maxScale) {
-              obj.scaleX = maxScale;
-            }
-            if (obj.scaleY > maxScale) {
-              obj.scaleY = maxScale;
-            }
-
-            // Verificar que la imagen no salga del límite del canvas
-            const canvasWidth = canvas.getWidth();
-            const canvasHeight = canvas.getHeight();
-
-            // Limitar la imagen dentro del canvas
-            if (obj.left + obj.width * obj.scaleX > canvasWidth) {
-              obj.left = canvasWidth - obj.width * obj.scaleX;
-            }
-            if (obj.top + obj.height * obj.scaleY > canvasHeight) {
-              obj.top = canvasHeight - obj.height * obj.scaleY;
-            }
-
-            if (obj.left < 0) {
-              obj.left = 0;
-            }
-            if (obj.top < 0) {
-              obj.top = 0;
-            }
-
-            // Volver a renderizar el canvas para aplicar las restricciones de escala
-            canvas.renderAll();
-          }
-        });
-      } catch (error) {
-        console.error("Error loading images into canvas:", error);
-      }
-    };
-
-    addImagesToCanvas();
-
-    return () => {
-      canvas.dispose();
-    };
-  }, [product, colorProduct]);
-
+      return () => {
+        canvasManager.dispose();
+      };
+    }
+  }, [currentView, appliedImages, product, colorProduct]);
 
   const saveAndAddToCart = () => {
     if (!canvasRef.current) return;
@@ -296,7 +200,7 @@ const Details: React.FC = () => {
     const canvas = canvasRef.current;
     const imageBase64 = canvas.toDataURL("image/png");
 
-    const userId = localStorage.getItem("UserId"); // Obtener UserId si existe
+    const userId = localStorage.getItem("UserId");
 
     // Crear el objeto cartItem dinámicamente
     const cartItem = {
@@ -349,6 +253,105 @@ const Details: React.FC = () => {
     }
   };
 
+  const handleApply = () => {
+    if (!canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const appliedImage = canvas.toDataURL();
+
+    setAppliedImages((prev) => ({
+      ...prev,
+      [currentView]: appliedImage, // Guarda la imagen aplicada para la vista actual
+    }));
+
+    // Desactiva la edición para la vista actual
+    if (currentView === "delantera") {
+      setIsEditableDelantera(false);
+    } else {
+      setIsEditableTrasera(false);
+    }
+  };
+
+  const handleViewChange = (view: "delantera" | "trasera") => {
+    if (appliedImages[view]) {
+      // Si la imagen está aplicada, no mostrar el canvas
+      setCurrentView(view);
+      return;
+    }
+
+    // Cambiar a la vista seleccionada
+    setCurrentView(view);
+
+    // Permitir edición solo si no hay imagen aplicada
+    if (view === "delantera") {
+      setIsEditableDelantera(true);
+    } else {
+      setIsEditableTrasera(true);
+    }
+  };
+
+  const handleEdit = () => {
+    setAppliedImages((prev) => ({
+      ...prev,
+      [currentView]: undefined, // Eliminar la imagen aplicada para la vista actual
+    }));
+
+    // Habilitar la edición para la vista actual
+    if (currentView === "delantera") {
+      setIsEditableDelantera(true);
+    } else {
+      setIsEditableTrasera(true);
+    }
+
+    // Mostrar el canvas nuevamente
+    if (canvasRef.current) {
+      canvasRef.current.style.display = "block";
+    }
+  };
+
+  const handleAddImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !canvasRef.current) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        const imageSrc = reader.result as string;
+
+        // Verifica si el canvas ya ha sido inicializado
+        if (canvasRef.current) {
+            // Limpia el canvas anterior
+            const existingCanvas = CanvasManager.getInstance(canvasRef.current); // Usa tu método para obtener la instancia existente
+            if (existingCanvas) {
+                existingCanvas.dispose(); // Limpia la instancia anterior
+            }
+        }
+        console.log(imageSrc);
+        
+
+        // Crea una nueva instancia de CanvasManager
+        const canvasManager = new CanvasManager(canvasRef.current);
+
+        // Configuración del canvas como en tu lógica actual
+        const camiImageSrc =
+            currentView === "delantera"
+                ? `data:image/png;base64,${colorProduct?.imagenDelantera}`
+                : `data:image/png;base64,${colorProduct?.imagenTrasera}`;
+        console.log(camiImageSrc);
+        const limitRectParams =
+            currentView === "delantera"
+                ? { left: 150, top: 100, width: 300, height: 400 }
+                : { left: 200, top: 150, width: 250, height: 350 };
+
+        canvasManager.addImagesToCanvas(imageSrc, camiImageSrc, limitRectParams);
+    };
+
+    reader.readAsDataURL(file);
+};
+
+  console.log(`Is ditable Delantera  =  ${isEditableDelantera}`);
+  console.log(`Is editable Trasera  =  ${isEditableTrasera}`);
+
   return (
     <div className="details-container">
       <h2 className="details-h2">Crea tu propio Diseño</h2>
@@ -392,26 +395,108 @@ const Details: React.FC = () => {
             </button>
           </div>
         </aside>
+        <div className="container-canvas-selector">
+          <div className="details-canvas">
+            <canvas
+              ref={canvasRef}
+              width={600}
+              height={600}
+              className="canvas-style"
+              style={{
+                display: !appliedImages[currentView] ? "block" : "none",
+              }}
+            />
+            <img
+              src={appliedImages[currentView] || ""}
+              alt={
+                currentView === "delantera"
+                  ? "Vista delantera"
+                  : "Vista trasera"
+              }
+              className="applied-image"
+              style={{
+                display: appliedImages[currentView] ? "block" : "none",
+              }}
+            />
+          </div>
 
-        <div className="details-canvas">
-          <canvas
-            ref={canvasRef}
-            width={600}
-            height={600}
-            className="canvas-style"
-          />
-          <Modal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            message={modalMessage}
-            onConfirm={handleGoToMyDesigns}
-            onCancel={handleStayDesigning}
-            confirmButtonText={button1Message}
-            cancelButtonText={button2Message}
-            confirmButtonColor="#4CAF50"
-            cancelButtonColor="#5494de"
-          />
+          <div className="view-selector">
+            <button
+              className={`view-button ${
+                currentView === "delantera" ? "active" : ""
+              }`}
+              onClick={() => handleViewChange("delantera")}
+            >
+              <img
+                src={
+                  appliedImages.delantera
+                    ? appliedImages.delantera
+                    : `data:image/png;base64,${colorProduct?.imagenDelantera}`
+                }
+                alt="Delantera"
+              />
+            </button>
+            <button
+              className={`view-button ${
+                currentView === "trasera" ? "active" : ""
+              }`}
+              onClick={() => handleViewChange("trasera")}
+            >
+              <img
+                src={
+                  appliedImages.trasera
+                    ? appliedImages.trasera
+                    : `data:image/png;base64,${colorProduct?.imagenTrasera}`
+                }
+                alt="Trasera"
+              />
+            </button>
+          </div>
+          <div className="container-buttons-edit-aply-details">
+            {appliedImages[currentView] ? (
+              <button
+                className="edit-button-details"
+                onClick={handleEdit}
+                disabled={!appliedImages[currentView]} // Deshabilitar si no hay imagen aplicada
+              >
+                Editar
+              </button>
+            ) : (
+              <button
+                className="apply-button-details"
+                onClick={handleApply}
+                disabled={
+                  !!appliedImages[currentView] || // Deshabilitar si la imagen ya está aplicada
+                  (currentView === "delantera" && !isEditableDelantera) ||
+                  (currentView === "trasera" && !isEditableTrasera)
+                }
+              >
+                Aplicar
+              </button>
+            )}
+            <label htmlFor="upload-image" className="upload-button-details">
+              Añadir otra imagen
+              <input
+                type="file"
+                id="upload-image"
+                accept="image/*"
+                onChange={handleAddImage}
+                style={{ display: "none" }}
+              />
+            </label>
+          </div>
         </div>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          message={modalMessage}
+          onConfirm={handleGoToMyDesigns}
+          onCancel={handleStayDesigning}
+          confirmButtonText={button1Message}
+          cancelButtonText={button2Message}
+          confirmButtonColor="#4CAF50"
+          cancelButtonColor="#5494de"
+        />
       </div>
     </div>
   );

@@ -28,6 +28,10 @@ public class ColorMangaLarga {
     @Column(name = "imagen_color2", columnDefinition="LONGBLOB")
     private byte[] imagenTrasera;
 
+    @Lob
+    @Column(name = "imagen_color3", columnDefinition="LONGBLOB")
+    private byte[] imagenLateral;
+
     @ElementCollection(targetClass = Size.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "color_manga_larga_sizes", joinColumns = @JoinColumn(name = "color_manga_larga_id"))

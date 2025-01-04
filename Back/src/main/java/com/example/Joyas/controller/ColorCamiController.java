@@ -44,6 +44,7 @@ public class ColorCamiController {
             @RequestParam(value = "name") String color,
             @RequestParam(value = "imagenDelantera") MultipartFile imagenDelantera,
             @RequestParam(value = "imagenTrasera") MultipartFile imagenTrasera,
+            @RequestParam(value = "imagenLateral") MultipartFile imagenLateral,
             @RequestParam(value = "sizes") List<String> sizes) {
 
         // Verificación de que se han recibido las imágenes
@@ -58,6 +59,7 @@ public class ColorCamiController {
         try {
             colorCami.setImagenDelantera(imagenDelantera.getBytes());
             colorCami.setImagenTrasera(imagenTrasera.getBytes());
+            colorCami.setImagenLateral(imagenLateral.getBytes());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al procesar las imágenes.");

@@ -45,6 +45,7 @@ public class ColorMangaLargaController {
             @RequestParam(value = "name") String color,
             @RequestParam(value = "imagenDelantera") MultipartFile imagenDelantera,
             @RequestParam(value = "imagenTrasera") MultipartFile imagenTrasera,
+            @RequestParam(value = "imagenLateral") MultipartFile imagenLateral,
             @RequestParam(value = "sizes") List<String> sizes) {
 
         // Verificación de que se han recibido las imágenes
@@ -59,6 +60,7 @@ public class ColorMangaLargaController {
         try {
             colorMangaLarga.setImagenDelantera(imagenDelantera.getBytes());
             colorMangaLarga.setImagenTrasera(imagenTrasera.getBytes());
+            colorMangaLarga.setImagenLateral(imagenLateral.getBytes());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al procesar las imágenes.");
