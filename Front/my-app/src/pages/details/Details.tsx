@@ -54,6 +54,7 @@ const typeOptionColor = [
 const Details: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasManagerRef = useRef<CanvasManager | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
   const [colorProduct, setColorProduct] = useState<Product | null>(null);
   const [selectedType, setSelectedType] = useState<string>("manga-corta");
@@ -73,6 +74,7 @@ const Details: React.FC = () => {
   }>({});
   const [isEditableDelantera, setIsEditableDelantera] = useState(true);
   const [isEditableTrasera, setIsEditableTrasera] = useState(true);
+  const [newImage, setNewImage] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`http://localhost:8080/cami/${id}`)
@@ -110,39 +112,43 @@ const Details: React.FC = () => {
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Verificar si la vista actual tiene una imagen aplicada
-    if (appliedImages[currentView]) {
-      // Si hay una imagen aplicada, no mostrar el canvas
-      canvasRef.current.style.display = "none";
-    } else {
-      // Si no hay imagen aplicada, mostrar el canvas
-      canvasRef.current.style.display = "block";
-
-      const canvasManager = new CanvasManager(canvasRef.current);
-
-      
-      const baseImageSrc = `data:image/png;base64,${product?.imagen1}`;
-      const camiImageSrc =
-        currentView === "delantera"
-          ? `data:image/png;base64,${colorProduct?.imagenDelantera}`
-          : `data:image/png;base64,${colorProduct?.imagenTrasera}`;
-
-      const limitRectParams =
-        currentView === "delantera"
-          ? { left: 150, top: 100, width: 300, height: 400 }
-          : { left: 200, top: 150, width: 250, height: 350 };
-
-      canvasManager.addImagesToCanvas(
-        baseImageSrc,
-        camiImageSrc,
-        limitRectParams
+    if (!canvasManagerRef.current) {
+      canvasManagerRef.current = CanvasManager.createInstance(
+        canvasRef.current
       );
-
-      return () => {
-        canvasManager.dispose();
-      };
     }
-  }, [currentView, appliedImages, product, colorProduct]);
+
+    return () => {
+      if (canvasManagerRef.current) {
+        canvasManagerRef.current.dispose();
+        canvasManagerRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!canvasManagerRef.current || !product || !colorProduct) return;
+
+    // Limpia el canvas antes de añadir nuevas imágenes
+    canvasManagerRef.current.clearCanvas();
+
+    const baseImageSrc = newImage || `data:image/png;base64,${product.imagen1}`; // Usa newImage si existe
+    const camiImageSrc =
+      currentView === "delantera"
+        ? `data:image/png;base64,${colorProduct.imagenDelantera}`
+        : `data:image/png;base64,${colorProduct.imagenTrasera}`;
+
+    const limitRectParams =
+      currentView === "delantera"
+        ? { left: 150, top: 100, width: 300, height: 400 }
+        : { left: 200, top: 150, width: 250, height: 350 };
+
+    canvasManagerRef.current.addImagesToCanvas(
+      baseImageSrc,
+      camiImageSrc,
+      limitRectParams
+    );
+  }, [newImage, currentView, product, colorProduct]);
 
   const saveAndAddToCart = () => {
     if (!canvasRef.current) return;
@@ -311,46 +317,14 @@ const Details: React.FC = () => {
 
   const handleAddImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !canvasRef.current) return;
+    if (!file) return;
 
     const reader = new FileReader();
-
     reader.onload = () => {
-        const imageSrc = reader.result as string;
-
-        // Verifica si el canvas ya ha sido inicializado
-        if (canvasRef.current) {
-            // Limpia el canvas anterior
-            const existingCanvas = CanvasManager.getInstance(canvasRef.current); // Usa tu método para obtener la instancia existente
-            if (existingCanvas) {
-                existingCanvas.dispose(); // Limpia la instancia anterior
-            }
-        }
-        console.log(imageSrc);
-        
-
-        // Crea una nueva instancia de CanvasManager
-        const canvasManager = new CanvasManager(canvasRef.current);
-
-        // Configuración del canvas como en tu lógica actual
-        const camiImageSrc =
-            currentView === "delantera"
-                ? `data:image/png;base64,${colorProduct?.imagenDelantera}`
-                : `data:image/png;base64,${colorProduct?.imagenTrasera}`;
-        console.log(camiImageSrc);
-        const limitRectParams =
-            currentView === "delantera"
-                ? { left: 150, top: 100, width: 300, height: 400 }
-                : { left: 200, top: 150, width: 250, height: 350 };
-
-        canvasManager.addImagesToCanvas(imageSrc, camiImageSrc, limitRectParams);
+      setNewImage(reader.result as string);
     };
-
     reader.readAsDataURL(file);
-};
-
-  console.log(`Is ditable Delantera  =  ${isEditableDelantera}`);
-  console.log(`Is editable Trasera  =  ${isEditableTrasera}`);
+  };
 
   return (
     <div className="details-container">
@@ -364,6 +338,7 @@ const Details: React.FC = () => {
               name="shirtType"
               onChange={(value) => setSelectedType(value)}
               selectedValue={selectedType}
+              disabled={!isEditableDelantera || !isEditableTrasera} // Deshabilitar si cualquiera es false
             />
           </div>
 
@@ -374,9 +349,9 @@ const Details: React.FC = () => {
               name="colorType"
               selectedValue={selectedColor}
               onChange={(value) => setSelectedColor(value)}
+              disabled={!isEditableDelantera || !isEditableTrasera} // Deshabilitar si cualquiera es false
             />
           </div>
-
           <div className="button-container-details">
             <button className="custom-button" onClick={saveAndAddToCart}>
               <img
@@ -474,16 +449,19 @@ const Details: React.FC = () => {
                 Aplicar
               </button>
             )}
-            <label htmlFor="upload-image" className="upload-button-details">
-              Añadir otra imagen
-              <input
-                type="file"
-                id="upload-image"
-                accept="image/*"
-                onChange={handleAddImage}
-                style={{ display: "none" }}
-              />
-            </label>
+
+            {!appliedImages[currentView] && ( // Mostrar el botón solo si no hay imagen aplicada
+              <label htmlFor="upload-image" className="upload-button-details">
+                Cambiar Imagen
+                <input
+                  type="file"
+                  id="upload-image"
+                  accept="image/*"
+                  onChange={handleAddImage}
+                  style={{ display: "none" }}
+                />
+              </label>
+            )}
           </div>
         </div>
         <Modal

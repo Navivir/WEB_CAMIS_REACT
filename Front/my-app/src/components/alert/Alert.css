@@ -6,7 +6,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
+    font-size: 16px;
     position: fixed; /* Hace que el alert sea sobrepuesto */
     top: 20px; /* Distancia desde la parte superior */
     left: 50%; /* Centra el alert horizontalmente */
@@ -15,7 +15,6 @@
     width: 90%; /* Ancho del alert, puedes ajustarlo a tu gusto */
     max-width: 600px; /* Ancho máximo para que no sea muy grande */
     box-sizing: border-box; 
-    margin-top: 50px;/* Asegura que el padding se tenga en cuenta dentro del ancho total */
   }
   
   .alert-success {
@@ -29,7 +28,7 @@
   }
   
   .alert-info {
-    background-color: #2196f3;
+    background-color: #2955e4e0;
     color: white;
   }
   

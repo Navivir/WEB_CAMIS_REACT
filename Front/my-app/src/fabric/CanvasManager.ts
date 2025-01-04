@@ -21,17 +21,26 @@ export class CanvasManager {
     }
     return CanvasManager.instance;
   }
-static createInstance(canvasElement: HTMLCanvasElement): CanvasManager {
-  // Limpia cualquier instancia previa para este canvas
-  const existingInstance = CanvasManager.instances.get(canvasElement);
-  if (existingInstance) {
-    existingInstance.dispose();
+  static createInstance(canvasElement: HTMLCanvasElement): CanvasManager {
+    if (CanvasManager.instances.has(canvasElement)) {
+      const existingInstance = CanvasManager.instances.get(canvasElement);
+      if (existingInstance) {
+        return existingInstance;
+      }
+    }
+
+    const newInstance = new CanvasManager(canvasElement);
+    CanvasManager.instances.set(canvasElement, newInstance);
+    return newInstance;
   }
 
-  const newInstance = new CanvasManager(canvasElement);
-  CanvasManager.instances.set(canvasElement, newInstance);
-  return newInstance;
-}
+  static disposeInstance(canvasElement: HTMLCanvasElement) {
+    const instance = CanvasManager.instances.get(canvasElement);
+    if (instance) {
+      instance.dispose();
+      CanvasManager.instances.delete(canvasElement); // Elimina la referencia
+    }
+  }
 
   public initializeCanvas(canvasElement: HTMLCanvasElement) {
     if (this.canvas) return; // Si ya está inicializado, no lo reiniciamos
@@ -159,9 +168,15 @@ static createInstance(canvasElement: HTMLCanvasElement): CanvasManager {
     if (this.canvas) {
       this.canvas.clear();
       this.canvas.dispose();
-      CanvasManager.instances.delete(this.canvas.lowerCanvasEl as HTMLCanvasElement);
+      CanvasManager.instances.delete(
+        this.canvas.getElement() as HTMLCanvasElement
+      );
     }
   }
 
-
+  public clearCanvas() {
+    if (this.canvas) {
+      this.canvas.clear(); // Elimina todos los objetos del canvas
+    }
+  }
 }

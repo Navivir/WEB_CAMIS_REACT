@@ -205,7 +205,7 @@ const Home: React.FC = () => {
           <label className="input-label-home">
             <input
               type="text"
-              placeholder="Ingresa un nombre para la imagen"
+              placeholder="Ingresa un nombre para el diseño"
               value={imageName}
               onChange={handleNameChange}
               className="text-input-home"
