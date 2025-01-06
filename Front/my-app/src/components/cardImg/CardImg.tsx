@@ -130,10 +130,8 @@ const CardImg: React.FC<CardPropsImg> = ({
         .then((response) => response.text())
         .then((text) => {
           if (text === "Img publicada") {
-            console.log("La imagen está publicada");
             setIsPublished(true);
           } else {
-            console.log("La imagen no está publicada");
             setIsPublished(false);
           }
         })

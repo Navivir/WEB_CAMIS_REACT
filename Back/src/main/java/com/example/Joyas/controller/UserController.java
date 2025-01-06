@@ -74,11 +74,11 @@ public class UserController {
 
         return userService.createUser(user);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         return userService.getUserById(id);
     }
+
 
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {

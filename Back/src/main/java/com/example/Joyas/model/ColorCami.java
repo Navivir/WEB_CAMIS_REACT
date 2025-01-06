@@ -30,6 +30,11 @@ public class ColorCami {
     @Column(name = "imagen_color2", columnDefinition="LONGBLOB")
     private byte[] imagenTrasera;
 
+    @Lob
+    @Column(name = "imagen_color3", columnDefinition="LONGBLOB")
+    private byte[] imagenLateral;
+
+
     @ElementCollection(targetClass = Size.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "color_cami_sizes", joinColumns = @JoinColumn(name = "color_cami_id"))

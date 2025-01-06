@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class CartItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con el ID: " + userId));
 
         cartItem.setUser(user);
+        cartItem.setCreated(LocalDateTime.now());
 
         return cartItemRepository.save(cartItem);
     }

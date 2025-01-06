@@ -2,19 +2,44 @@ import { useEffect, useState } from "react";
 import "./MyDesigns.css";
 import CardItem from "../../components/cardItem/CardItem";
 import CardImg from "../../components/cardImg/CardImg";
-import { CartItem, ImageDesign } from "../../scripts/Types";
+import { CartItem, ImageDesign, User } from "../../scripts/Types";
 import { useNavigate } from "react-router-dom";
-
-// import { TabItem } from "flowbite-react";
+import { getUserById } from "../../scripts/Session";
 
 const MyDesigns = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<ImageDesign[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
   const userId = localStorage.getItem("UserId");
+  const userIdNumber = userId ? parseInt(userId, 10) : 0;
 
+  // Función para obtener los datos del usuario
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!userId) {
+        setError("No user ID found.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const user = await getUserById(userIdNumber); // Pasamos el userIdNumber
+        setUser(user); // Guardamos el usuario
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setError("Failed to fetch user data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [userId, userIdNumber]);
+
+  // Obtener cart items
   useEffect(() => {
     if (!userId) {
       setError("No user ID found.");
@@ -35,11 +60,10 @@ const MyDesigns = () => {
       .catch((error) => {
         setLoading(false);
         console.error("Error fetching cart items:", error);
-        setError("Error al cargar los diseños.");
       });
-  }, [userId]); // El efecto se ejecutará cada vez que `userId` cambie
+  }, [userId]);
 
-
+  // Obtener imágenes del usuario
   useEffect(() => {
     if (!userId) {
       setError("No user ID found.");
@@ -53,12 +77,12 @@ const MyDesigns = () => {
         setImages(camisList);
       })
       .catch((error) => console.error("Error fetching camis:", error));
-  }, [userId]);  // El efecto se ejecutará cada vez que `userId` cambie
+  }, [userId]);
 
   const handleDeleteItem = (id: number) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
   };
-  
+
   const handleMakeItReal = (id: number) => {
     console.log("Hacerlo realidad con ID:", id);
     window.location.href = `/pre-cart?id=${id}`;
@@ -72,7 +96,6 @@ const MyDesigns = () => {
     console.log("Diseñar con ID:", id);
     navigate(`/details/${id}`);
   };
-
 
   if (loading) {
     return <div>Loading...</div>;
@@ -94,14 +117,17 @@ const MyDesigns = () => {
           ) : (
             cartItems.map((item) => (
               <CardItem
-              key={item.id}
-              id={item.id}
-              title={item.name}
-              imageUrl={item.image}
-              onDelete={handleDeleteItem}
-              onMakeItReal={handleMakeItReal}
-              showActions={true}
-            />
+                key={item.id}
+                id={item.id}
+                title={item.name}
+                created={item.created}
+                images={item.images}
+                onDelete={handleDeleteItem}
+                onMakeItReal={handleMakeItReal}
+                showActions={true}
+                user_name={user ? user.username : "Usuario no encontrado"}
+                user_image={user?.imagenPerfil || ""} 
+              />
             ))
           )}
         </div>
@@ -109,21 +135,23 @@ const MyDesigns = () => {
       <div className="cards-container-my-designs">
         <h2 className="h2-my-designs-input-image">Tus Diseños de Imagen:</h2>
         <div className="cards-container-my-designs-cards">
-          {images.map((img) => (
-           <CardImg
-            key={img.id}
-            id={img.id}
-            title={img.name}
-            imageUrl={`data:image/png;base64, ${img.imagen1}`}
-            onDelete={handleDeleteImg}
-            onMakeItReal={handleDesign}
-            showActions={true}          
-           />          
-          ))}
+          {images.length === 0 ? (
+            <p>No tienes imagenes guardadas</p>
+          ):(
+          images.map((img) => (
+            <CardImg
+              key={img.id}
+              id={img.id}
+              title={img.name}
+              imageUrl={`data:image/png;base64, ${img.imagen1}`}
+              onDelete={handleDeleteImg}
+              onMakeItReal={handleDesign}
+              showActions={true}
+            />
+          ))
+          )}
         </div>
       </div>
-
-   
     </div>
   );
 };

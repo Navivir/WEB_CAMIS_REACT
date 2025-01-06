@@ -37,6 +37,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 600px;
 }
 
 .details-aside label {
@@ -133,4 +134,112 @@
 
 .button-icon-details{
   width: 50px;
+}
+
+
+
+
+
+/* Contenedor de selección de parte de la camiseta*/
+
+.view-selector {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.view-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.view-button img {
+  width: 80px;
+  height: auto;
+  border: 2px solid transparent;
+  border-radius: 8px;
+}
+
+.view-button.active img {
+  border: 2px solid #4caf50; /* Cambia el color según tu diseño */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Contenedor de los botones */
+.container-buttons-edit-aply-details {
+  display: flex;
+  justify-content: space-between; /* Espaciado entre botones */
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px;
+  width: 600px;
+}
+
+/* Botón "Aplicar" */
+.apply-button-details {
+  background-color: #4f9a45; /* Verde clarito */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.apply-button-details:hover {
+  background-color: #36c476; /* Verde más oscuro al pasar el ratón */
+}
+
+.apply-button-details:disabled {
+  background-color: #cccccc; /* Gris claro para estado deshabilitado */
+  cursor: not-allowed;
+}
+
+/* Botón "Editar" */
+.edit-button-details {
+  background-color: #456ccf; /* Azul clarito */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button-details:hover {
+  background-color: #4ab1da; /* Azul más oscuro al pasar el ratón */
+}
+
+.edit-button-details:disabled {
+  background-color: #cccccc; /* Gris claro para estado deshabilitado */
+  cursor: not-allowed;
+}
+
+/* Botón "Cambiar Imagen" */
+.upload-button-details {
+  background-color: #635bbe; /* Rosa clarito */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button-details:hover {
+  background-color: #8f36d3; /* Rosa más oscuro al pasar el ratón */
+}
+
+.upload-button-details:disabled {
+  background-color: #cccccc; /* Gris claro para estado deshabilitado */
+  cursor: not-allowed;
 }
