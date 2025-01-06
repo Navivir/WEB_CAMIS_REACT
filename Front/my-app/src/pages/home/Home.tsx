@@ -4,9 +4,10 @@ import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { GenerateToken, isValidToken } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
-import { Product, CartItem } from "../../scripts/Types";
+import { Product, CartItem, User } from "../../scripts/Types";
 import CardItem from "../../components/cardItem/CardItem";
 import Modal from "../../components/modal/Modal";
+import { getUserById } from "../../scripts/Session";
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -27,6 +28,26 @@ const Home: React.FC = () => {
   const [alertType, setAlertType] = useState<"success" | "error" | "info">(
     "success"
   );
+  const userIdNumber = user_id ? parseInt(user_id, 10) : 0;
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user_id) {
+        return;
+      }
+
+      try {
+        const user = await getUserById(userIdNumber);
+        setUser(user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [user_id, userIdNumber]);
+
 
   useEffect(() => {
     if (token) {
@@ -240,10 +261,13 @@ const Home: React.FC = () => {
               key={cartItem.id}
               id={cartItem.id}
               title={cartItem.name}
-              imageUrl={cartItem.image}
+              images={cartItem.images}
               onDelete={handleDeleteItem}
               onMakeItReal={handleMakeItReal}
               showActions={false}
+              created={cartItem.created}
+              user_name={user ? user.username : "Usuario no encontrado"}
+              user_image={user?.imagenPerfil || ""} 
             />
           ))}
         </div>

@@ -13,6 +13,8 @@ import saveIcon from "../../logos/disquete.png";
 import nextIcon from "../../logos/next.png";
 import { isLoggedIn } from "../../scripts/Session";
 import { CanvasManager } from "../../fabric/CanvasManager";
+import { resizeImage } from "../../scripts/Utils";
+
 
 interface Product {
   imagen1: string;
@@ -75,6 +77,10 @@ const Details: React.FC = () => {
   const [isEditableDelantera, setIsEditableDelantera] = useState(true);
   const [isEditableTrasera, setIsEditableTrasera] = useState(true);
   const [newImage, setNewImage] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [imagenUsadaFrontal, setImagenUsadaFrontal] = useState<string>("");
+  const [imagenUsadaTrasera, setImagenUsadaTrasera] = useState<string>("");
+  const [image2Add, setImage2Add] = useState<string>("");
 
   useEffect(() => {
     fetch(`http://localhost:8080/cami/${id}`)
@@ -105,7 +111,13 @@ const Details: React.FC = () => {
 
     fetch(fetchUrl)
       .then((response) => response.json())
-      .then((data) => setColorProduct(data))
+      .then((data) => {
+        // Asumimos que data tiene las imágenes 'delantera' y 'trasera'
+        setColorProduct(data);
+
+        // Actualiza las imágenes en el estado
+        setImages([`data:image/png;base64,${data.imagenDelantera}`,`data:image/png;base64,${data.imagenTrasera}`]);
+      })
       .catch((error) => console.error("Error fetching color image:", error));
   };
 
@@ -129,10 +141,11 @@ const Details: React.FC = () => {
   useEffect(() => {
     if (!canvasManagerRef.current || !product || !colorProduct) return;
 
-    // Limpia el canvas antes de añadir nuevas imágenes
     canvasManagerRef.current.clearCanvas();
+    if (imagenUsadaFrontal || imagenUsadaTrasera){
 
-    const baseImageSrc = newImage || `data:image/png;base64,${product.imagen1}`; // Usa newImage si existe
+    }
+    const baseImageSrc = newImage || `data:image/png;base64,${product.imagen1}`;
     const camiImageSrc =
       currentView === "delantera"
         ? `data:image/png;base64,${colorProduct.imagenDelantera}`
@@ -143,14 +156,60 @@ const Details: React.FC = () => {
         ? { left: 150, top: 100, width: 300, height: 400 }
         : { left: 200, top: 150, width: 250, height: 350 };
 
-    canvasManagerRef.current.addImagesToCanvas(
-      baseImageSrc,
-      camiImageSrc,
-      limitRectParams
-    );
-  }, [newImage, currentView, product, colorProduct]);
+    if (currentView === "delantera" && imagenUsadaFrontal) {
+      canvasManagerRef.current.addImagesToCanvas(
+        imagenUsadaFrontal,
+        camiImageSrc,
+        limitRectParams
+      );
+    }
+
+    if (currentView === "trasera" && imagenUsadaTrasera) {
+      canvasManagerRef.current.addImagesToCanvas(
+        imagenUsadaTrasera,
+        camiImageSrc,
+        limitRectParams
+      );
+    } 
+
+    if (currentView === "delantera" && !imagenUsadaFrontal){
+      setImage2Add(baseImageSrc)
+      canvasManagerRef.current.addImagesToCanvas(
+        baseImageSrc,
+        camiImageSrc,
+        limitRectParams
+      );
+    }
+
+    if (currentView === "trasera" && !imagenUsadaTrasera){
+      setImage2Add(baseImageSrc)
+      canvasManagerRef.current.addImagesToCanvas(
+        baseImageSrc,
+        camiImageSrc,
+        limitRectParams
+      );
+    }
+
+  }, [
+    newImage,
+    currentView,
+    product,
+    colorProduct,
+    imagenUsadaFrontal,
+    imagenUsadaTrasera
+  
+  ]);
 
   const saveAndAddToCart = () => {
+
+    if (isEditableDelantera && isEditableTrasera) {
+      setModalMessage("Debes aplicar imágenes antes de guardar.");
+      setbutton1Message("");  // Oculta el botón si está vacio
+      setbutton2Message("Aceptar");
+      setIsModalOpen(true);
+      return;
+    }
+
     if (!canvasRef.current) return;
 
     const userId = localStorage.getItem("UserId");
@@ -169,14 +228,11 @@ const Details: React.FC = () => {
       setbutton2Message("Seguir creando");
     }
 
-    const canvas = canvasRef.current;
-
-    const imageBase64 = canvas.toDataURL("image/png");
 
     const cartItem = {
       productId: id,
       userId: parseInt(userId),
-      image: imageBase64,
+      images: images,
       type: selectedType,
       color: selectedColor,
       id_cami: idCami,
@@ -203,15 +259,12 @@ const Details: React.FC = () => {
   const makeItReal = () => {
     if (!canvasRef.current) return;
 
-    const canvas = canvasRef.current;
-    const imageBase64 = canvas.toDataURL("image/png");
-
     const userId = localStorage.getItem("UserId");
 
     // Crear el objeto cartItem dinámicamente
     const cartItem = {
       productId: id,
-      image: imageBase64,
+      images: images,
       type: selectedType,
       color: selectedColor,
       id_cami: idCami,
@@ -264,17 +317,48 @@ const Details: React.FC = () => {
 
     const canvas = canvasRef.current;
     const appliedImage = canvas.toDataURL();
-
+    
     setAppliedImages((prev) => ({
       ...prev,
       [currentView]: appliedImage, // Guarda la imagen aplicada para la vista actual
     }));
 
-    // Desactiva la edición para la vista actual
     if (currentView === "delantera") {
       setIsEditableDelantera(false);
+      
+      if(imagenUsadaFrontal){
+        setImages((prevImages) => {
+          const newImages = [...prevImages];
+          newImages[0] = appliedImage;
+          return newImages;
+        });
+      } else{
+      setImagenUsadaFrontal(image2Add)
+      setImages((prevImages) => {
+        const newImages = [...prevImages];
+        newImages[0] = appliedImage;
+        return newImages;   
+      });
+      }
+
     } else {
       setIsEditableTrasera(false);
+      if(imagenUsadaTrasera){
+      setImages((prevImages) => {
+        const newImages = [...prevImages];
+        newImages[1] = appliedImage;
+        return newImages;
+      });
+    } else {
+      setImagenUsadaTrasera(image2Add);
+       setImages((prevImages) => {
+        const newImages = [...prevImages];
+        newImages[1] = appliedImage;
+        return newImages;
+      });
+      
+      
+    }
     }
   };
 
@@ -302,28 +386,39 @@ const Details: React.FC = () => {
       [currentView]: undefined, // Eliminar la imagen aplicada para la vista actual
     }));
 
-    // Habilitar la edición para la vista actual
     if (currentView === "delantera") {
       setIsEditableDelantera(true);
+      setImagenUsadaFrontal(imagenUsadaFrontal)
     } else {
       setIsEditableTrasera(true);
+      setImagenUsadaTrasera(imagenUsadaTrasera)
     }
 
-    // Mostrar el canvas nuevamente
     if (canvasRef.current) {
       canvasRef.current.style.display = "block";
     }
   };
 
-  const handleAddImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setNewImage(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+  
+    try {
+      const resizedImage = await resizeImage(file, 500);
+      setNewImage(resizedImage);
+  
+      if (currentView === "delantera") {
+        setImagenUsadaFrontal(resizedImage);
+      } else {
+        setImagenUsadaTrasera(resizedImage);
+      }
+  
+      if (canvasRef.current) {
+        canvasRef.current.style.display = "block";
+      }
+    } catch (error) {
+      console.error('Error al redimensionar la imagen:', error);
+    }
   };
 
   return (
@@ -470,8 +565,8 @@ const Details: React.FC = () => {
           message={modalMessage}
           onConfirm={handleGoToMyDesigns}
           onCancel={handleStayDesigning}
-          confirmButtonText={button1Message}
-          cancelButtonText={button2Message}
+          confirmButtonText={button1Message || ""}
+          cancelButtonText={button2Message || ""}
           confirmButtonColor="#4CAF50"
           cancelButtonColor="#5494de"
         />

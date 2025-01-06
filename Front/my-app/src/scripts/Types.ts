@@ -10,12 +10,15 @@ export interface User {
 
   export interface CartItem {
     id: number;
-    image: string;
+    images: string[];
     type: string;
     size: string;
     color: string;
     quantity: number;
     name: string;
+    created: string;
+    user_name: string;
+    user_image: string;
     
   }
 
@@ -37,7 +40,10 @@ export interface User {
 export interface CardProps {
     id: number;
     title: string;
-    imageUrl: string;
+    images: string[];
+    created: string;
+    user_name: string;
+    user_image: string;
     onClick?: () => void;
     onDelete: (id: number) => void; 
     onMakeItReal: (id: number) => void;

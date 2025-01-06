@@ -55,7 +55,6 @@ public class CartItemController {
         if (userId == null || userId <= 0) {
             return ResponseEntity.badRequest().body("El ID del usuario no es válido.");
         }
-
         try {
             CartItem savedCartItem = cartItemService.addCartItemToUser(userId, cartItem);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCartItem);

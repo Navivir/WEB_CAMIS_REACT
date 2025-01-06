@@ -43,8 +43,8 @@ public class CartService {
 
         if (existingItem != null) {
             existingItem.setQuantity(existingItem.getQuantity() + cartItem.getQuantity());
-            existingItem.setImage(cartItem.getImage()); // Actualizar la imagen también
-            existingItem.setDiscount(cartItem.getDiscount()); // Actualizar el descuento también
+            existingItem.setImages(cartItem.getImages());
+            existingItem.setDiscount(cartItem.getDiscount());
         } else {
             cart.getItems().add(cartItem);
             cart.setCreatedAt(LocalDateTime.now());
@@ -88,7 +88,7 @@ public class CartService {
 
         if (existingItem != null) {
             existingItem.setQuantity(existingItem.getQuantity() + cartItem.getQuantity());
-            existingItem.setImage(cartItem.getImage());
+            existingItem.setImages(cartItem.getImages());
             existingItem.setDiscount(cartItem.getDiscount());
         } else {
             cart.getItems().add(cartItem);

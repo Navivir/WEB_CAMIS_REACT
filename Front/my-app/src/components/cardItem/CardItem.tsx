@@ -17,7 +17,10 @@ import { CardProps } from "../../scripts/Types";
 const CardItem: React.FC<CardProps> = ({
   id,
   title,
-  imageUrl,
+  images,
+  created,
+  user_name,
+  user_image,
   onClick,
   onDelete,
   onMakeItReal,
@@ -126,17 +129,15 @@ const CardItem: React.FC<CardProps> = ({
   const handleIsPublished = (id: number) => {
     if (id != null) {
       fetch(`http://localhost:8080/cartItem/is-published/${id}`)
-        .then(response => response.text())
-        .then(text => {
-          if (text === 'Item publicado') {
-            console.log('El artículo está publicado');
+        .then((response) => response.text())
+        .then((text) => {
+          if (text === "Item publicado") {
             setIsPublished(true);
           } else {
-            console.log('El artículo no está publicado');
             setIsPublished(false);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Ha habido un problema con la petición:", error);
           setIsPublished(false);
         });
@@ -147,6 +148,16 @@ const CardItem: React.FC<CardProps> = ({
   };
 
   handleIsPublished(id);
+
+  const formatDate = (dateString: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-ES", options); // Formato día mes año en español
+  };
 
   return (
     <div>
@@ -167,15 +178,16 @@ const CardItem: React.FC<CardProps> = ({
           }}
           className="custom-card-cart"
         >
-          {/* Imagen clickeable */}
-          <CardMedia
-            component="img"
-            height="200"
-            image={imageUrl}
-            alt={title}
-            onClick={handleClickOpen}
-            sx={{ cursor: "pointer" }} // Cambiar el cursor para indicar que es clickeable
-          />
+          {images && images.length > 0 && (
+            <CardMedia
+              component="img"
+              height="200"
+              image={images[0]}
+              alt={title}
+              onClick={handleClickOpen}
+              sx={{ cursor: "pointer" }}
+            />
+          )}
           {/* Contenido del card */}
           <CardContent>
             <Typography variant="h6" component="div" className="card-title">
@@ -195,48 +207,79 @@ const CardItem: React.FC<CardProps> = ({
       >
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <img
-            src={imageUrl}
-            alt={title}
-            style={{ width: "100%", height: "auto" }}
-          />
+          {/* Información adicional */}
+          <div style={{ marginBottom: "20px" }}>
+            <Typography variant="body1" color="textSecondary">
+              <span>Creado el: </span>
+              <span style={{ fontWeight: "bold" }}>{formatDate(created)}</span>
+            </Typography>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Typography
+                variant="body1"
+                color="textSecondary"
+              >
+                <span>Autor:  </span>
+                <span style={{ fontWeight: "bold" }}> {user_name}</span>
+              </Typography>
+              {user_image && (
+                <img
+                  src={`data:image/png;base64,${user_image}`}
+                  alt={user_name}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Imágenes del producto */}
+          <div style={{ display: "flex", overflowX: "auto", gap: "10px" }}>
+            {images.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`${title} - ${index + 1}`}
+                style={{ width: "100%", height: "auto", maxWidth: "500px" }}
+              />
+            ))}
+          </div>
         </DialogContent>
         <DialogActions>
-          {/* Condicional para mostrar los botones solo si showActions es verdadero */}
+          {/* Botones de acción */}
           {showActions && (
             <>
               {isPublished ? (
                 <Button
                   onClick={handleOpenUnpublishDialog}
-                  color="info"
                   variant="contained"
-                  style={{ padding: "10px" }}
+                  className="button-retirar"
                 >
                   Retirar
                 </Button>
               ) : (
                 <Button
                   onClick={handleOpenPublishDialog}
-                  color="info"
                   variant="contained"
-                  style={{ padding: "10px" }}
+                  className="button-publicar"
                 >
                   Publicar
                 </Button>
               )}
               <Button
                 onClick={handleOpenDeleteDialog}
-                color="error"
                 variant="contained"
-                style={{ padding: "10px" }}
+                className="button-eliminar"
               >
                 Eliminar
               </Button>
               <Button
                 onClick={() => onMakeItReal(id)}
-                color="success" // Establecemos color verde para el botón de añadir al carrito
                 variant="contained"
-                style={{ padding: "10px" }}
+                className="button-siguiente"
               >
                 Siguiente
               </Button>
@@ -244,9 +287,9 @@ const CardItem: React.FC<CardProps> = ({
           )}
           <Button
             onClick={handleClose}
-            style={{ padding: "10px", cursor: "pointer" }}
+            className="button-cerrar"
           >
-            Cerrar
+            X
           </Button>
         </DialogActions>
       </Dialog>

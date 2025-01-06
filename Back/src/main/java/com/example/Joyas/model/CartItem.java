@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,9 +50,13 @@ public class CartItem {
     @Column
     private Integer discount;
 
-    @Lob
+    @Column
+    private LocalDateTime created;
+
+    @ElementCollection
+    @CollectionTable(name = "cart_item_images", joinColumns = @JoinColumn(name = "cart_item_id"))
     @Column(name = "image", columnDefinition = "LONGBLOB")
-    private String image; // imagen es en formato binario
+    private List<String> images;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -60,17 +67,18 @@ public class CartItem {
     private User user;
 
     // Constructor con parámetros
-    public CartItem(String name, String size, String color, Double price, Integer quantity, String image, Integer id_cami,
-                    String type, Integer discount, Cart cart) {
+    public CartItem(String name, String size, String color, Double price, Integer quantity, String[] images, Integer id_cami,
+                    String type, Integer discount, LocalDateTime created, Cart cart) {
         this.name = name;
         this.size = size;
         this.color = color;
         this.price = price;
         this.quantity = quantity;
-        this.image = image;
+        this.images = new ArrayList<>(Arrays.asList(images));
         this.id_cami = id_cami;
         this.type = type;
         this.discount = discount;
+        this.created = created;
         this.cart = cart;
     }
 
