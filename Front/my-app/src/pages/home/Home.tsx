@@ -4,7 +4,7 @@ import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { GenerateToken, isValidToken } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
-import { Product, CartItem, User } from "../../scripts/Types";
+import { Product, CartItem } from "../../scripts/Types";
 import CardItem from "../../components/cardItem/CardItem";
 import Modal from "../../components/modal/Modal";
 import { getUserById } from "../../scripts/Session";
@@ -28,25 +28,7 @@ const Home: React.FC = () => {
   const [alertType, setAlertType] = useState<"success" | "error" | "info">(
     "success"
   );
-  const userIdNumber = user_id ? parseInt(user_id, 10) : 0;
-  const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!user_id) {
-        return;
-      }
-
-      try {
-        const user = await getUserById(userIdNumber);
-        setUser(user);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    fetchUser();
-  }, [user_id, userIdNumber]);
 
 
   useEffect(() => {
@@ -63,13 +45,35 @@ const Home: React.FC = () => {
   }, [token]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/cartItem/published")
-      .then((response) => response.json())
-      .then((data) => {
-        setCartItems(data);
-      })
-      .catch((error) => console.error("Errror fetching the items", error));
+    const fetchCartItemsWithUsers = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/cartItem/published");
+        const data: CartItem[] = await response.json();
+  
+        // Mapea los cartItems para incluir información del usuario
+        const cartItemsWithUsers = await Promise.all(
+          data.map(async (item) => {
+            try {
+              if (item.user_id) {
+                const user = await getUserById(item.user_id);
+                return { ...item, user }; // Agrega los datos del usuario al cartItem
+              }
+            } catch (error) {
+              console.error(`Error fetching user for cartItem ${item.id}:`, error);
+            }
+            return item; // Devuelve el cartItem sin usuario si ocurre un error
+          })
+        );
+  
+        setCartItems(cartItemsWithUsers);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+  
+    fetchCartItemsWithUsers();
   }, []);
+
   useEffect(() => {
     fetch("http://localhost:8080/published")
       .then((response) => response.json())
@@ -266,8 +270,8 @@ const Home: React.FC = () => {
               onMakeItReal={handleMakeItReal}
               showActions={false}
               created={cartItem.created}
-              user_name={user ? user.username : "Usuario no encontrado"}
-              user_image={user?.imagenPerfil || ""} 
+              user_name={cartItem.user ? cartItem.user.username : "Usuario no encontrado"}
+              user_image={cartItem.user?.imagenPerfil || ""}  
             />
           ))}
         </div>

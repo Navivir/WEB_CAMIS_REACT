@@ -17,9 +17,22 @@ export interface User {
     quantity: number;
     name: string;
     created: string;
-    user_name: string;
-    user_image: string;
+    user_id: number;
+    user?: User; 
     
+  }
+
+  export interface CardItemCart {
+    id: number;
+    name: string;
+    size: string | null;
+    color: string;
+    price: number | null;
+    quantity: number | null;
+    id_cami: number;
+    type: string;
+    discount: number | null;
+    images: string[]; 
   }
 
   export interface ImageDesign {
@@ -59,3 +72,4 @@ export interface CardProps {
     onMakeItReal: (id: number) => void;
     showActions: boolean; 
   }
+

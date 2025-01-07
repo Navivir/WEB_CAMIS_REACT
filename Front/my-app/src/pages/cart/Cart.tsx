@@ -14,7 +14,7 @@ interface CartItemData {
   id_cami: number;
   type: string;
   discount: number;
-  image: string;
+  images: string[];
 }
 
 const Cart: React.FC = () => {
@@ -94,7 +94,7 @@ const Cart: React.FC = () => {
                 color={item.color}
                 price={item.price}
                 quantity={item.quantity}
-                image={item.image}
+                images={item.images}
                 onRemove={handleRemoveItem}  // Pasamos la función handleRemoveItem
               />
             ))

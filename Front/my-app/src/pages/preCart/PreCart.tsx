@@ -2,23 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./PreCart.css";
 import { isLoggedIn } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
+import { CardItemCart } from "../../scripts/Types";
 
-interface CartItem {
-  id: number;
-  name: string;
-  size: string | null;
-  color: string;
-  price: number | null;
-  quantity: number | null;
-  id_cami: number;
-  type: string;
-  discount: number | null;
-  image: string;
-}
 
 
 const PreCart: React.FC = () => {
-  const [cartItem, setCartItem] = useState<CartItem | null>(null);
+  const [cartItem, setCartItem] = useState<CardItemCart | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const searchParams = new URLSearchParams(window.location.search);
@@ -75,7 +64,7 @@ const PreCart: React.FC = () => {
       name: cartItem.name,
       size: selectedSize,
       quantity: selectedQuantity,
-      image: cartItem.image,
+      images: cartItem.images,
       color: cartItem.color,
       price: 20,
       discount: cartItem.discount,
@@ -122,7 +111,7 @@ const PreCart: React.FC = () => {
       <h1 className="cart-item-page-h1">Seleccione talla y cantidad.</h1>
       <div className="cart-item-precart">
         <img
-          src={cartItem.image}
+          src={cartItem.images[0]}
           alt={cartItem.name}
           className="cart-item-image-pre"
         />

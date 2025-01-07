@@ -10,7 +10,7 @@ interface CartCardProps {
   color: string;
   price: number;
   quantity: number;
-  image: string;
+  images: string[];
   onRemove: (id: number) => void;
 }
 
@@ -21,7 +21,7 @@ const CartCard: React.FC<CartCardProps> = ({
   color,
   price,
   quantity,
-  image,
+  images,
   onRemove,
 }) => {
   return (
@@ -36,7 +36,14 @@ const CartCard: React.FC<CartCardProps> = ({
           <DeleteIcon className="remove-item-icon" />
         </button>
       </div>
-      <img src={image} alt={name} className="cart-item-card-image" />
+      {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`${name} - ${index + 1}`}
+            className="cart-item-image-cart"
+          />
+        ))}
     </div>
   );
 };
