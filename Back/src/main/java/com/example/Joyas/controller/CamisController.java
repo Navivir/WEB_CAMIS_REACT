@@ -45,6 +45,15 @@ public class CamisController {
         return this.camisService.getCamis();
     }
 
+    @GetMapping("/getCamiByName")
+    public ResponseEntity<?> getCamiByName(@PathVariable String name){
+        if (name == null || name.trim().isEmpty()){
+            return ResponseEntity.badRequest().body("The name is null or empty");
+        }
+        Camis cami = camisService.findByName(name);
+
+        return ResponseEntity.ok().body(cami);
+    }
     @GetMapping("/camis_page")
     public ResponseEntity<Page<Camis>> getCamisPagable(
             @RequestParam(value = "page", defaultValue = "0") int page,

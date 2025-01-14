@@ -156,12 +156,11 @@ const CardItem: React.FC<CardProps> = ({
       day: "numeric",
     };
     const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", options); // Formato día mes año en español
+    return date.toLocaleDateString("es-ES", options);
   };
 
   return (
     <div>
-      {/* Card de Material UI */}
       <ButtonBase onClick={onClick} sx={{ width: "100%" }}>
         <MaterialCard
           sx={{
@@ -188,7 +187,6 @@ const CardItem: React.FC<CardProps> = ({
               sx={{ cursor: "pointer" }}
             />
           )}
-          {/* Contenido del card */}
           <CardContent>
             <Typography variant="h6" component="div" className="card-title">
               {title}
@@ -196,8 +194,6 @@ const CardItem: React.FC<CardProps> = ({
           </CardContent>
         </MaterialCard>
       </ButtonBase>
-
-      {/* Modal para ampliar la imagen */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -205,22 +201,26 @@ const CardItem: React.FC<CardProps> = ({
         fullWidth
         className="custom-modal"
       >
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle className="title-dialog-cartitem">
+          <div className="container-cartitem-cabecera">
+            <div className="title-cabecera-cartitem">{title}</div>
+            <Button onClick={handleClose} className="button-cerrar">
+              X
+            </Button>
+          </div>
+        </DialogTitle>
         <DialogContent>
-          {/* Información adicional */}
           <div style={{ marginBottom: "20px" }}>
-            <Typography variant="body1" color="textSecondary">
-              <span>Creado el: </span>
-              <span style={{ fontWeight: "bold" }}>{formatDate(created)}</span>
+            <Typography variant="body1" color="textSecondary" className="typografy-creat-at">
+              <span className="text-create-at">Creado el: </span>
+              <span className="content-create-at">{formatDate(created)}</span>
             </Typography>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Typography
-                variant="body1"
-                color="textSecondary"
-              >
-                <span>Autor:  </span>
-                <span style={{ fontWeight: "bold" }}> {user_name}</span>
+              <Typography variant="body1" color="textSecondary" className="typografy-author">
+                <span className="text-author">Autor: </span>
+                <span className="content-author"> {user_name}</span>
               </Typography>
+
               {user_image && (
                 <img
                   src={`data:image/png;base64,${user_image}`}
@@ -236,20 +236,18 @@ const CardItem: React.FC<CardProps> = ({
             </div>
           </div>
 
-          {/* Imágenes del producto */}
           <div style={{ display: "flex", overflowX: "auto", gap: "10px" }}>
             {images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`${title} - ${index + 1}`}
-                style={{ width: "100%", height: "auto", maxWidth: "500px" }}
+                className="images-cart-item"
               />
             ))}
           </div>
         </DialogContent>
         <DialogActions>
-          {/* Botones de acción */}
           {showActions && (
             <>
               {isPublished ? (
@@ -285,15 +283,8 @@ const CardItem: React.FC<CardProps> = ({
               </Button>
             </>
           )}
-          <Button
-            onClick={handleClose}
-            className="button-cerrar"
-          >
-            X
-          </Button>
         </DialogActions>
       </Dialog>
-      {/* Dialog de confirmación de eliminación */}
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDeleteDialog}

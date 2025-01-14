@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CamisRepository extends JpaRepository<Camis, Integer> {
@@ -20,5 +21,6 @@ public interface CamisRepository extends JpaRepository<Camis, Integer> {
     Page<Camis> findByDiscountGreaterThan(Integer discount, Pageable pageable);
 
     Page<Camis> findByUserId(Integer userId, Pageable pageable);
+    Optional<Camis> findByName(String name);
 
 }

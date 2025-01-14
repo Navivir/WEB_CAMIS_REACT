@@ -149,7 +149,6 @@ const CardImg: React.FC<CardPropsImg> = ({
 
   return (
     <div>
-      {/* Card de Material UI */}
       <ButtonBase onClick={onClick} sx={{ width: "100%" }}>
         <MaterialCard
           sx={{
@@ -166,36 +165,34 @@ const CardImg: React.FC<CardPropsImg> = ({
           }}
           className="custom-card-cart"
         >
-          {/* Imagen clickeable */}
           <CardMedia
             component="img"
             sx={{
-              height: "75%", // La imagen ocupa el 75% de la tarjeta
+              height: "75%",
               cursor: "pointer",
-              objectFit: "cover", // Asegura que la imagen no se deforme
+              objectFit: "cover",
             }}
             image={imageUrl}
             alt={title}
             onClick={handleClickOpen}
             className="image-card-my-designs"
           />
-          {/* Contenido del card */}
           <CardContent
             sx={{
-              height: "25%", // El contenido (título) ocupa el 25% de la tarjeta
+              height: "25%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
-              padding: "8px", // Espaciado interno opcional
+              padding: "8px",
             }}
           >
             <Typography
               variant="h6"
               component="div"
-              className="card-title"
+              className="card-title-card-image"
               sx={{
-                fontSize: "16px",
+                fontSize: "20px",
                 fontFamily: "Trebuchet MS",
                 color: "#333",
                 overflow: "hidden",
@@ -209,7 +206,6 @@ const CardImg: React.FC<CardPropsImg> = ({
         </MaterialCard>
       </ButtonBase>
 
-      {/* Modal para ampliar la imagen */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -217,64 +213,60 @@ const CardImg: React.FC<CardPropsImg> = ({
         fullWidth
         className="custom-modal"
       >
-        <DialogTitle>{title}</DialogTitle>
-        <DialogContent>
+        <DialogTitle className="title-dialog-cartimage">
+          <div className="container-title-cabecera-cart-image" >
+            <div className="title-cabecera-cart-image">{title}</div>
+            <Button onClick={handleClose} className="button-cerrar">
+              X
+            </Button>
+          </div>
+        </DialogTitle>
+        <DialogContent className="dialog-content-image-cart-image">
           <img
             src={imageUrl}
             alt={title}
-            style={{ width: "100%", height: "auto" }}
+            className="image-cart-image"
           />
         </DialogContent>
+
         <DialogActions>
-          {/* Condicional para mostrar los botones solo si showActions es verdadero */}
           {showActions && (
             <>
               {isPublished ? (
                 <Button
                   onClick={handleOpenUnpublishDialog}
-                  color="info"
                   variant="contained"
-                  style={{ padding: "10px" }}
+                  className="button-retirar"
                 >
                   Retirar
                 </Button>
               ) : (
                 <Button
                   onClick={handleOpenPublishDialog}
-                  color="info"
                   variant="contained"
-                  style={{ padding: "10px" }}
+                  className="button-publicar"
                 >
                   Publicar
                 </Button>
               )}
               <Button
                 onClick={handleOpenDeleteDialog}
-                color="error"
                 variant="contained"
-                style={{ padding: "10px" }}
+                className="button-eliminar"
               >
                 Eliminar
               </Button>
               <Button
                 onClick={() => onMakeItReal(id)}
-                color="success" // Establecemos color verde para el botón de añadir al carrito
                 variant="contained"
-                style={{ padding: "10px" }}
+                className="button-siguiente"
               >
                 Aplicar
               </Button>
             </>
           )}
-          <Button
-            onClick={handleClose}
-            style={{ padding: "10px", cursor: "pointer" }}
-          >
-            Cerrar
-          </Button>
         </DialogActions>
       </Dialog>
-      {/* Dialog de confirmación de eliminación */}
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDeleteDialog}

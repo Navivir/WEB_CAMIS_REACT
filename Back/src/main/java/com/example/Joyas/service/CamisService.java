@@ -1,6 +1,7 @@
 package com.example.Joyas.service;
 
 import com.example.Joyas.dao.CamisRepository;
+import com.example.Joyas.exceptions.ItemNotFoundException;
 import com.example.Joyas.model.Camis;
 import jakarta.persistence.EntityNotFoundException;
 import net.coobird.thumbnailator.Thumbnails;
@@ -29,6 +30,10 @@ public class CamisService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    public Camis findByName(String name) {
+        return camisRepository.findByName(name)
+                .orElseThrow(() -> new ItemNotFoundException("Cami Not Found"));
     }
 
     public ResponseEntity<?> insertCami(Camis cami) {
