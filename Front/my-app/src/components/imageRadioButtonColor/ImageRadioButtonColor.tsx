@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ImageRadioButtonColor.css';
 import Alert from '../alert/Alert';
+
 // Definir los tipos para la imagen
 interface Image {
   src: string;
@@ -26,6 +27,7 @@ const ImageRadioButton: React.FC<ImageRadioButtonProps> = ({
 }) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState(false);
+  
 
   useEffect(() => {
     // Si el valor seleccionado cambia desde el componente padre, actualizar el estado local

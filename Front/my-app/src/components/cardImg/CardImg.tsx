@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import "./CardImg.css";
 import { CardPropsImg } from "../../scripts/Types";
+import { InputChangeName } from "../inputChangeName/InputChangeName";
 
 const CardImg: React.FC<CardPropsImg> = ({
   id,
@@ -28,7 +29,9 @@ const CardImg: React.FC<CardPropsImg> = ({
   const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
   const [isUnpublishDialogOpen, setIsUnpublishDialogOpen] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
-
+  const [newName, setNewName] = useState<string>("");
+  const [isNameInputOpen, setIsNameInputOpen] = useState(false);
+  const [titleName, setTitleName] = useState<string>(title);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -61,6 +64,14 @@ const CardImg: React.FC<CardPropsImg> = ({
   const handleCloseUnpublishDialog = () => {
     setIsUnpublishDialogOpen(false);
     setIsPublished(false);
+  };
+
+  const handleOpenInput = () => {
+    setIsNameInputOpen(true);
+  };
+
+  const handleCloseInput = () => {
+    setIsNameInputOpen(false);
   };
 
   const handleConfirmDeleteImg = (id: number) => {
@@ -103,6 +114,36 @@ const CardImg: React.FC<CardPropsImg> = ({
           handleClose();
         });
     }
+  };
+
+  const changeName = (name: string) => {
+    if (name.trim() !== "") {
+      const formData = new FormData();
+      formData.append("name", name);
+      fetch(`http://localhost:8080/cami/${id}`, {
+        method: "PUT",
+        body: formData,
+      })
+        .then((response) => {
+          if (response.ok) {
+            handleCloseInput();
+            console.log("Nombre modificado existosamente");
+          } else {
+            console.log("No se ha podido modificar el nombre");
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la solicitud", error);
+        });
+    } else {
+      alert("El nombre no puede estar vacio");
+    }
+  };
+
+  const handleChangeName = (name: string) => {
+    setNewName(name);
+    changeName(name);
+    setTitleName(name);
   };
 
   const handleUnpublish = (id: number) => {
@@ -200,7 +241,7 @@ const CardImg: React.FC<CardPropsImg> = ({
                 textOverflow: "ellipsis",
               }}
             >
-              {title}
+              {titleName}
             </Typography>
           </CardContent>
         </MaterialCard>
@@ -214,24 +255,27 @@ const CardImg: React.FC<CardPropsImg> = ({
         className="custom-modal"
       >
         <DialogTitle className="title-dialog-cartimage">
-          <div className="container-title-cabecera-cart-image" >
-            <div className="title-cabecera-cart-image">{title}</div>
+          <div className="container-title-cabecera-cart-image">
+            <div className="title-cabecera-cart-image">{titleName}</div>
             <Button onClick={handleClose} className="button-cerrar">
               X
             </Button>
           </div>
         </DialogTitle>
         <DialogContent className="dialog-content-image-cart-image">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="image-cart-image"
-          />
+          <img src={imageUrl} alt={title} className="image-cart-image" />
         </DialogContent>
 
         <DialogActions>
           {showActions && (
             <>
+              <Button
+                onClick={handleOpenInput}
+                variant="contained"
+                className="button-change-name"
+              >
+                Cambiar Nombre
+              </Button>
               {isPublished ? (
                 <Button
                   onClick={handleOpenUnpublishDialog}
@@ -288,6 +332,7 @@ const CardImg: React.FC<CardPropsImg> = ({
             Eliminar
           </Button>
         </DialogActions>
+   
       </Dialog>
       <Dialog
         open={isPublishDialogOpen}
@@ -325,6 +370,15 @@ const CardImg: React.FC<CardPropsImg> = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog open={isNameInputOpen} onClose={handleCloseInput}>
+      <DialogContent>
+        <InputChangeName
+          label={"Cambiar Nombre"}
+          onSubmit={handleChangeName}
+          onCancel={handleCloseInput}
+        />
+      </DialogContent>
+    </Dialog>
     </div>
   );
 };

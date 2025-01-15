@@ -35,9 +35,8 @@ html, body {
   gap: 1em;
   height: 20%;
 }
-/* Imagen de la tarjeta */
-.cart-item-image {
-  height: 200px; /* Fijamos una altura para las imágenes */
+/* Imagen de la tarjeta */.cart-item-image {
+  height: 200px;
   overflow: hidden;
 }
 
