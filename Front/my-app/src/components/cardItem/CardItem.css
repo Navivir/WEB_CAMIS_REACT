@@ -190,3 +190,22 @@
 .button-cerrar:active {
   background-color: #bdbdbd;
 }
+
+.button-change-name{
+  background-color: #635bbe !important;
+  color: #fafbfc;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-transform: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-change-name:hover {
+  background-color: #8f36d3;
+  transform: scale(1.05);
+}
+
+.button-change-name:active {
+  background-color: #bdbdbd;
+}

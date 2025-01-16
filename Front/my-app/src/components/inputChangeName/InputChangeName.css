@@ -1,67 +1,69 @@
-/* Estilos generales para el contenedor */
+
 .change-name-container-input {
     display: flex;
-    flex-direction: column; /* Alinea los elementos en una columna */
-    gap: 16px; /* Espacio entre los elementos */
-    width: 400px; /* Ancho máximo del formulario */
-    margin: 0 auto; /* Centra el formulario horizontalmente */
+    flex-direction: column;
+    gap: 16px;
+    width: 400px;
+    margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ddd; /* Borde para el formulario */
-    border-radius: 8px; /* Bordes redondeados */
-    background-color: #f9f9f9; /* Fondo gris claro */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
 }
 
-/* Estilo para la etiqueta del input */
+
 .change-name-label-input {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 8px;
 }
 
-/* Estilo para el input de texto */
+
 .change-name-input {
     padding: 8px 12px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 100%; /* Ocupa el 100% del contenedor */
+    width: 100%;
 }
 
-/* Contenedor para los botones */
+
 .change-name-input-button-container {
     display: flex;
-    justify-content: space-between; /* Alinea los botones a los extremos */
-    gap: 12px; /* Espacio entre los botones */
+    justify-content: space-between;
+    gap: 12px;
 }
 
-/* Estilo para los botones */
-.change-name-exit-button-input,
-.change-name--save-button-input {
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    flex: 1; /* Hacer que los botones ocupen el mismo tamaño */
-}
 
-/* Estilo para el botón 'Salir' */
-.change-name-exit-button-input {
-    background-color: #f44336; /* Rojo para salir */
-    color: white;
-}
 
-.change-name-exit-button-input:hover {
-    background-color: #e53935; /* Rojo oscuro en hover */
-}
-
-/* Estilo para el botón 'Guardar' */
 .change-name-save-button-input {
-    background-color: #4caf50; 
-    color: white;
+  background-color:#1b79c6 !important;
+  color: #fafbfc;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-transform: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .change-name-save-button-input:hover {
-    background-color: #388e3c;
+    background-color: #42a5f5 !important;
 }
+
+.change-name-exit-button-input {
+    background-color:#9c1414 !important;
+    color: #fafbfc;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-transform: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.change-name-exit-button-input:hover {
+    background-color: #ab3030de !important;
+}
+
+
+
+

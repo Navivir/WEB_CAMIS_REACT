@@ -65,6 +65,18 @@ public class CartItemController {
         }
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?>updateName(@PathVariable Integer id, @RequestParam(value = "name", required = false) String name){
+        if(name.trim() == ""){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El nombre no puede estar vacio");
+        }
+        boolean isUpdated = cartItemService.updateName(name, id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(isUpdated);
+    }
+
+
+
+
     @PostMapping("/uuser")
     public ResponseEntity<?> addCartItem( @RequestBody CartItem cartItem) {
 

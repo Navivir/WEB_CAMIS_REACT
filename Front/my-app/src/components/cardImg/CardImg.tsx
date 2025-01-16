@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card as MaterialCard,
   CardContent,
@@ -24,14 +24,27 @@ const CardImg: React.FC<CardPropsImg> = ({
   onMakeItReal,
   showActions,
 }) => {
+  const MAX_TITLE_LENGTH = 25;
+  const truncatedTitle = title.length > MAX_TITLE_LENGTH 
+    ? title.slice(0, MAX_TITLE_LENGTH) 
+    : title;
+
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
   const [isUnpublishDialogOpen, setIsUnpublishDialogOpen] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [newName, setNewName] = useState<string>("");
   const [isNameInputOpen, setIsNameInputOpen] = useState(false);
-  const [titleName, setTitleName] = useState<string>(title);
+  const [titleName, setTitleName] = useState<string>(truncatedTitle);
+
+  useEffect(() => {
+    if (id) {
+      handleIsPublished(id);
+    }
+  }, [id]); 
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -141,9 +154,10 @@ const CardImg: React.FC<CardPropsImg> = ({
   };
 
   const handleChangeName = (name: string) => {
+    const truncatedName = name.slice(0, MAX_TITLE_LENGTH);
     setNewName(name);
     changeName(name);
-    setTitleName(name);
+    setTitleName(truncatedName);
   };
 
   const handleUnpublish = (id: number) => {
@@ -185,8 +199,6 @@ const CardImg: React.FC<CardPropsImg> = ({
       setIsPublished(false);
     }
   };
-
-  handleIsPublished(id);
 
   return (
     <div>

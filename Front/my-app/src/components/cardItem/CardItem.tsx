@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card as MaterialCard,
   CardContent,
@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import "./CardItem.css";
 import { CardProps } from "../../scripts/Types";
+import { InputChangeName } from "../inputChangeName/InputChangeName";
 
 const CardItem: React.FC<CardProps> = ({
   id,
@@ -26,11 +27,24 @@ const CardItem: React.FC<CardProps> = ({
   onMakeItReal,
   showActions,
 }) => {
+  const MAX_TITLE_LENGTH = 25;
+  const truncatedTitle =
+    title.length > MAX_TITLE_LENGTH ? title.slice(0, MAX_TITLE_LENGTH) : title;
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
   const [isUnpublishDialogOpen, setIsUnpublishDialogOpen] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [newName, setNewName] = useState<string>("");
+  const [isNameInputOpen, setIsNameInputOpen] = useState(false);
+  const [titleName, setTitleName] = useState<string>(truncatedTitle);
+
+  useEffect(() => {
+      if (id) {
+        handleIsPublished(id);
+      }
+    }, [id]); 
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,6 +78,14 @@ const CardItem: React.FC<CardProps> = ({
   const handleCloseUnpublishDialog = () => {
     setIsUnpublishDialogOpen(false);
     setIsPublished(false);
+  };
+
+  const handleOpenInput = () => {
+    setIsNameInputOpen(true);
+  };
+
+  const handleCloseInput = () => {
+    setIsNameInputOpen(false);
   };
 
   const handleConfirmDelete = (id: number) => {
@@ -147,8 +169,6 @@ const CardItem: React.FC<CardProps> = ({
     }
   };
 
-  handleIsPublished(id);
-
   const formatDate = (dateString: string): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -157,6 +177,37 @@ const CardItem: React.FC<CardProps> = ({
     };
     const date = new Date(dateString);
     return date.toLocaleDateString("es-ES", options);
+  };
+
+  const changeName = (name: string) => {
+    if (name.trim() !== "") {
+      const formData = new FormData();
+      formData.append("name", name);
+      fetch(`http://localhost:8080/cartItem/update/${id}`, {
+        method: "PUT",
+        body: formData,
+      })
+        .then((response) => {
+          if (response.ok) {
+            handleCloseInput();
+            console.log("Nombre modificado existosamente");
+          } else {
+            console.log("No se ha podido modificar el nombre");
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la solicitud", error);
+        });
+    } else {
+      alert("El nombre no puede estar vacio");
+    }
+  };
+
+  const handleChangeName = (name: string) => {
+    const truncatedName = name.slice(0, MAX_TITLE_LENGTH);
+    setNewName(name);
+    changeName(name);
+    setTitleName(truncatedName);
   };
 
   return (
@@ -189,7 +240,7 @@ const CardItem: React.FC<CardProps> = ({
           )}
           <CardContent>
             <Typography variant="h6" component="div" className="card-title">
-              {title}
+              {titleName}
             </Typography>
           </CardContent>
         </MaterialCard>
@@ -203,7 +254,7 @@ const CardItem: React.FC<CardProps> = ({
       >
         <DialogTitle className="title-dialog-cartitem">
           <div className="container-cartitem-cabecera">
-            <div className="title-cabecera-cartitem">{title}</div>
+            <div className="title-cabecera-cartitem">{titleName}</div>
             <Button onClick={handleClose} className="button-cerrar">
               X
             </Button>
@@ -211,12 +262,20 @@ const CardItem: React.FC<CardProps> = ({
         </DialogTitle>
         <DialogContent>
           <div style={{ marginBottom: "20px" }}>
-            <Typography variant="body1" color="textSecondary" className="typografy-creat-at">
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              className="typografy-creat-at"
+            >
               <span className="text-create-at">Creado el: </span>
               <span className="content-create-at">{formatDate(created)}</span>
             </Typography>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Typography variant="body1" color="textSecondary" className="typografy-author">
+              <Typography
+                variant="body1"
+                color="textSecondary"
+                className="typografy-author"
+              >
                 <span className="text-author">Autor: </span>
                 <span className="content-author"> {user_name}</span>
               </Typography>
@@ -250,6 +309,13 @@ const CardItem: React.FC<CardProps> = ({
         <DialogActions>
           {showActions && (
             <>
+              <Button
+                onClick={handleOpenInput}
+                variant="contained"
+                className="button-change-name"
+              >
+                Cambiar Nombre
+              </Button>
               {isPublished ? (
                 <Button
                   onClick={handleOpenUnpublishDialog}
@@ -342,6 +408,15 @@ const CardItem: React.FC<CardProps> = ({
             Retirar
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog open={isNameInputOpen} onClose={handleCloseInput}>
+        <DialogContent>
+          <InputChangeName
+            label={"Cambiar Nombre"}
+            onSubmit={handleChangeName}
+            onCancel={handleCloseInput}
+          />
+        </DialogContent>
       </Dialog>
     </div>
   );

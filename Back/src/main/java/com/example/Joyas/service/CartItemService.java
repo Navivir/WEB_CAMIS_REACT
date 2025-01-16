@@ -97,4 +97,13 @@ public class CartItemService {
             }
             throw new RuntimeException("No se ha podido ver si el item está publicado");
     }
+
+    public boolean updateName(String newName, Integer id) {
+        Optional<CartItem> cartItem = cartItemRepository.findById(id);
+        cartItem.ifPresent(item -> {
+            item.setName(newName);
+            cartItemRepository.save(item);
+        });
+        return cartItem.isPresent();
+    }
 }
