@@ -1,5 +1,6 @@
 const GenerateToken = async () => {
   try {
+    console.log("Generate Token Inside")
     const response = await fetch("http://localhost:8080/users/generate-token");
     const token = await response.text();
     localStorage.setItem("token", token);
@@ -54,4 +55,11 @@ async function getUserById(id:number): Promise<any | null> {
   }
 }
 
-export { GenerateToken, isLoggedIn, isValidToken, getUserById };
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("UserId");
+  localStorage.removeItem("UserName");
+  window.location.href = `/login`;
+};
+
+export { GenerateToken, isLoggedIn, isValidToken, getUserById , handleLogout};

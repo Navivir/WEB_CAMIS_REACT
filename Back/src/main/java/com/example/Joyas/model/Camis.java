@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -30,6 +31,9 @@ public class Camis {
 
     @Column
     private Integer published = 0;
+
+    @Column
+    private LocalDateTime created;
 
     @OneToMany(mappedBy = "camis", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

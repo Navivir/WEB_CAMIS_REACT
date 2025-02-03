@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ public class CamisService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Cami data provided");
         }
         try {
+            cami.setCreated(LocalDateTime.now());
             camisRepository.save(cami);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cami. Please try " +

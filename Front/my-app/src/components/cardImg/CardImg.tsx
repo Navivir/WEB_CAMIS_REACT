@@ -13,21 +13,24 @@ import {
 } from "@mui/material";
 import "./CardImg.css";
 import { CardPropsImg } from "../../scripts/Types";
+import { formatDate } from "../../scripts/Utils";
 import { InputChangeName } from "../inputChangeName/InputChangeName";
 
 const CardImg: React.FC<CardPropsImg> = ({
   id,
   title,
   imageUrl,
+  user_name,
+  user_image,
+  created,
   onClick,
   onDelete,
   onMakeItReal,
   showActions,
 }) => {
   const MAX_TITLE_LENGTH = 25;
-  const truncatedTitle = title.length > MAX_TITLE_LENGTH 
-    ? title.slice(0, MAX_TITLE_LENGTH) 
-    : title;
+  const truncatedTitle =
+    title.length > MAX_TITLE_LENGTH ? title.slice(0, MAX_TITLE_LENGTH) : title;
 
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -43,8 +46,8 @@ const CardImg: React.FC<CardPropsImg> = ({
     if (id) {
       handleIsPublished(id);
     }
-  }, [id]); 
-  
+  }, [id]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -274,10 +277,42 @@ const CardImg: React.FC<CardPropsImg> = ({
             </Button>
           </div>
         </DialogTitle>
+        <div style={{ marginBottom: "20px", marginLeft:"20px" }}>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            className="typografy-creat-at"
+          >
+            <span className="text-create-at">Creado el: </span>
+            <span className="content-create-at">{formatDate(created)}</span>
+          </Typography>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              className="typografy-author"
+            >
+              <span className="text-author">Autor: </span>
+              <span className="content-author"> {user_name}</span>
+            </Typography>
+
+            {user_image && (
+              <img
+                src={`data:image/png;base64,${user_image}`}
+                alt={user_name}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            )}
+          </div>
+        </div>
         <DialogContent className="dialog-content-image-cart-image">
           <img src={imageUrl} alt={title} className="image-cart-image" />
         </DialogContent>
-
         <DialogActions>
           {showActions && (
             <>
@@ -312,15 +347,15 @@ const CardImg: React.FC<CardPropsImg> = ({
               >
                 Eliminar
               </Button>
-              <Button
-                onClick={() => onMakeItReal(id)}
-                variant="contained"
-                className="button-siguiente"
-              >
-                Aplicar
-              </Button>
             </>
           )}
+          <Button
+            onClick={() => onMakeItReal(id)}
+            variant="contained"
+            className="button-siguiente"
+          >
+            Aplicar
+          </Button>
         </DialogActions>
       </Dialog>
       <Dialog
@@ -344,7 +379,6 @@ const CardImg: React.FC<CardPropsImg> = ({
             Eliminar
           </Button>
         </DialogActions>
-   
       </Dialog>
       <Dialog
         open={isPublishDialogOpen}
@@ -383,14 +417,14 @@ const CardImg: React.FC<CardPropsImg> = ({
         </DialogActions>
       </Dialog>
       <Dialog open={isNameInputOpen} onClose={handleCloseInput}>
-      <DialogContent>
-        <InputChangeName
-          label={"Cambiar Nombre"}
-          onSubmit={handleChangeName}
-          onCancel={handleCloseInput}
-        />
-      </DialogContent>
-    </Dialog>
+        <DialogContent>
+          <InputChangeName
+            label={"Cambiar Nombre"}
+            onSubmit={handleChangeName}
+            onCancel={handleCloseInput}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

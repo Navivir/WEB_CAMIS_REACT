@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -102,6 +103,7 @@ public class CamisController {
             @RequestParam(value = "published", required = false) Integer published,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "price", required = false) Float price,
+            @RequestParam(value = "created", required = false) LocalDateTime created,
             @RequestParam(value = "imagen1", required = false) MultipartFile imagen1) throws IOException {
 
         Camis cami = new Camis();
@@ -121,6 +123,10 @@ public class CamisController {
         }
         if (price != null) {
             cami.setPrice(price);
+        }
+
+        if (created != null) {
+            cami.setCreated(created);
         }
         if (imagen1 != null && !imagen1.isEmpty()) {
             cami.setImagen1(camisService.resizeImage(imagen1, 500));
@@ -200,12 +206,21 @@ public class CamisController {
     public ResponseEntity<DesignResponse> addNewCamiToUser(
             @PathVariable Long userId,
             @RequestParam("name") String name,
+            @RequestParam(value = "created", required = false) LocalDateTime created,
             @RequestParam("imagen1") MultipartFile image) throws IOException {
 
         Camis cami = new Camis();
-        cami.setName(name);
+        if(name != null && name != ""){
+            cami.setName(name);
+        }
 
-        cami.setImagen1(camisService.resizeImage(image, 500));
+        if (created != null) {
+            cami.setCreated(created);
+        }
+
+        if (image != null){
+            cami.setImagen1(camisService.resizeImage(image, 500));
+        }
 
         userService.addNewCamiToUser(userId, cami);
 

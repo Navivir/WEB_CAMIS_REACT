@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import "./CardItem.css";
 import { CardProps } from "../../scripts/Types";
+import { formatDate } from "../../scripts/Utils";
 import { InputChangeName } from "../inputChangeName/InputChangeName";
 
 const CardItem: React.FC<CardProps> = ({
@@ -29,7 +30,7 @@ const CardItem: React.FC<CardProps> = ({
 }) => {
   const MAX_TITLE_LENGTH = 25;
   const truncatedTitle =
-    title.length > MAX_TITLE_LENGTH ? title.slice(0, MAX_TITLE_LENGTH) : title;
+  title.length > MAX_TITLE_LENGTH ? title.slice(0, MAX_TITLE_LENGTH) : title;
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
@@ -41,10 +42,10 @@ const CardItem: React.FC<CardProps> = ({
   const [titleName, setTitleName] = useState<string>(truncatedTitle);
 
   useEffect(() => {
-      if (id) {
-        handleIsPublished(id);
-      }
-    }, [id]); 
+    if (id) {
+      handleIsPublished(id);
+    }
+  }, [id]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -167,16 +168,6 @@ const CardItem: React.FC<CardProps> = ({
       console.log("ID inválido");
       setIsPublished(false);
     }
-  };
-
-  const formatDate = (dateString: string): string => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", options);
   };
 
   const changeName = (name: string) => {
@@ -340,15 +331,15 @@ const CardItem: React.FC<CardProps> = ({
               >
                 Eliminar
               </Button>
-              <Button
-                onClick={() => onMakeItReal(id)}
-                variant="contained"
-                className="button-siguiente"
-              >
-                Siguiente
-              </Button>
             </>
           )}
+          <Button
+            onClick={() => onMakeItReal(id)}
+            variant="contained"
+            className="button-siguiente"
+          >
+            Siguiente
+          </Button>
         </DialogActions>
       </Dialog>
       <Dialog

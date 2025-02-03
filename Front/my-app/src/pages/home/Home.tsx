@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import CardHome from "../../components/cardHome/CardHome";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { GenerateToken, isValidToken } from "../../scripts/Session";
 import Alert from "../../components/alert/Alert";
 import { Product, CartItem } from "../../scripts/Types";
 import CardItem from "../../components/cardItem/CardItem";
+import CardImg from "../../components/cardImg/CardImg";
 import Modal from "../../components/modal/Modal";
-import { getUserById } from "../../scripts/Session";
+import { getUserById, handleLogout} from "../../scripts/Session";
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,6 +21,7 @@ const Home: React.FC = () => {
   const [button1Message, setbutton1Message] = useState<string>("");
   const [button2Message, setbutton2Message] = useState<string>("");
   const token = localStorage.getItem("token");
+  const authToken = localStorage.getItem("authToken");
   const user_id = localStorage.getItem("UserId");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -28,9 +29,7 @@ const Home: React.FC = () => {
   const [alertType, setAlertType] = useState<"success" | "error" | "info">(
     "success"
   );
-
-
-
+  
   useEffect(() => {
     if (token) {
       const validateToken = async () => {
@@ -45,11 +44,26 @@ const Home: React.FC = () => {
   }, [token]);
 
   useEffect(() => {
+    if (authToken) {
+      const validateToken = async () => {
+        const valid = await isValidToken(authToken);
+        console.log(valid);
+        if (!valid) {
+          handleLogout();
+        }
+      };
+      validateToken();
+    }
+  }, [authToken]);
+
+  useEffect(() => {
     const fetchCartItemsWithUsers = async () => {
       try {
-        const response = await fetch("http://localhost:8080/cartItem/published");
+        const response = await fetch(
+          "http://localhost:8080/cartItem/published"
+        );
         const data: CartItem[] = await response.json();
-  
+
         // Mapea los cartItems para incluir información del usuario
         const cartItemsWithUsers = await Promise.all(
           data.map(async (item) => {
@@ -59,29 +73,53 @@ const Home: React.FC = () => {
                 return { ...item, user }; // Agrega los datos del usuario al cartItem
               }
             } catch (error) {
-              console.error(`Error fetching user for cartItem ${item.id}:`, error);
+              console.error(
+                `Error fetching user for cartItem ${item.id}:`,
+                error
+              );
             }
             return item; // Devuelve el cartItem sin usuario si ocurre un error
           })
         );
-  
+
         setCartItems(cartItemsWithUsers);
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
     };
-  
+
     fetchCartItemsWithUsers();
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8080/published")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchProductsWithUsers = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/published");
+        const data = await response.json();
         const imgsList = data._embedded?.camisList || [];
-        setProducts(imgsList);
-      })
-      .catch((error) => console.error("Error fetching products:", error));
+  
+        // Mapea los productos para incluir información del usuario
+        const productsWithUsers = await Promise.all(
+          imgsList.map(async (item:Product ) => {
+            try {
+              if (item.user_id) {
+                const user = await getUserById(item.user_id);
+                return { ...item, user }; // Agrega los datos del usuario al producto
+              }
+            } catch (error) {
+              console.error(`Error fetching user for product ${item.user_id}:`, error);
+            }
+            return item; // Devuelve el producto sin usuario si ocurre un error
+          })
+        );
+  
+        setProducts(productsWithUsers); // Establece los productos con usuarios en el estado
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+  
+    fetchProductsWithUsers();
   }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +195,7 @@ const Home: React.FC = () => {
   };
 
   const handleClick = (id: number) => {
-    const selectedProduct = products.find(product => product.id === id);
+    const selectedProduct = products.find((product) => product.id === id);
     if (selectedProduct) {
       setProduct(selectedProduct);
     }
@@ -165,14 +203,10 @@ const Home: React.FC = () => {
     setbutton1Message("Aceptar");
     setbutton2Message("Cancelar");
     setIsModalOpen(true);
-    setModalMessage(
-      "¿Deseas aplicar el diseño seleccionado a una camiseta?."
-    );
+    setModalMessage("¿Deseas aplicar el diseño seleccionado a una camiseta?.");
     setbutton1Message("Aceptar");
     setbutton2Message("Cancelar");
     setIsModalOpen(true);
-
-
   };
 
   const handleDeleteItem = (id: number) => {
@@ -180,14 +214,18 @@ const Home: React.FC = () => {
   };
 
   const handleMakeItReal = (id: number) => {
-    window.location.href = `/pre-cart?id=${id}`;
+    handleClick(id);
   };
+
+  const handleBuy = (id: number) => {
+    window.location.href = `/pre-cart?id=${id}`
+  };
+
   const handleStayDesigning = () => {
     setIsModalOpen(false);
   };
-
-  const handleGoToDesign = (id:number) => {
-    navigate(`/details/${id}`);
+  const handleGoToDesign = (id: number) => {
+    window.location.href = `/details/${id}`;
   };
 
   return (
@@ -246,11 +284,19 @@ const Home: React.FC = () => {
         <h2 className="h2-home-input-image">Diseños De La Comunidad:</h2>
         <div className="cards-container-home-cards">
           {products.map((product, index) => (
-            <CardHome
-              key={index}
+            <CardImg
+              key={product.id}
+              id={product.id}
               title={product.name}
-              imageUrl={`data:image/png;base64,${product.imagen1}`}
-              onClick={() => handleClick(product.id)}
+              onDelete={handleDeleteItem}
+              onMakeItReal={handleMakeItReal}
+              imageUrl={`data:image/png;base64, ${product.imagen1}`}
+              showActions={false}
+              created={product.created}
+              user_name={
+                product.user ? product.user.username : "Usuario no encontrado"
+              }
+              user_image={product.user?.imagenPerfil || ""}
             />
           ))}
         </div>
@@ -267,25 +313,27 @@ const Home: React.FC = () => {
               title={cartItem.name}
               images={cartItem.images}
               onDelete={handleDeleteItem}
-              onMakeItReal={handleMakeItReal}
+              onMakeItReal={handleBuy}
               showActions={false}
               created={cartItem.created}
-              user_name={cartItem.user ? cartItem.user.username : "Usuario no encontrado"}
-              user_image={cartItem.user?.imagenPerfil || ""}  
+              user_name={
+                cartItem.user ? cartItem.user.username : "Usuario no encontrado"
+              }
+              user_image={cartItem.user?.imagenPerfil || ""}
             />
           ))}
         </div>
-            <Modal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            message={modalMessage}
-            onConfirm={() => product && handleGoToDesign(product.id)} 
-            onCancel={handleStayDesigning}
-            confirmButtonText={button1Message}
-            cancelButtonText={button2Message}
-            confirmButtonColor="#4CAF50"
-            cancelButtonColor="#5494de"
-          />
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          message={modalMessage}
+          onConfirm={() => product && handleGoToDesign(product.id)}
+          onCancel={handleStayDesigning}
+          confirmButtonText={button1Message}
+          cancelButtonText={button2Message}
+          confirmButtonColor="#4CAF50"
+          cancelButtonColor="#5494de"
+        />
       </div>
     </div>
   );

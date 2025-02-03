@@ -38,6 +38,7 @@ export interface User {
   export interface ImageDesign {
     id:number;
     imagen1:string;
+    created:string;
     name:string;
     description:string;
     published:number;
@@ -48,6 +49,9 @@ export interface User {
     id: number;
     name: string;
     imagen1: string;
+    created: string;
+    user_id: number;
+    user?: User; 
   }
 
 export interface CardProps {
@@ -67,6 +71,9 @@ export interface CardProps {
     id: number;
     title: string;
     imageUrl: string;
+    user_name: string;
+    user_image: string;
+    created: string;
     onClick?: () => void;
     onDelete: (id: number) => void; 
     onMakeItReal: (id: number) => void;

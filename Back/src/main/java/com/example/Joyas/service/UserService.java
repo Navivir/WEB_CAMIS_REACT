@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -45,8 +47,24 @@ public class UserService {
                 token = userCart.get().getToken();
                 LocalDateTime expiresTime = userCart.get().getExpiresAt();
 
-                if(expiresTime.isBefore(LocalDateTime.now())){
+                System.out.println("Token actual: " + token);
+                System.out.println("Fecha de expiración: " + expiresTime);
+                System.out.println("Fecha actual: " + LocalDateTime.now());
+                System.out.println("¿Expirado? " + expiresTime.isBefore(LocalDateTime.now()));
+
+                if (expiresTime.isBefore(LocalDateTime.now())) {
+
                     token = jwtUtil.generateToken(user.getUsername());
+                    Date newExpirationDate = jwtUtil.getExpirationDate(token);
+                    LocalDateTime newExpirationDateTime =
+                            LocalDateTime.ofInstant(newExpirationDate.toInstant(), ZoneId.systemDefault());
+
+                    userCart.get().setToken(token);
+                    userCart.get().setCreatedAt(LocalDateTime.now());
+                    userCart.get().setExpiresAt(newExpirationDateTime);
+
+                    // Guardar el carrito con la nueva información
+                    cartRepository.save(userCart.get());
                 }
             } else {
                 System.out.println("El usuario no tiene un carrito asociado. Generando uno nuevo.");
@@ -153,11 +171,18 @@ public class UserService {
         User user = userRepository.findById(Math.toIntExact(userId))
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Guardar la camiseta (cami) en la base de datos para que se genere el id
+        if (cami != null) {
+            cami.setCreated(LocalDateTime.now());
+        }
         camisRepository.save(cami);  // Asegúrate de que tienes un repositorio de Camis
 
         user.addCami(cami);
 
         userRepository.save(user);
+    }
+
+    public String gtoken() {
+        String token = jwtUtil.generateToken("maceiraro");
+        return token;
     }
 }

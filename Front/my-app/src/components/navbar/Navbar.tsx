@@ -1,7 +1,8 @@
 import { Navbar, Dropdown } from "flowbite-react";
 import logo from "../../logos/camiB.svg";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { handleLogout } from "../../scripts/Session";
+
 import { useState, useEffect } from "react";
 import { User } from '../../scripts/Types';
 
@@ -11,7 +12,7 @@ export function NavbarW(){
   const userName = localStorage.getItem("UserName");
   const userId = localStorage.getItem("UserId");
 
-  const navigate = useNavigate();
+  
 
   useEffect(() => {
     if (userId) {
@@ -26,12 +27,7 @@ export function NavbarW(){
     }
   }, [userId]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("UserId");
-    localStorage.removeItem("UserName");
-    navigate("/login");
-  };
+
 
   return (
     <Navbar fluid rounded className="bg-gray-800">

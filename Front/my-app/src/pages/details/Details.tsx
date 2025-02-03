@@ -14,14 +14,16 @@ import nextIcon from "../../logos/next.png";
 import { isLoggedIn } from "../../scripts/Session";
 import { CanvasManager } from "../../fabric/CanvasManager";
 import { resizeImage } from "../../scripts/Utils";
-
+import { InputChangeName } from "../../components/inputChangeName/InputChangeName";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
 
 interface Product {
   imagen1: string;
   imagenDelantera: string;
   imagenTrasera: string;
 }
-
+ 
 const typeOptions = [
   {
     src: camiseta,
@@ -65,11 +67,15 @@ const Details: React.FC = () => {
   const [modalMessage, setModalMessage] = useState<string>("");
   const [button1Message, setbutton1Message] = useState<string>("");
   const [button2Message, setbutton2Message] = useState<string>("");
+  const [onConfirmAction, setOnConfirmAction] = useState(() => () => {});
+  const [onCancelAction, setOnCancelAction] = useState(() => () => {});
   const [idCami, setIdCami] = useState<string | null>(null);
   const [nameCami, setNameCami] = useState<string>("");
   const [currentView, setCurrentView] = useState<"delantera" | "trasera">(
     "delantera"
   );
+  // eslint-disable-next-line
+  const [isInputOpen, setInputOpen] = useState<boolean>(false);
   const [appliedImages, setAppliedImages] = useState<{
     delantera?: string;
     trasera?: string;
@@ -81,6 +87,8 @@ const Details: React.FC = () => {
   const [imagenUsadaFrontal, setImagenUsadaFrontal] = useState<string>("");
   const [imagenUsadaTrasera, setImagenUsadaTrasera] = useState<string>("");
   const [image2Add, setImage2Add] = useState<string>("");
+  const [imageForSave, setImageForSave] = useState<string>("");
+
 
   useEffect(() => {
     fetch(`http://localhost:8080/cami/${id}`)
@@ -116,7 +124,10 @@ const Details: React.FC = () => {
         setColorProduct(data);
 
         // Actualiza las imágenes en el estado
-        setImages([`data:image/png;base64,${data.imagenDelantera}`,`data:image/png;base64,${data.imagenTrasera}`]);
+        setImages([
+          `data:image/png;base64,${data.imagenDelantera}`,
+          `data:image/png;base64,${data.imagenTrasera}`,
+        ]);
       })
       .catch((error) => console.error("Error fetching color image:", error));
   };
@@ -142,8 +153,7 @@ const Details: React.FC = () => {
     if (!canvasManagerRef.current || !product || !colorProduct) return;
 
     canvasManagerRef.current.clearCanvas();
-    if (imagenUsadaFrontal || imagenUsadaTrasera){
-
+    if (imagenUsadaFrontal || imagenUsadaTrasera) {
     }
     const baseImageSrc = newImage || `data:image/png;base64,${product.imagen1}`;
     const camiImageSrc =
@@ -170,10 +180,10 @@ const Details: React.FC = () => {
         camiImageSrc,
         limitRectParams
       );
-    } 
+    }
 
-    if (currentView === "delantera" && !imagenUsadaFrontal){
-      setImage2Add(baseImageSrc)
+    if (currentView === "delantera" && !imagenUsadaFrontal) {
+      setImage2Add(baseImageSrc);
       canvasManagerRef.current.addImagesToCanvas(
         baseImageSrc,
         camiImageSrc,
@@ -181,31 +191,29 @@ const Details: React.FC = () => {
       );
     }
 
-    if (currentView === "trasera" && !imagenUsadaTrasera){
-      setImage2Add(baseImageSrc)
+    if (currentView === "trasera" && !imagenUsadaTrasera) {
+      setImage2Add(baseImageSrc);
       canvasManagerRef.current.addImagesToCanvas(
         baseImageSrc,
         camiImageSrc,
         limitRectParams
       );
     }
-
   }, [
     newImage,
     currentView,
     product,
     colorProduct,
     imagenUsadaFrontal,
-    imagenUsadaTrasera
-  
+    imagenUsadaTrasera,
   ]);
 
   const saveAndAddToCart = () => {
-
     if (isEditableDelantera && isEditableTrasera) {
       setModalMessage("Debes aplicar imágenes antes de guardar.");
-      setbutton1Message("");  // Oculta el botón si está vacio
+      setbutton1Message("");
       setbutton2Message("Aceptar");
+      setOnCancelAction( () => handleStayDesigning);
       setIsModalOpen(true);
       return;
     }
@@ -219,6 +227,8 @@ const Details: React.FC = () => {
       );
       setbutton1Message("Iniciar sesión");
       setbutton2Message("Seguir creando");
+      setOnConfirmAction(() => handleGoToMyDesigns);
+      setOnCancelAction( () => handleStayDesigning);
       setIsModalOpen(true);
       console.error("No UserId found in localStorage");
       return;
@@ -226,8 +236,9 @@ const Details: React.FC = () => {
       setModalMessage("¡Diseño añadido a tu lista!");
       setbutton1Message("Ver mis diseños");
       setbutton2Message("Seguir creando");
+      setOnConfirmAction(() => handleGoToMyDesigns);
+      setOnCancelAction( () => handleStayDesigning);
     }
-
 
     const cartItem = {
       productId: id,
@@ -288,7 +299,6 @@ const Details: React.FC = () => {
       .then((data) => {
         console.log("Product added to My Designs:", data);
 
-        // Redirigir a /pre-cart pasando el ID capturado
         window.location.href = `/pre-cart?id=${data.id}`;
       })
       .catch((error) => {
@@ -298,6 +308,7 @@ const Details: React.FC = () => {
 
   const handleStayDesigning = () => {
     setIsModalOpen(false);
+    setInputOpen(false);
   };
 
   const handleGoToMyDesigns = () => {
@@ -317,7 +328,7 @@ const Details: React.FC = () => {
 
     const canvas = canvasRef.current;
     const appliedImage = canvas.toDataURL();
-    
+
     setAppliedImages((prev) => ({
       ...prev,
       [currentView]: appliedImage, // Guarda la imagen aplicada para la vista actual
@@ -325,40 +336,37 @@ const Details: React.FC = () => {
 
     if (currentView === "delantera") {
       setIsEditableDelantera(false);
-      
-      if(imagenUsadaFrontal){
+
+      if (imagenUsadaFrontal) {
         setImages((prevImages) => {
           const newImages = [...prevImages];
           newImages[0] = appliedImage;
           return newImages;
         });
-      } else{
-      setImagenUsadaFrontal(image2Add)
-      setImages((prevImages) => {
-        const newImages = [...prevImages];
-        newImages[0] = appliedImage;
-        return newImages;   
-      });
+      } else {
+        setImagenUsadaFrontal(image2Add);
+        setImages((prevImages) => {
+          const newImages = [...prevImages];
+          newImages[0] = appliedImage;
+          return newImages;
+        });
       }
-
     } else {
       setIsEditableTrasera(false);
-      if(imagenUsadaTrasera){
-      setImages((prevImages) => {
-        const newImages = [...prevImages];
-        newImages[1] = appliedImage;
-        return newImages;
-      });
-    } else {
-      setImagenUsadaTrasera(image2Add);
-       setImages((prevImages) => {
-        const newImages = [...prevImages];
-        newImages[1] = appliedImage;
-        return newImages;
-      });
-      
-      
-    }
+      if (imagenUsadaTrasera) {
+        setImages((prevImages) => {
+          const newImages = [...prevImages];
+          newImages[1] = appliedImage;
+          return newImages;
+        });
+      } else {
+        setImagenUsadaTrasera(image2Add);
+        setImages((prevImages) => {
+          const newImages = [...prevImages];
+          newImages[1] = appliedImage;
+          return newImages;
+        });
+      }
     }
   };
 
@@ -388,10 +396,10 @@ const Details: React.FC = () => {
 
     if (currentView === "delantera") {
       setIsEditableDelantera(true);
-      setImagenUsadaFrontal(imagenUsadaFrontal)
+      setImagenUsadaFrontal(imagenUsadaFrontal);
     } else {
       setIsEditableTrasera(true);
-      setImagenUsadaTrasera(imagenUsadaTrasera)
+      setImagenUsadaTrasera(imagenUsadaTrasera);
     }
 
     if (canvasRef.current) {
@@ -399,25 +407,94 @@ const Details: React.FC = () => {
     }
   };
 
+  const handleOpenInput = (image: string) => {
+    setInputOpen(true);
+    setImageForSave(image);
+  };
+
+  const handleCloseInput = () => {
+    setInputOpen(false);
+  };
+
+
   const handleAddImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (!file) return;
-  
+
     try {
       const resizedImage = await resizeImage(file, 500);
       setNewImage(resizedImage);
-  
+      if (resizedImage) {
+        setModalMessage("¿Deseas guardar la imagen?");
+        setbutton1Message("Guardar");
+        setbutton2Message("Cancelar");
+        setOnConfirmAction(() => () => {
+          // Al hacer clic en "Guardar", cerrar el modal y abrir el input
+          setIsModalOpen(false);
+          handleOpenInput(resizedImage);
+        });
+        setOnCancelAction(() => handleStayDesigning);
+        setIsModalOpen(true);
+      } else {
+        alert("No hay ninguna imagen a guardar");
+      }
+
       if (currentView === "delantera") {
         setImagenUsadaFrontal(resizedImage);
       } else {
         setImagenUsadaTrasera(resizedImage);
       }
-  
+
       if (canvasRef.current) {
         canvasRef.current.style.display = "block";
       }
     } catch (error) {
-      console.error('Error al redimensionar la imagen:', error);
+      console.error("Error al redimensionar la imagen:", error);
+    }
+  };
+  const handleAddName = async (name: string) => {
+    const userId = localStorage.getItem("UserId");
+    const truncatedName = name.slice(0, 25); // agregar constante global max_title_lenght
+    try {
+      let response;
+  
+      if (userId) {
+        const formData = new FormData();
+        
+        // Convertir Base64 a Blob
+        const byteCharacters = atob(imageForSave.split(',')[1]);
+        const byteArray = new Uint8Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteArray[i] = byteCharacters.charCodeAt(i);
+        }
+        const blob = new Blob([byteArray], { type: 'image/png' });
+  
+        formData.append("imagen1", blob, "imagen.png");
+        formData.append("name", truncatedName);
+ 
+        response = await fetch(`http://localhost:8080/add-new-cami/${userId}`, {
+          method: "POST",
+          body: formData,
+        });
+        if (response.ok){
+          handleCloseInput();
+        }
+        if (!response.ok) {
+          throw new Error("Error al guardar la camiseta. " + response.statusText);
+        }
+      } else {
+        setModalMessage(
+          "¡Necesitas estar registrado para guardar tus diseños! Por favor, inicia sesión o regístrate para continuar."
+        );
+        setbutton1Message("Iniciar sesión");
+        setbutton2Message("Seguir creando");
+        setOnConfirmAction(() => handleGoToMyDesigns);
+        setOnCancelAction( () => handleStayDesigning);
+        setIsModalOpen(true);
+      }
+    } catch (e) {
+      alert(`error en el proceso: ${e}`);
     }
   };
 
@@ -563,13 +640,23 @@ const Details: React.FC = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           message={modalMessage}
-          onConfirm={handleGoToMyDesigns}
-          onCancel={handleStayDesigning}
+          onConfirm={onConfirmAction}
+          onCancel={onCancelAction}
           confirmButtonText={button1Message || ""}
           cancelButtonText={button2Message || ""}
           confirmButtonColor="#4CAF50"
           cancelButtonColor="#5494de"
         />
+
+        <Dialog open={isInputOpen} onClose={handleCloseInput}>
+          <DialogContent>
+            <InputChangeName
+              label={"Cambiar Nombre"}
+              onSubmit={(name) => handleAddName(name)}
+              onCancel={handleCloseInput}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

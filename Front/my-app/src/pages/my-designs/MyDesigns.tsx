@@ -144,9 +144,12 @@ const MyDesigns = () => {
               id={img.id}
               title={img.name}
               imageUrl={`data:image/png;base64, ${img.imagen1}`}
+              created={img.created}
               onDelete={handleDeleteImg}
               onMakeItReal={handleDesign}
               showActions={true}
+              user_name={user ? user.username : "Usuario no encontrado"}
+              user_image={user?.imagenPerfil || ""} 
             />
           ))
           )}

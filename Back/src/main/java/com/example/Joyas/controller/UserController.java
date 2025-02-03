@@ -34,6 +34,12 @@ public class UserController {
         return userService.loginUser(loginUser);
     }
 
+    @GetMapping("/g-token")
+    public ResponseEntity<?>gtoken(){
+        String token = userService.gtoken();
+        return ResponseEntity.ok().body(token);
+
+    }
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(
             @RequestParam(value = "name", required = false) String name,
