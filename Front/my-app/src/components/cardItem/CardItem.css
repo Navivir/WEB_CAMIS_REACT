@@ -13,13 +13,21 @@
 .container-cartitem-cabecera{
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-right: 10px;
   width: 100%;
+  gap: 10px;
 }
 
 .title-cabecera-cartitem{
-  font-size: 25px;
-  font-family: "Trebuchet MS"
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 
@@ -31,10 +39,19 @@
 }
 
 .author-image {
-  width: 40px;
-  height: 40px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.card-images-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  overflow-x: auto;
 }
 
 .product-images {
@@ -53,159 +70,157 @@
 
 
 .title-dialog-cartitem {
-  background-color: #f2e0c679;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
   font-weight: 600;
-  color: #333;
+  color: #1f2937;
   padding: 20px;
 }
 
 .typografy-creat-at{
-  margin-top: 20px !important;
-  margin-bottom: 10px !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  font-size: 14px !important;
 }
 .text-create-at{
-  color: #858585b9 ;
+  color: #6b7280;
+  font-weight: 500;
 }
 .content-create-at{
-  color: #000000b9;
-  font-weight: 700;
+  color: #111827;
+  font-weight: 600;
   
 }
 
 .typografy-author{
-  margin-top: 20px !important;
-  margin-bottom: 10px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  font-size: 14px !important;
 }
 .text-author{
-  color: #858585b9 ;
+  color: #6b7280;
+  font-weight: 500;
 }
 .content-author{
-  color: #000000b9;
-  font-weight: 700;
+  color: #111827;
+  font-weight: 600;
   
 }
 
 .MuiDialogActions-root {
-  padding: 16px;
+  padding: 16px 20px;
+  border-top: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .MuiDialogActions-root {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .MuiDialogActions-root button {
+    width: 100%;
+    margin: 0 !important;
+  }
 }
 
 .images-cart-item{
- width: "100%";
- height: "auto";
- max-width: 500px;
- margin-left: 50px;
+ flex: 1 1 0;
+ min-width: 0;
+ width: 100%;
+ aspect-ratio: 1 / 1;
+ max-height: 70vh;
+ object-fit: contain;
+ cursor: zoom-in;
 }
 
-.button-retirar {
-  background-color: #1b79c6 !important;
-  color: #fafbfc;
-  font-size: 14px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-transform: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+.custom-modal .MuiDialogContent-root {
+ padding-top: 28px !important;
 }
 
-.button-retirar:hover {
-  background-color: #64b5f6;
-  transform: scale(1.05);
+/* Botones de acción de la carta/modal: un único acento sólido para la acción
+   principal y estilo "outline" neutro para el resto, evitando el efecto arcoíris */
+.button-retirar,
+.button-publicar,
+.button-eliminar,
+.button-siguiente,
+.button-change-name {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 8px 18px !important;
+  border-radius: 8px !important;
+  text-transform: none !important;
+  letter-spacing: 0.2px !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
 }
 
-.button-retirar:active {
-  background-color: #42a5f5;
-}
-
-.button-publicar {
-  background-color:#1b79c6 !important;
-  color: #fafbfc;
-  font-size: 14px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-transform: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.button-publicar:hover {
-  background-color: #64b5f6;
-  transform: scale(1.05);
-}
-
-.button-publicar:active {
-  background-color: #42a5f5;
-}
-
-.button-eliminar {
-  background-color: #9c1414 !important;
-  color: #fafbfc;
-  font-size: 14px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-transform: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  
-}
-
-.button-eliminar:hover {
-  background-color: #ef9a9a;
-  transform: scale(1.05);
-}
-
-.button-eliminar:active {
-  background-color: #e57373;
-}
-
-.button-siguiente {
-  background-color: #157320 !important;
-  color: #fafbfc;
-  font-size: 14px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-transform: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.button-siguiente:hover {
-  background-color: #05c85c;
-  transform: scale(1.05);
-}
-
-.button-siguiente:active {
-  background-color: #5aeb21;
-}
-
-.button-cerrar {
-  color: #000000cc !important;
-  font-size: 20px !important;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-transform: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.button-cerrar:hover {
-  background-color: #ab3030de;
-  transform: scale(1.05);
-}
-
-.button-cerrar:active {
-  background-color: #bdbdbd;
-}
-
-.button-change-name{
-  background-color: #635bbe !important;
-  color: #fafbfc;
-  font-size: 14px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-transform: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+.button-change-name {
+  background-color: #fff !important;
+  color: #374151 !important;
+  border: 1.5px solid #d1d5db !important;
 }
 
 .button-change-name:hover {
-  background-color: #8f36d3;
-  transform: scale(1.05);
+  background-color: #f3f4f6 !important;
 }
 
-.button-change-name:active {
-  background-color: #bdbdbd;
+.button-publicar {
+  background-color: #fff !important;
+  color: #1d4ed8 !important;
+  border: 1.5px solid #1d4ed8 !important;
+}
+
+.button-publicar:hover {
+  background-color: #eff6ff !important;
+}
+
+.button-retirar {
+  background-color: #fff !important;
+  color: #b45309 !important;
+  border: 1.5px solid #b45309 !important;
+}
+
+.button-retirar:hover {
+  background-color: #fffbeb !important;
+}
+
+.button-eliminar {
+  background-color: #fff !important;
+  color: #dc2626 !important;
+  border: 1.5px solid #dc2626 !important;
+}
+
+.button-eliminar:hover {
+  background-color: #fef2f2 !important;
+}
+
+.button-siguiente {
+  background-color: #1d4ed8 !important;
+  color: #fff !important;
+  border: 1.5px solid #1d4ed8 !important;
+}
+
+.button-siguiente:hover {
+  background-color: #1e40af !important;
+  border-color: #1e40af !important;
+}
+
+.button-cerrar {
+  min-width: 36px !important;
+  width: 36px;
+  height: 36px;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  color: #6b7280 !important;
+  font-size: 16px !important;
+  text-transform: none !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.button-cerrar:hover {
+  background-color: #eef0f2 !important;
 }

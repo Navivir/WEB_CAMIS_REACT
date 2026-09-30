@@ -39,3 +39,21 @@
     cursor: pointer;
     font-size: 16px;
   }
+
+  @media (max-width: 600px) {
+    .alert {
+      height: auto;
+      min-height: 64px;
+      padding: 16px 18px;
+      font-size: 18px;
+      line-height: 1.35;
+      gap: 12px;
+      width: 94%;
+    }
+
+    .alert-close-button {
+      font-size: 22px;
+      padding: 8px 12px;
+      flex-shrink: 0;
+    }
+  }

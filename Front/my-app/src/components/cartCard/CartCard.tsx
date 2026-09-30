@@ -1,7 +1,7 @@
 // CartCard.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./CartCard.css";
-import { ReactComponent as DeleteIcon } from "../../logos/basura.svg"; 
+import { FiTrash2, FiX } from "react-icons/fi";
 
 interface CartCardProps {
   id: number;
@@ -24,26 +24,80 @@ const CartCard: React.FC<CartCardProps> = ({
   images,
   onRemove,
 }) => {
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!zoomedImage) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setZoomedImage(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [zoomedImage]);
+
   return (
     <div className="cart-item-card">
-      <div className="cart-item-card-details">
-        <h3>{name}</h3>
-        <p>Talla: {size}</p>
-        <p>Color: {color}</p>
-        <p>Precio: {price.toFixed(2)} €</p>
-        <p>Cantidad: {quantity}</p>
-        <button onClick={() => onRemove(id)} className="remove-item-btn">
-          <DeleteIcon className="remove-item-icon" />
-        </button>
-      </div>
-      {images.map((image, index) => (
+      <button
+        onClick={() => onRemove(id)}
+        className="remove-item-btn"
+        aria-label="Eliminar producto"
+        title="Eliminar producto"
+      >
+        <FiTrash2 className="remove-item-icon" />
+      </button>
+
+      <div className="cart-item-images">
+        {images.map((image, index) => (
           <img
             key={index}
             src={image}
             alt={`${name} - ${index + 1}`}
             className="cart-item-image-cart"
+            onClick={() => setZoomedImage(image)}
           />
         ))}
+      </div>
+
+      <div className="cart-item-card-details">
+        <h3>{name}</h3>
+        <div className="cart-item-meta">
+          <p>
+            <span className="meta-label">Talla</span>
+            <span className="meta-value">{size}</span>
+          </p>
+          <p>
+            <span className="meta-label">Color</span>
+            <span className="meta-value">{color}</span>
+          </p>
+          <p>
+            <span className="meta-label">Precio</span>
+            <span className="meta-value">{price.toFixed(2)} €</span>
+          </p>
+          <p>
+            <span className="meta-label">Cantidad</span>
+            <span className="meta-value">{quantity}</span>
+          </p>
+        </div>
+      </div>
+
+      {zoomedImage && (
+        <div className="image-zoom-overlay" onClick={() => setZoomedImage(null)}>
+          <button
+            className="image-zoom-close"
+            aria-label="Cerrar"
+            onClick={() => setZoomedImage(null)}
+          >
+            <FiX />
+          </button>
+          <img
+            src={zoomedImage}
+            alt={name}
+            className="image-zoom-content"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 };

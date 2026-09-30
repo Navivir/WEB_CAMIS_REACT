@@ -12,6 +12,8 @@ import {
   Button,
 } from "@mui/material";
 import "./CardImg.css";
+import "../cartCard/CartCard.css";
+import { FiX } from "react-icons/fi";
 import { CardPropsImg } from "../../scripts/Types";
 import { formatDate } from "../../scripts/Utils";
 import { InputChangeName } from "../inputChangeName/InputChangeName";
@@ -41,6 +43,21 @@ const CardImg: React.FC<CardPropsImg> = ({
   const [newName, setNewName] = useState<string>("");
   const [isNameInputOpen, setIsNameInputOpen] = useState(false);
   const [titleName, setTitleName] = useState<string>(truncatedTitle);
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  useEffect(() => {
+    if (!isZoomed) return;
+
+    // Captura para cerrar solo el zoom y no el diálogo de MUI
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        setIsZoomed(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [isZoomed]);
 
   useEffect(() => {
     if (id) {
@@ -277,7 +294,7 @@ const CardImg: React.FC<CardPropsImg> = ({
             </Button>
           </div>
         </DialogTitle>
-        <div style={{ marginBottom: "20px", marginLeft:"20px" }}>
+        <div style={{ marginTop: "24px", marginBottom: "20px", marginLeft:"20px" }}>
           <Typography
             variant="body1"
             color="textSecondary"
@@ -286,32 +303,31 @@ const CardImg: React.FC<CardPropsImg> = ({
             <span className="text-create-at">Creado el: </span>
             <span className="content-create-at">{formatDate(created)}</span>
           </Typography>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div className="author-info">
+            {user_image && (
+              <img
+                src={`data:image/png;base64,${user_image}`}
+                alt={user_name}
+                className="author-image"
+              />
+            )}
             <Typography
               variant="body1"
               color="textSecondary"
               className="typografy-author"
             >
               <span className="text-author">Autor: </span>
-              <span className="content-author"> {user_name}</span>
+              <span className="content-author">{user_name}</span>
             </Typography>
-
-            {user_image && (
-              <img
-                src={`data:image/png;base64,${user_image}`}
-                alt={user_name}
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-              />
-            )}
           </div>
         </div>
         <DialogContent className="dialog-content-image-cart-image">
-          <img src={imageUrl} alt={title} className="image-cart-image" />
+          <img
+            src={imageUrl}
+            alt={title}
+            className="image-cart-image"
+            onClick={() => setIsZoomed(true)}
+          />
         </DialogContent>
         <DialogActions>
           {showActions && (
@@ -358,11 +374,30 @@ const CardImg: React.FC<CardPropsImg> = ({
           </Button>
         </DialogActions>
       </Dialog>
+      {isZoomed && (
+        <div className="image-zoom-overlay" onClick={() => setIsZoomed(false)}>
+          <button
+            className="image-zoom-close"
+            aria-label="Cerrar"
+            onClick={() => setIsZoomed(false)}
+          >
+            <FiX />
+          </button>
+          <img
+            src={imageUrl}
+            alt={title}
+            className="image-zoom-content"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="alert-dialog-title">
           ¿Estás seguro de eliminar este diseño?
@@ -385,6 +420,8 @@ const CardImg: React.FC<CardPropsImg> = ({
         onClose={handleClosePublishDialog}
         aria-labelledby="publish-dialog-title"
         aria-describedby="publish-dialog-description"
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="publish-dialog-title">
           ¿Estás seguro de que deseas publicar este producto?
@@ -403,6 +440,8 @@ const CardImg: React.FC<CardPropsImg> = ({
         onClose={handleCloseUnpublishDialog}
         aria-labelledby="unpublish-dialog-title"
         aria-describedby="unpublish-dialog-description"
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="unpublish-dialog-title">
           ¿Estás seguro de que deseas retirar este producto?
@@ -416,7 +455,7 @@ const CardImg: React.FC<CardPropsImg> = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={isNameInputOpen} onClose={handleCloseInput}>
+      <Dialog open={isNameInputOpen} onClose={handleCloseInput} fullWidth maxWidth="xs">
         <DialogContent>
           <InputChangeName
             label={"Cambiar Nombre"}

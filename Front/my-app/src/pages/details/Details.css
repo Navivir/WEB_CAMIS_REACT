@@ -3,8 +3,8 @@
 .details-h2 {
   margin :20px; /* Añade un espacio entre el título y el contenedor */
   text-align: center; /* Centra el título */
-  font-family: "Trebuchet MS";
-  font-size: 50px;
+  font-weight: 700;
+  font-size: 2.5rem;
 }
 
 
@@ -33,18 +33,42 @@
   width: 50%;
 }
 
+/* Tamaño definido en px (no %) para que el canvas y la imagen aplicada
+   midan siempre exactamente lo mismo, sin depender del ancho del contenedor padre */
 .details-canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 600px;
+  width: min(85vw, 600px);
+  margin: 0 auto;
+}
+
+/* Escala visualmente el canvas de Fabric sin tocar su resolución interna (600x600),
+   por lo que las coordenadas/límites usados por CanvasManager siguen siendo válidos */
+.details-canvas .canvas-container {
+  width: min(85vw, 600px) !important;
+  height: min(85vw, 600px) !important;
+  margin: 0 auto;
+}
+
+.details-canvas .canvas-container canvas {
+  width: min(85vw, 600px) !important;
+  height: min(85vw, 600px) !important;
+  touch-action: none;
+}
+
+.applied-image {
+  width: min(85vw, 600px);
+  height: min(85vw, 600px);
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }
 
 .details-aside label {
   font-size: 1.1em; /* Tamaño más grande para las etiquetas */
   color: #333; /* Color del texto */
   margin-bottom: 10px;
-  font-family: "Trebuchet MS";
 }
 
 .details-aside select {
@@ -242,4 +266,53 @@
 .upload-button-details:disabled {
   background-color: #cccccc; /* Gris claro para estado deshabilitado */
   cursor: not-allowed;
+}
+
+@media (max-width: 1000px) {
+  .details-content {
+    flex-direction: column;
+    align-items: center;
+    margin-inline: 4%;
+    padding: 4%;
+  }
+
+  .details-aside {
+    width: 100%;
+    max-width: 600px;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .container-buttons-edit-aply-details {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .details-h2 {
+    font-size: 1.8rem;
+    margin-inline: 10px;
+  }
+
+  .details-aside {
+    padding: 16px;
+  }
+
+  .details-aside select {
+    width: 100%;
+  }
+
+  .button-container-details {
+    margin-top: 40px;
+  }
+
+  .view-button img {
+    width: 56px;
+  }
+
+  .container-buttons-edit-aply-details {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 }

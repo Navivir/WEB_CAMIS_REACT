@@ -7,12 +7,26 @@ export class CanvasManager {
   private limitRect: fabric.Rect | null = null;
   private static instance: CanvasManager | null = null;
   private static instances = new Map<HTMLCanvasElement, CanvasManager>();
+  private selectionChangeHandler: ((hasSelection: boolean) => void) | null = null;
 
   constructor(private canvasElement: HTMLCanvasElement | null) {
     if (!canvasElement) {
       throw new Error("No se proporcionó un elemento canvas válido.");
     }
     this.canvas = new fabric.Canvas(canvasElement);
+
+    this.canvas.on("selection:created", () => this.notifySelectionChange());
+    this.canvas.on("selection:updated", () => this.notifySelectionChange());
+    this.canvas.on("selection:cleared", () => this.notifySelectionChange());
+  }
+
+  // Permite a la UI saber cuándo hay un objeto seleccionado (con el recuadro de redimensionar visible)
+  public onSelectionChange(callback: (hasSelection: boolean) => void) {
+    this.selectionChangeHandler = callback;
+  }
+
+  private notifySelectionChange() {
+    this.selectionChangeHandler?.(!!this.canvas.getActiveObject());
   }
 
   static getInstance(canvas: HTMLCanvasElement): CanvasManager {
@@ -177,6 +191,7 @@ export class CanvasManager {
   public clearCanvas() {
     if (this.canvas) {
       this.canvas.clear(); // Elimina todos los objetos del canvas
+      this.notifySelectionChange(); // Ya no queda ningún objeto seleccionado
     }
   }
 }

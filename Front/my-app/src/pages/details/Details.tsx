@@ -82,6 +82,7 @@ const Details: React.FC = () => {
   }>({});
   const [isEditableDelantera, setIsEditableDelantera] = useState(true);
   const [isEditableTrasera, setIsEditableTrasera] = useState(true);
+  const [isObjectSelected, setIsObjectSelected] = useState(false);
   const [newImage, setNewImage] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [imagenUsadaFrontal, setImagenUsadaFrontal] = useState<string>("");
@@ -140,6 +141,8 @@ const Details: React.FC = () => {
         canvasRef.current
       );
     }
+
+    canvasManagerRef.current.onSelectionChange(setIsObjectSelected);
 
     return () => {
       if (canvasManagerRef.current) {
@@ -325,6 +328,7 @@ const Details: React.FC = () => {
 
   const handleApply = () => {
     if (!canvasRef.current) return;
+    if (isObjectSelected) return; // No aplicar mientras el recuadro de selección/redimensionar esté visible
 
     const canvas = canvasRef.current;
     const appliedImage = canvas.toDataURL();
@@ -615,7 +619,13 @@ const Details: React.FC = () => {
                 disabled={
                   !!appliedImages[currentView] || // Deshabilitar si la imagen ya está aplicada
                   (currentView === "delantera" && !isEditableDelantera) ||
-                  (currentView === "trasera" && !isEditableTrasera)
+                  (currentView === "trasera" && !isEditableTrasera) ||
+                  isObjectSelected // Deshabilitar mientras el recuadro de selección/redimensionar esté visible
+                }
+                title={
+                  isObjectSelected
+                    ? "Deselecciona la imagen (haz click fuera de ella) antes de aplicar"
+                    : undefined
                 }
               >
                 Aplicar
@@ -648,7 +658,7 @@ const Details: React.FC = () => {
           cancelButtonColor="#5494de"
         />
 
-        <Dialog open={isInputOpen} onClose={handleCloseInput}>
+        <Dialog open={isInputOpen} onClose={handleCloseInput} fullWidth maxWidth="xs">
           <DialogContent>
             <InputChangeName
               label={"Cambiar Nombre"}

@@ -61,7 +61,6 @@ html, body {
   margin-bottom: 20px;
   margin-left: 50px;
   font-size: 50px;
-  font-family: "Trebuchet MS";
 }
 .modal.second-modal {
   z-index: 1200; 
@@ -91,5 +90,17 @@ html, body {
 .h2-my-designs-input-image{
   margin-bottom: 20px;
   font-size: 30px;
-  font-family: "Trebuchet MS";
+}
+
+@media (max-width: 600px) {
+  .cart-item-details-h1 {
+    margin-left: 0;
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .cards-container-my-designs,
+  .cart-items-my-designs {
+    width: 94%;
+  }
 }

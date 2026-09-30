@@ -1,7 +1,6 @@
 /* LoginPage.css */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
     background-color: #f3f4f6;
   }
   
@@ -130,5 +129,14 @@ body {
   
   .login-container .submit-button:hover {
     background-color: #1a600c;
+  }
+
+  @media (max-width: 700px) {
+    .login-form {
+      width: 92%;
+      max-width: 420px;
+      height: auto;
+      padding: 20px 24px;
+    }
   }
   

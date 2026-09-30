@@ -32,4 +32,13 @@
     border-radius: 30px;
     object-fit: cover;
   }
+
+  @media (max-width: 500px) {
+    .image-radio-buttons-color {
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
   

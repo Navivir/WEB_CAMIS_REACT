@@ -13,9 +13,9 @@
 }
 
 .card-title-card-image {
-  font-size: 20px;
-  font-family: "Trebuchet MS";
-  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
   text-align: center;
   overflow: hidden;
   white-space: nowrap;
@@ -41,18 +41,27 @@
 .container-title-cabecera-cart-image {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-right: 10px;
   width: 100%;
+  gap: 10px;
 }
 .title-cabecera-cart-image{
-  font-size: 25px;
-  font-family: "Trebuchet MS"
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .title-dialog-cartimage {
-  background-color: #efeee179;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
   font-weight: 600;
-  color: #333;
+  color: #1f2937;
   padding: 20px;
 }
 
@@ -60,6 +69,14 @@
   margin: 50px;
   max-width: 500px;
   max-height: 500px;
+  cursor: zoom-in;
+}
+
+@media (max-width: 600px) {
+  .image-cart-image {
+    margin: 16px;
+    max-width: 100%;
+  }
 }
 
 .dialog-content-image-cart-image {

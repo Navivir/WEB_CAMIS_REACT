@@ -12,6 +12,8 @@ import {
   Button,
 } from "@mui/material";
 import "./CardItem.css";
+import "../cartCard/CartCard.css";
+import { FiX } from "react-icons/fi";
 import { CardProps } from "../../scripts/Types";
 import { formatDate } from "../../scripts/Utils";
 import { InputChangeName } from "../inputChangeName/InputChangeName";
@@ -40,6 +42,21 @@ const CardItem: React.FC<CardProps> = ({
   const [newName, setNewName] = useState<string>("");
   const [isNameInputOpen, setIsNameInputOpen] = useState(false);
   const [titleName, setTitleName] = useState<string>(truncatedTitle);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!zoomedImage) return;
+
+    // Captura para cerrar solo el zoom y no el diálogo de MUI
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        setZoomedImage(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [zoomedImage]);
 
   useEffect(() => {
     if (id) {
@@ -251,48 +268,42 @@ const CardItem: React.FC<CardProps> = ({
             </Button>
           </div>
         </DialogTitle>
-        <DialogContent>
-          <div style={{ marginBottom: "20px" }}>
+        <div style={{ marginTop: "24px", marginBottom: "20px", marginLeft: "20px" }}>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            className="typografy-creat-at"
+          >
+            <span className="text-create-at">Creado el: </span>
+            <span className="content-create-at">{formatDate(created)}</span>
+          </Typography>
+          <div className="author-info">
+            {user_image && (
+              <img
+                src={`data:image/png;base64,${user_image}`}
+                alt={user_name}
+                className="author-image"
+              />
+            )}
             <Typography
               variant="body1"
               color="textSecondary"
-              className="typografy-creat-at"
+              className="typografy-author"
             >
-              <span className="text-create-at">Creado el: </span>
-              <span className="content-create-at">{formatDate(created)}</span>
+              <span className="text-author">Autor: </span>
+              <span className="content-author">{user_name}</span>
             </Typography>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Typography
-                variant="body1"
-                color="textSecondary"
-                className="typografy-author"
-              >
-                <span className="text-author">Autor: </span>
-                <span className="content-author"> {user_name}</span>
-              </Typography>
-
-              {user_image && (
-                <img
-                  src={`data:image/png;base64,${user_image}`}
-                  alt={user_name}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-            </div>
           </div>
-
-          <div style={{ display: "flex", overflowX: "auto", gap: "10px" }}>
+        </div>
+        <DialogContent>
+          <div className="card-images-container">
             {images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`${title} - ${index + 1}`}
                 className="images-cart-item"
+                onClick={() => setZoomedImage(img)}
               />
             ))}
           </div>
@@ -342,11 +353,30 @@ const CardItem: React.FC<CardProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
+      {zoomedImage && (
+        <div className="image-zoom-overlay" onClick={() => setZoomedImage(null)}>
+          <button
+            className="image-zoom-close"
+            aria-label="Cerrar"
+            onClick={() => setZoomedImage(null)}
+          >
+            <FiX />
+          </button>
+          <img
+            src={zoomedImage}
+            alt={title}
+            className="image-zoom-content"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="alert-dialog-title">
           ¿Estás seguro de eliminar este diseño?
@@ -369,6 +399,8 @@ const CardItem: React.FC<CardProps> = ({
         onClose={handleClosePublishDialog}
         aria-labelledby="publish-dialog-title"
         aria-describedby="publish-dialog-description"
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="publish-dialog-title">
           ¿Estás seguro de que deseas publicar este producto?
@@ -387,6 +419,8 @@ const CardItem: React.FC<CardProps> = ({
         onClose={handleCloseUnpublishDialog}
         aria-labelledby="unpublish-dialog-title"
         aria-describedby="unpublish-dialog-description"
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="unpublish-dialog-title">
           ¿Estás seguro de que deseas retirar este producto?
@@ -400,7 +434,7 @@ const CardItem: React.FC<CardProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={isNameInputOpen} onClose={handleCloseInput}>
+      <Dialog open={isNameInputOpen} onClose={handleCloseInput} fullWidth maxWidth="xs">
         <DialogContent>
           <InputChangeName
             label={"Cambiar Nombre"}

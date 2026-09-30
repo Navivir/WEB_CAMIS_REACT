@@ -3,7 +3,6 @@
 .title{
   font-weight: bold;
   font-size: 1.5rem;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .home-container {
@@ -73,7 +72,19 @@
 .h2-home-input-image{
   margin-bottom: 20px;
   font-size: 30px;
-  font-family: "Trebuchet MS";
+}
+
+.input-container-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.input-label-home {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .file-input-home {
@@ -85,13 +96,16 @@
   justify-content: center;
   align-items: center;
   border: 2px dashed #3498db;
-  width: 500px;
-  height: 500px;
+  /* Tamaño fijo (mismo cálculo siempre) para que no cambie al cargar una imagen */
+  width: min(90vw, 500px);
+  height: min(90vw, 500px);
   border-radius: 30px;
   background-color: #f9f9f9;
   cursor: pointer;
   color: #666;
   transition: background-color 0.3s, border-color 0.3s;
+  box-sizing: border-box;
+  flex-shrink: 0;
 
 }
 
@@ -138,7 +152,6 @@
   font-size: 14px;
   cursor: pointer;
   margin-top: 20px;
-  margin-left: 70px;
   height: 50px;
 }
 
@@ -150,6 +163,36 @@
 
 .upload-button-home:active {
   transform: translateY(2px);
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    margin-top: 1em;
+  }
+
+  .cards-container-home,
+  .card-item-container {
+    width: 92%;
+    max-width: 92vw;
+    padding: 4%;
+  }
+
+  .upload-section-home {
+    width: 92%;
+    height: auto;
+    padding-block: 2em;
+  }
+
+  .h2-home-input-image {
+    font-size: 1.5rem;
+    text-align: center;
+    padding-inline: 1em;
+  }
+
+  .text-input-home {
+    width: 90%;
+    max-width: 300px;
+  }
 }
 
 
